@@ -86,7 +86,6 @@ export const USER_INFO_SCREEN = "UserInfo";
 export const USER_FORM_SCREEN = "UserForm";
 export const REWARD_INFO_SCREEN = "RewardScreen";
 export const INSTRUCTION_SCREEN = "Instruction";
-export const SECOND_INSTRUCTION_SCREEN = "SecondInstruction";
 export const PSFORM_SCREEN = "PsychologyForm";
 export const VISUAL_PATTERN_SCREEN = "VisualPatternTask";
 export const VISUAL_PATTERN_DEMO_SCREEN = "VisualPatternTask Demo";

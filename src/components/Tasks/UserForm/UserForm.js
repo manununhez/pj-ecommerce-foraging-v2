@@ -17,8 +17,8 @@ const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 
 interface UserInfo {
   sex: String;
-  age: String;
-  yearsEduc: String;
+  age: Number;
+  yearsEduc: Number;
   profession: String;
   levelEduc: String;
 }
@@ -26,8 +26,8 @@ interface UserInfo {
 export default function UserForm(props) {
   let defaultUserInfo: UserInfo = {
     sex: TEXT_EMPTY,//default selected sex
-    age: TEXT_EMPTY,
-    yearsEduc: TEXT_EMPTY,
+    age: 0,
+    yearsEduc: 0,
     levelEduc: FORM_LEVEL_EDUC_DEFAULT, //default selected 
     profession: TEXT_EMPTY
   }
@@ -44,10 +44,18 @@ export default function UserForm(props) {
     //We save all fields from form data
     switch (id) {
       case FORM_SEX:
-        userInfo.sex = value
+        if (value === MALE_VALUE || value === FEMALE_VALUE) {
+          userInfo.sex = value
+        } else {
+          userInfo.sex = TEXT_EMPTY
+        }
         break;
       case FORM_AGE:
-        userInfo.age = value
+        if (isNaN(value) || value === TEXT_EMPTY || value < 0) {
+          userInfo.age = 0
+        } else {
+          userInfo.age = parseInt(value)
+        }
         break;
       case FORM_PROFESSION:
         userInfo.profession = value
@@ -56,7 +64,12 @@ export default function UserForm(props) {
         userInfo.yearsEduc = value
         break;
       case FORM_LEVEL_EDUC:
-        userInfo.levelEduc = value
+        if (value === FORM_LEVEL_EDUC_DEFAULT || value === FORM_LEVEL_EDUC_INITIAL
+          || value === FORM_LEVEL_EDUC_MIDDLE || value === FORM_LEVEL_EDUC_SUPERIOR) {
+          userInfo.levelEduc = value
+        } else {
+          userInfo.levelEduc = FORM_LEVEL_EDUC_DEFAULT
+        }
         break;
       default:
         break;
