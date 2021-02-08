@@ -1,9 +1,16 @@
 // Fetch.js
 import * as constant from '../helpers/constants';
 
-const _apiHost = 'https://api.swps-pjatk-experiment.pl/v2';//'http://localhost:5000'; //
-const fetch_sheet_url = '/v4-get';
-const save_sheet_url = '/v4-post';
+// const _apiHost = 'https://api.swps-pjatk-experiment.pl/v2/'; //'http://localhost:5000/'
+const _apiHost = 'http://localhost:5000/';
+const fetch_versions_url = 'versions'
+const fetch_psform_url = 'psform'
+const fetch_apptext_url = 'apptext'
+const fetch_inituserdata_url = 'inituserdata'
+const save_visualpattern_url = 'visualpattern';
+const save_userinfo_url = 'userinfo';
+const save_userlogtime_url = 'userlogtime';
+const save_usegeneraldata_url = 'usergeneraldata';
 
 async function request(url, params, method = 'GET') {
 
@@ -23,7 +30,7 @@ async function request(url, params, method = 'GET') {
         }
     }
 
-    const response = await fetch(_apiHost + url, options);
+    const response = await fetch(url, options);
 
     if (response.status !== 200) {
         return generateErrorResponse('The server responded with an unexpected status.');
@@ -47,11 +54,11 @@ function generateErrorResponse(message) {
 }
 
 export function get(url, params) {
-    return request(url, params);
+    return request(_apiHost + url, params);
 }
 
 export function create(url, params) {
-    return request(url, params, 'POST');
+    return request(_apiHost + url, params, 'POST');
 }
 
 //  function update(url, params) {
@@ -62,261 +69,126 @@ export function create(url, params) {
 //   return request(url, params, 'DELETE');
 // }
 
-function save(spreadSheetName, row, column, data, callback) {
-    create(save_sheet_url, {
-        spreadSheetName: spreadSheetName,
-        column: row,
-        row: column,
-        submissionValues: data
-    }).then((response) => {
-        callback({ response });
-    }, function (reason) {
-        callback(false, reason);
-    });
+function save(url, data, callback) {
+    create(url, data)
+        .then((response) => {
+            callback({ response });
+        }, function (reason) {
+            callback(false, reason);
+        });
 }
 
-/**
- * Load app versions from the spreadsheet
- * @param {*} callback 
- */
-export function fetchVersions(callback) {
+export function fetchUserInitialData(typeTask, callback) {
+    let url = fetch_inituserdata_url + '/' + typeTask
 
-    let spreadsheetName = constant.VERSIONS_SHEETNAME;
-    let row = "A2";
-    let column = "B";
-
-    get(fetch_sheet_url, { spreadSheetName: spreadsheetName, column: row, row: column })
+    get(url, {})
         .then((response) => {
-            const data = response.rows;
-            let versions = data.map((versions) => {
-                return { version: versions[0], url: versions[1] };
-            });
+            const indexFemale = 0
+            const indexMale = 1
+            const indexScenario1 = 2
+            const indexScenario2 = 3
+
+            let screens = [];
+            for (let value of Object.values(response.screens)) {
+                screens.push({
+                    screen: value.screen_name,
+                    type: value.screen_type
+                });
+            }
+
+            let participants = Array(4);
+            //TODO MEJORAR ESTO. SE DEBE BUSCAR EL VALOR EN EL ARRAY EN LUGAR DE TENER UN INDEX FIJO
+            for (let value of Object.values(response.experimentCount)) {
+                if (value.category === 'female') {
+                    participants[indexFemale] = [value.group_1, value.group_2, value.group_3]
+                } else if (value.category === 'male') {
+                    participants[indexMale] = [value.group_1, value.group_2, value.group_3]
+                } else if (value.category === 'scenario_1') {
+                    participants[indexScenario1] = [value.group_1, value.group_2, value.group_3]
+                } else if (value.category === 'scenario_2') {
+                    participants[indexScenario2] = [value.group_1, value.group_2, value.group_3]
+                }
+            }
+
+            callback({ screens, participants });
+        }, (response) => {
+            callback(false, response);
+        });
+}
+
+// /**
+//  * Load app versions from the spreadsheet
+//  * @param {*} callback 
+//  */
+export function fetchVersions(callback) {
+    let url = fetch_versions_url
+
+    get(url, {})
+        .then((response) => {
+            let versions = [];
+
+            for (let value of Object.values(response)) {
+                versions.push({ version: value.name });
+            }
 
             callback({ versions });
         }, (response) => {
             callback(false, response);
         });
 }
-
 /**
  * Load psychology questionaries input data from the spreadsheet
  * @param {*} callback 
  */
-export function fetchPSFormData(callback) {
+export function fetchPSFormData(sex, callback) {
+    let url = fetch_psform_url + '/' + sex
 
-    let spreadsheetName = constant.PSFORM_SHEETNAME;
-    let row = "A2";
-    let column = "J";
-
-    get(fetch_sheet_url, { spreadSheetName: spreadsheetName, column: row, row: column })
+    get(url, {})
         .then((response) => {
-            const data = response.rows;
-            let result = data.map((version, i) => {
-                let answersValues = []
+            let result = [];
 
-                const indexScreen = 0
-                const indexQuestionCode = 1
-                const indexType = 2
-                const indexAnswerStart = 3
-
-                for (let i = indexAnswerStart; i < version.length; i++)
-                    answersValues.push(version[i])
-
-                return {
-                    screen: version[indexScreen],
-                    questionCode: version[indexQuestionCode],
-                    type: version[indexType],
-                    answer: answersValues
-                };
-            });
-
-            callback({ result });
-        }, (response) => {
-            callback(false, response.result.error);
-        });
-}
-
-/**
- * Load all the necessary Text structure for the app from the spreadsheet
- * @param {*} callback 
- */
-export function fetchAppTextFemale(callback) {
-    let spreadsheetName = constant.APP_TEXT_FEMALE_SHEETNAME;
-    let row = "A2";
-    let column = "C";
-
-    get(fetch_sheet_url, { spreadSheetName: spreadsheetName, column: row, row: column })
-        .then((response) => {
-            const data = response.rows;
-
-            let appText = data.map((version, i) => {
-                return { screen: version[0], size: version[1], text: version[2] };
-            });
-
-            callback({ appText });
-        }, (response) => {
-            callback(false, response.result.error);
-        });
-}
-
-/**
- * Load all the necessary Text structure for the app from the spreadsheet
- * @param {*} callback 
- */
-export function fetchAppTextMale(callback) {
-    let spreadsheetName = constant.APP_TEXT_MALE_SHEETNAME;
-    let row = "A2";
-    let column = "C";
-
-    get(fetch_sheet_url, { spreadSheetName: spreadsheetName, column: row, row: column })
-        .then((response) => {
-            const data = response.rows;
-
-            let appText = data.map((version, i) => {
-                return { screen: version[0], size: version[1], text: version[2] };
-            });
-
-            callback({ appText });
-        }, (response) => {
-            callback(false, response.result.error);
-        });
-}
-
-/**
- * Load screen navigation structure from the spreadsheet
- * @param {*} spreadsheetName 
- * @param {*} callback 
- */
-export function fetchNavScreens(spreadsheetName, callback) {
-
-    let row = "A2";
-    let column = "B";
-
-    get(fetch_sheet_url, { spreadSheetName: spreadsheetName, column: row, row: column })
-        .then((response) => {
-            const data = response.rows;
-            let screens = data.map((version, i) => {
-                return { pageId: version[0], screen: version[1] };
-            });
-
-            callback({ screens });
-        }, (response) => {
-            callback(false, response.result.error);
-        });
-}
-
-/**
- * Load the current amount of participants of the experiment from the spreadsheet
- * @param {*} callback 
- */
-export function fetchParticipantsCounter(callback) {
-
-    let spreadsheetName = constant.USER_PARTICIPANTS_COUNTER_SHEETNAME;
-    let row = "B2";
-    let column = "I";
-
-    get(fetch_sheet_url, { spreadSheetName: spreadsheetName, column: row, row: column })
-        .then((response) => {
-            const data = response.rows;
-
-            let participants = []
-            let scenarios = []
-            let groups = []
-            let config = {
-                participantsLimit: "",
-                yearsEducLimit: "",
-                scenariosLimit: ""
+            for (let value of Object.values(response)) {
+                result.push({
+                    title: value.main_title,
+                    titleFontSize: value.main_title_font_size,
+                    questionCode: value.question_code,
+                    question: value.question,
+                    questionFontSize: value.question_font_size,
+                    type: value.question_type,
+                    answer: [value.answer_1, value.answer_2, value.answer_3, value.answer_4, value.answer_5, value.answer_6]
+                });
             }
 
-            data.forEach(column => {
-                //Participants table from column B to D
-                if (column[0] !== "" && column[1] !== "" && column[2] !== "") {
-                    participants.push([column[0], column[1], column[2]])
-                }
-
-                //Config parameters table from column G to I
-                if (column[5] === "participants_per_sex_per_group") {
-                    config.participantsLimit = column[6]
-                } else if (column[5] === "years_education_limit") {
-                    config.yearsEducLimit = column[6]
-                } else if (column[5] === "participants_per_scenario_per_group") {
-                    config.scenariosLimit = column[6]
-                } else if (column[5].includes("scenario_")) {
-                    scenarios.push(column[6])
-                } else if (column[5].includes("group_")) {
-                    groups.push({ minAge: column[6], maxAge: column[7] })
-                }
-            });
-
-
-            callback({ participants, config, groups, scenarios });
+            callback({ result });
         }, (response) => {
-            callback(false, response.result.error);
+            callback(false, response);
         });
 }
 
 /**
- * Load reward info data from the spreadsheet
+ * Load all the necessary Text structure for the app from the spreadsheet
  * @param {*} callback 
  */
-export function fetchRewardData(callback) {
+export function fetchAppText(sex, callback) {
+    let url = fetch_apptext_url + '/' + sex
 
-    let spreadsheetName = constant.INPUT_REWARD_SHEETNAME;
-    let row = "A2";
-    let column = "C";
-
-    get(fetch_sheet_url, { spreadSheetName: spreadsheetName, column: row, row: column })
+    get(url, {})
         .then((response) => {
-            const data = response.rows;
-            let result = data.map((version, i) => {
+            let appText = [];
 
-                const indexScreen = 0
-                const indexThreshold = 1
-                const indexBonusPoints = 2
+            for (let value of Object.values(response)) {
+                appText.push({
+                    screen: value.name,
+                    size: value.font_size,
+                    text: value.text,
+                });
+            }
 
-                return {
-                    screen: version[indexScreen],
-                    threshold: version[indexThreshold],
-                    bonusPoint: version[indexBonusPoints]
-                };
-            });
-
-            callback({ result });
+            callback({ appText });
         }, (response) => {
-            callback(false, response.result.error);
+            callback(false, response);
         });
 }
-
-/**
- * Load reward info data from the spreadsheet
- * @param {*} callback 
- */
-export function fetchAppGeneralMessages(callback) {
-
-    let spreadsheetName = constant.INPUT_APP_MESSAGES;
-    let row = "A2";
-    let column = "B";
-
-    get(fetch_sheet_url, { spreadSheetName: spreadsheetName, column: row, row: column })
-        .then((response) => {
-            const data = response.rows;
-            let result = data.map((version, i) => {
-
-                const indexKey = 0
-                const indexValue = 1
-
-                return {
-                    key: version[indexKey],
-                    value: version[indexValue]
-                };
-            });
-
-            callback({ result });
-        }, (response) => {
-            callback(false, response.result.error);
-        });
-}
-
 
 /**
  * Write results to GSheets
@@ -324,12 +196,7 @@ export function fetchAppGeneralMessages(callback) {
  * @param {*} callback 
  */
 export function saveGeneralData(data, ariadnaUserID, callback) {
-    let userdata = usergeneraldata(data, ariadnaUserID);
-    let spreadSheetName = constant.USER_GENERAL_DATA_SHEETNAME;
-    let row = "A2";
-    let column = "Z";
-
-    save(spreadSheetName, row, column, userdata, callback)
+    save(save_usegeneraldata_url, usergeneraldata(data, ariadnaUserID), callback)
 }
 
 /**
@@ -338,12 +205,7 @@ export function saveGeneralData(data, ariadnaUserID, callback) {
  * @param {*} callback 
  */
 export function saveUserPSForm(data, callback) {
-    let userPSForm = userpsform(data);
-    let spreadSheetName = constant.USER_PSFORM_SHEETNAME;
-    let row = "A2";
-    let column = "D";
-
-    save(spreadSheetName, row, column, userPSForm, callback)
+    save(fetch_psform_url, userpsform(data), callback)
 }
 
 /**
@@ -352,27 +214,7 @@ export function saveUserPSForm(data, callback) {
  * @param {*} callback 
  */
 export function saveUserInfo(data, callback) {
-    let userInfo = userinfo(data);
-    let spreadSheetName = constant.USER_INFO_SHEETNAME;
-    let row = "A2";
-    let column = "L";
-
-    save(spreadSheetName, row, column, userInfo, callback)
-}
-
-
-/**
- * Write results to GSheets
- * @param {*} data 
- * @param {*} callback 
- */
-export function saveUserForm(data, callback) {
-    let userForm = userform(data);
-    let spreadSheetName = constant.USER_FORM_SHEETNAME;
-    let row = "A2";
-    let column = "K";
-
-    save(spreadSheetName, row, column, userForm, callback)
+    save(save_userinfo_url, userinfo(data), callback)
 }
 
 /**
@@ -381,12 +223,7 @@ export function saveUserForm(data, callback) {
  * @param {*} callback 
  */
 export function saveUserLogTime(data, callback) {
-    let userLogtime = userlogtime(data);
-    let spreadSheetName = constant.USER_LOGTIME_SHEETNAME;
-    let row = "A2";
-    let column = "F";
-
-    save(spreadSheetName, row, column, userLogtime, callback)
+    save(save_userlogtime_url, userlogtime(data), callback)
 }
 
 /**
@@ -395,12 +232,7 @@ export function saveUserLogTime(data, callback) {
  * @param {*} callback 
  */
 export function saveUserVisualPattern(data, callback) {
-    let userVisualPattern = uservisualpattern(data);
-    let spreadSheetName = constant.USER_VISUAL_PATTERN_SHEETNAME;
-    let row = "A2";
-    let column = "L";
-
-    save(spreadSheetName, row, column, userVisualPattern, callback)
+    save(save_visualpattern_url, uservisualpattern(data), callback)
 }
 
 
@@ -410,7 +242,7 @@ export function saveUserVisualPattern(data, callback) {
  */
 const usergeneraldata = (data, ariadnaUserID) => {
 
-    let result = [];
+    let result = []; //should have exactly 14 columns (Column A to N), thats why we fill empty indexes with ""
     for (let j = 0; j < data.length; j++) {
         let output = data[j];
         if (output.task === constant.USER_FORM_SCREEN) {
@@ -418,20 +250,21 @@ const usergeneraldata = (data, ariadnaUserID) => {
                 output.userID,
                 ariadnaUserID,
                 output.task,
-                output.timestamp, //created
                 output.data.sex,
                 output.data.age,
                 output.data.profession,
                 output.data.yearsEduc,
                 output.data.levelEduc,
-                output.data.typeAuction
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY
             ]);
         } else if (output.task === constant.USER_INFO_SCREEN) {
             result.push([
                 output.userID,
                 ariadnaUserID,
                 output.task,
-                output.timestamp,
                 output.data[0],
                 output.data[1],
                 output.data[2],
@@ -448,9 +281,16 @@ const usergeneraldata = (data, ariadnaUserID) => {
                 output.userID,
                 ariadnaUserID,
                 output.task,
-                output.timestamp, //created
                 output.data.questionCode,
-                output.data.answer
+                output.data.answer,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY
             ]);
         } else if (output.task === constant.VISUAL_PATTERN_SCREEN || output.task === constant.VISUAL_PATTERN_DEMO_SCREEN) {
             let vp1 = output.data.map((item) => {
@@ -458,7 +298,6 @@ const usergeneraldata = (data, ariadnaUserID) => {
                     output.userID,
                     ariadnaUserID,
                     output.task,
-                    output.timestamp, //created
                     (item.level + 1), //+1 to be more idiomatic: starts from level 1 insteado of level 0
                     item.dimention,
                     JSON.stringify(item.matrix),
@@ -467,7 +306,8 @@ const usergeneraldata = (data, ariadnaUserID) => {
                     item.matrixCheckResult.filter((element) => element === constant.TILE_ERROR).length, //we get the amount of errors if any
                     item.matrixCheckResult.filter((element) => element === constant.TILE_LEFT).length, //we get the amount of errors if any
                     item.retry,
-                    item.timestamp
+                    item.timestamp,
+                    constant.TEXT_EMPTY
                 ]
             });
             result = result.concat(vp1);
@@ -478,12 +318,12 @@ const usergeneraldata = (data, ariadnaUserID) => {
 }
 
 function userinfo(data) {
-    let result = [];
 
-    const { userInfo, userID } = data;
-    const now = Date.now();
+    const { userID, userInfo, outputFormData, typeTask, ariadnaUserID } = data;
 
-    result.push([
+    let result = { info: [], form: [] };
+
+    result.info.push([
         userID,
         userInfo.os.name,
         userInfo.os.version,
@@ -494,21 +334,10 @@ function userinfo(data) {
         userInfo.engine.name,
         userInfo.engine.version,
         userInfo.screen.width,
-        userInfo.screen.height,
-        now //created
+        userInfo.screen.height
     ]);
 
-
-    return result;
-}
-
-function userform(data) {
-    let result = [];
-    // let data = this.props.data;
-    const { userID, outputFormData, typeTask, ariadnaUserID } = data;
-    const now = Date.now();
-
-    result.push([
+    result.form.push([
         userID,
         ariadnaUserID,
         outputFormData.sex,
@@ -516,11 +345,9 @@ function userform(data) {
         outputFormData.profession,
         outputFormData.yearsEduc,
         outputFormData.levelEduc,
-        outputFormData.typeAuction,
-        typeTask,
-        true, //experimentCompleted,
-        now //created
+        typeTask
     ]);
+
 
     return result;
 }
@@ -531,7 +358,6 @@ function userlogtime(data) {
 
     const { logTimestamp, userID } = data;
     const { screen, timestamp } = logTimestamp;
-    const now = Date.now();
 
     for (let i = 0; i < screen.length; i++) {
         result.push([
@@ -539,7 +365,6 @@ function userlogtime(data) {
             screen[i],
             timestamp[i],
             Math.floor((((i + 1) < screen.length) ? (timestamp[i + 1] - timestamp[i]) : 0) / 1000),
-            now //created
         ]);
     }
 
@@ -547,10 +372,9 @@ function userlogtime(data) {
 }
 
 function uservisualpattern(data) {
-    const { userID, outputVisualPattern, outputVisualPatternDemo } = data;
-    const now = Date.now();
+    const { userID, outputVisualPattern } = data;
 
-    let resultDemo = outputVisualPatternDemo.map((output) => {
+    let resultDemo = outputVisualPattern.demo.map((output) => {
         return [
             userID,
             constant.VISUAL_PATTERN_DEMO_SCREEN,
@@ -563,12 +387,11 @@ function uservisualpattern(data) {
             output.matrixCheckResult.filter((item) => item === constant.TILE_LEFT).length,
             output.retry,
             output.timestamp,
-            now //created
         ];
     });
 
 
-    let result = outputVisualPattern.map((output) => {
+    let result = outputVisualPattern.task.map((output) => {
         return [
             userID,
             constant.VISUAL_PATTERN_SCREEN,
@@ -581,7 +404,6 @@ function uservisualpattern(data) {
             output.matrixCheckResult.filter((item) => item === constant.TILE_LEFT).length,
             output.retry,
             output.timestamp,
-            now //created
         ];
     });
 
@@ -591,14 +413,12 @@ function uservisualpattern(data) {
 function userpsform(data) {
     let result = [];
     const { outputPSForm, userID } = data;
-    const now = Date.now();
 
     for (let i = 0; i < outputPSForm.length; i++) {
         result.push([
             userID,
             outputPSForm[i].questionCode,
             outputPSForm[i].answer,
-            now //created
         ]);
     }
 

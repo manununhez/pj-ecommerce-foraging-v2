@@ -1,8 +1,5 @@
 import React, { Component } from "react";
 
-// core components
-import { Progress } from 'reactstrap';
-
 //UUID
 import { v4 as uuidv4 } from 'uuid'; // For version 4
 
@@ -16,24 +13,24 @@ import FadeLoader from "react-spinners/FadeLoader";
 import SyncLoader from "react-spinners/SyncLoader";
 
 // Views
-import FooterV1 from "../Footers/FooterV1.0";
-import Instruction from "../Tasks/Instruction/Instruction"
-import UserForm from "../Tasks/UserForm/UserForm";
-import VisualPatternTask from "../Tasks/VisualPatternTask/VisualPatternTask";
-import VisualPatternDemoTask from "../Tasks/VisualPatternTask/VisualPatternDemoTask";
-import PSForm from "../Tasks/PSForm";
-import "./Experiment.css"
+import Footer from "../Footers/Footer";
+import Instruction from "./Instruction"
+import UserForm from "./UserForm";
+import VisualPatternTask from "./VisualPatternTask";
+import VisualPatternDemoTask from "./VisualPatternDemoTask";
+import PSForm from "./PSForm";
+import "./style.css"
 
 // helpers
 import * as request from '../../helpers/fetch';
 import * as constant from '../../helpers/constants';
-import { USER_INFO, randomNumber, getAppMessage } from '../../helpers/utils';
+import { USER_INFO } from '../../helpers/utils';
 
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 const ARIADNA_REDIRECT_REJECT = process.env.REACT_APP_ARIADNA_REDIRECT_REJECT;
 const ARIADNA_REDIRECT_ACCEPTED = process.env.REACT_APP_ARIADNA_REDIRECT_ACCEPTED;
 
-class Experiment extends Component {
+class Index extends Component {
     constructor(props) {
         super(props);
 
@@ -55,7 +52,6 @@ class Experiment extends Component {
                 USER_INFO.screen.width,
                 USER_INFO.screen.height
             ],
-            timestamp: Date.now(), //created
             sync: constant.STATE_NOT_SYNC
         }
         const generalOutputDefault = [userGeneralInfo]
@@ -73,40 +69,24 @@ class Experiment extends Component {
             ariadnaUserID: ariadnaUserID,
             userID: userID,
             userInfo: USER_INFO,
+            typeTask: typeTask,
             //Variables for input data
             inputNavigation: [],
             inputTextInstructions: [],
-            inputAuctionTask: [],
-            inputAuctionDemoTask: [],
             inputParticipants: [],
             inputPSForm: [],
-            inputRewardData: [],
-            inputAppGeneralMessages: [],
             //Variables for output data (results)
             generalOutput: generalOutputDefault,
             generalOutputIndexes: [],
             outputFormData: userFormDefault,
             outputPSForm: [],
-            outputVisualPattern: [],
-            outputVisualPatternDemo: [],
+            outputVisualPattern: { task: [], demo: [] },
             //utils
-            logTimestamp: {
-                screen: [],
-                timestamp: []
-            },
-            typeTask: typeTask,
-            showAlertWindowsClosing: true,
+            logTimestamp: { screen: [], timestamp: [] },
             currentScreenNumber: 0,
+            showAlertWindowsClosing: true,
             loading: false,
-            loadingSyncData: false,
-            progressBarNow: 1,
-            showPagination: false,
-            page: constant.TEXT_EMPTY,
-            error: {
-                showError: false,
-                textError: constant.TEXT_EMPTY
-            },
-            modalOpen: false
+            loadingSyncData: false
         };
 
         //session timer
@@ -126,9 +106,7 @@ class Experiment extends Component {
         // if(DEBUG) console.log('time remaining', this.idleTimer.getRemainingTime())
 
         if (this.idleTimer.getRemainingTime() === 0) {
-            const { inputAppGeneralMessages } = this.state;
-            const SESSION_TIMEOUT_MESSAGE = getAppMessage(constant.SESSION_TIMEOUT_MESSAGE, inputAppGeneralMessages)
-            alert(SESSION_TIMEOUT_MESSAGE);
+            alert(constant.SESSION_TIMEOUT_MESSAGE);
             document.location.reload();
         }
     }
@@ -144,16 +122,11 @@ class Experiment extends Component {
      ** Sequence calling:
     * fetchNavScreens
     * fetchParticipantsCounter
-    * fetchFirstTaskDemo
-    * fetchFirstTask
     * fetchPSForm
      */
     _fetchExperimentInputData() {
-        if (DEBUG) console.log("FETCH app messages")
-        request.fetchAppGeneralMessages(this._onLoadAppMessagesCallBack.bind(this))
-
         if (DEBUG) console.log("Fetch navigationScreens");
-        request.fetchNavScreens(this.state.typeTask, this._onLoadNavScreenCallBack.bind(this))
+        request.fetchUserInitialData(this.state.typeTask, this._onLoadInitialDataCallBack.bind(this))
     }
 
     /**
@@ -161,9 +134,9 @@ class Experiment extends Component {
     * 
     ** Sequence calling:
     * request.saveUserInfo()
-    * request.saveUserForm()
     * request.saveUserLogTime()
     * request.userVisualPattern()
+    * request.saveUserPSForm
      */
     _syncData() { //if the experiment is not completed, the data is still not sync
         if (DEBUG) console.log("Sync Data...");
@@ -202,7 +175,7 @@ class Experiment extends Component {
             }
         }
 
-        if (DEBUG) console.log("Syncing GeneralData now()")
+        if (DEBUG) console.log("Syncing GeneralData now")
         if (DEBUG) console.log(itemsNotSynced)
 
         for (let i = 0; i < generalOutput.length; i++) {
@@ -240,7 +213,7 @@ class Experiment extends Component {
      * @param {*} data 
      * @param {*} error 
      */
-    _onLoadNavScreenCallBack(data, error) {
+    _onLoadInitialDataCallBack(data, error) {
         if (data) {
             //Loggin the first screen of the navigation
             let timestamp = [];
@@ -249,57 +222,24 @@ class Experiment extends Component {
             timestamp.push(Date.now()); //we log the first screen we are entering in
 
             this.setState({
-                // loading: false, //Hide loading
+                loading: false, //Hide loading
                 logTimestamp: {
                     screen: screenTmp,
                     timestamp: timestamp
                 },
-                inputNavigation: data.screens
+                inputNavigation: data.screens,
+                inputParticipants: data.participants
             })
-            if (DEBUG) console.log(data)
 
-            if (DEBUG) console.log("Fetch participants counter");
-            request.fetchParticipantsCounter(this._onLoadParticipantCountCallBack.bind(this))
+            if (DEBUG) console.log(data)
         }
         else {
             this.setState({
                 loading: false,
-                error: {
-                    showError: true,
-                    textError: `${error}. Please refresh page.`
-                }
+            }, () => {
+                alert(`${error}. Please refresh page.`)
+                if (DEBUG) console.log(error)
             })
-            if (DEBUG) console.log(error)
-
-        }
-    }
-
-    /**
-     * Once the participant amount have been loaded from the spreadsheet
-     * @param {*} data 
-     * @param {*} error 
-     */
-    _onLoadParticipantCountCallBack(data, error) {
-        if (data) {
-            //Loggin the first screen of the navigation
-            this.setState({
-                loading: false, //Hide loading
-                inputParticipants: data
-            })
-
-            if (DEBUG) console.log(data)
-            if (DEBUG) console.log("Fetch PSFormCallback");
-            request.fetchPSFormData(this._onLoadPSFormCallback.bind(this))
-        }
-        else {
-            this.setState({
-                loading: false,
-                error: {
-                    showError: true,
-                    textError: `${error}. Please refresh page.`
-                }
-            })
-            if (DEBUG) console.log(error)
         }
     }
 
@@ -319,10 +259,11 @@ class Experiment extends Component {
         }
         else {
             this.setState({
-                loading: false, //Hide loading
-                error: error
+                loading: false,
+            }, () => {
+                alert(`${error}. Please refresh page.`)
+                if (DEBUG) console.log(error)
             })
-            if (DEBUG) console.log(error)
 
         }
     }
@@ -340,76 +281,17 @@ class Experiment extends Component {
             }, () => {
                 if (DEBUG) console.log(this.state)
             });
-
-            if (DEBUG) console.log("Fetch RewardData");
-            request.fetchRewardData(this._onLoadRewardDataCallback.bind(this))
         }
         else {
             this.setState({
                 loading: false,
-                error: {
-                    showError: true,
-                    textError: `${error}. Please refresh page.`
-                }
-            })
-            if (DEBUG) console.log(error);
-        }
-    }
-
-    /**
-    * Once the reward info input have been loaded from the spreadsheet
-    * @param {*} data 
-    * @param {*} error 
-    */
-    _onLoadRewardDataCallback(data, error) {
-        if (data) {
-            this.setState({
-                loading: false, //Hide loading
-                inputRewardData: data.result
             }, () => {
-                if (DEBUG) console.log(this.state)
-            });
-
-            if (DEBUG) console.log(data)
-            if (DEBUG) console.log("Fetch COMPLETED!!");
-        }
-        else {
-            this.setState({
-                loading: false,
-                error: {
-                    showError: true,
-                    textError: `${error}. Please refresh page.`
-                }
+                alert(`${error}. Please refresh page.`)
+                if (DEBUG) console.log(error)
             })
-            if (DEBUG) console.log(error);
         }
     }
 
-    /**
-     * 
-     * @param {*} data 
-     * @param {*} error 
-     */
-    _onLoadAppMessagesCallBack(data, error) {
-        if (data) {
-            //Loggin the first screen of the navigation
-            this.setState({
-                // loading: false, //Hide loading
-                inputAppGeneralMessages: data.result
-            })
-
-            if (DEBUG) console.log(data)
-        } else {
-            this.setState({
-                loading: false,
-                error: {
-                    showError: true,
-                    textError: `${error}. Please refresh page.`
-                }
-            })
-            if (DEBUG) console.log(error)
-        }
-    }
 
     /********************************************************** 
      *   Callbacks from async request - save data (see fetch.js)
@@ -424,25 +306,9 @@ class Experiment extends Component {
         if (DEBUG) console.log(data);
         if (data) {
             if (DEBUG) console.log("SaveUserInfo");
-            request.saveUserForm(this.state, this._onSaveUserFormCallBack.bind(this))
-        } else {
-            if (DEBUG) console.log("Error saving user info")
-            this.setState({ loading: false });
-        }
-    }
-
-    /**
-     * Results from saving user form data
-     * @param {*} data 
-     * @param {*} error 
-     */
-    _onSaveUserFormCallBack(data, error) {
-        if (DEBUG) console.log(data);
-        if (data) {
-            if (DEBUG) console.log("SaveUserForm");
             request.saveUserLogTime(this.state, this._onSaveUserLogTimeCallBack.bind(this))
         } else {
-            if (DEBUG) console.log("Error saving user form")
+            if (DEBUG) console.log("Error saving user info")
             this.setState({ loading: false });
         }
     }
@@ -464,10 +330,10 @@ class Experiment extends Component {
     }
 
     /**
- * Results from saving user visual pattern data
- * @param {*} data 
- * @param {*} error 
- */
+     * Results from saving user visual pattern data
+     * @param {*} data 
+     * @param {*} error 
+     */
     _onSaveUserVisualPatternCallBack(data, error) {
         if (DEBUG) console.log(data);
         if (data) {
@@ -521,13 +387,11 @@ class Experiment extends Component {
         }
         else {
             this.setState({
-                loadingSyncData: false,
-                error: {
-                    showError: true,
-                    textError: `${error}. Please refresh page.`
-                }
+                loading: false,
+            }, () => {
+                alert(`${error}. Please refresh page.`)
+                if (DEBUG) console.log(error)
             })
-            if (DEBUG) console.log(error)
         }
     }
 
@@ -543,7 +407,6 @@ class Experiment extends Component {
      */
     formHandler = (formData) => {
         const { generalOutput, userID } = this.state
-        const now = Date.now();
 
         if (DEBUG) console.log(formData)
 
@@ -561,7 +424,6 @@ class Experiment extends Component {
                 userID: userID,
                 task: constant.USER_FORM_SCREEN,
                 data: formData,
-                timestamp: now,
                 sync: constant.STATE_NOT_SYNC
             })
         } else { //we update existing values
@@ -569,7 +431,6 @@ class Experiment extends Component {
                 userID: userID,
                 task: constant.USER_FORM_SCREEN,
                 data: formData,
-                timestamp: now,
                 sync: constant.STATE_NOT_SYNC
             }
         }
@@ -578,6 +439,8 @@ class Experiment extends Component {
         this.setState({
             outputFormData: formData,
             generalOutput: generalOutput
+        }, () => {
+            this._validatePressedEnterButtonToNextPage()
         })
     }
 
@@ -586,33 +449,25 @@ class Experiment extends Component {
      * PSFORM component (PSForm.js)
      * @param {*} evt 
      */
-    psFormHandler = (evt) => {
+    psFormHandler = (result) => {
         const { outputPSForm, generalOutput, userID } = this.state;
-        const now = Date.now();
 
-        const selectedQuestionCode = evt.target.id;
-        const selectedQuestionValue = evt.target.value;
-
-        const psFormValue = { questionCode: selectedQuestionCode, answer: selectedQuestionValue };
-
-        if (DEBUG) console.log(selectedQuestionCode)
-        if (DEBUG) console.log(selectedQuestionValue)
-
-        if (selectedQuestionCode === constant.TEXT_EMPTY || selectedQuestionValue === constant.TEXT_EMPTY) return
+        if (DEBUG) console.log(result.questionCode)
+        if (DEBUG) console.log(result.answer)
 
         let outputPSFormIndex = -1;
         //if something already exists, we loop through to find the element
         for (let i = 0; i < outputPSForm.length; i++) {
-            if (outputPSForm[i].questionCode === selectedQuestionCode) {  //if it is something already selected, we find that code and updated it
+            if (outputPSForm[i].questionCode === result.questionCode) {  //if it is something already selected, we find that code and updated it
                 outputPSFormIndex = i;
                 break;
             }
         }
 
         if (outputPSFormIndex === -1) {
-            outputPSForm.push(psFormValue)
+            outputPSForm.push(result)
         } else {
-            outputPSForm[outputPSFormIndex] = psFormValue
+            outputPSForm[outputPSFormIndex] = result
         }
 
 
@@ -620,27 +475,24 @@ class Experiment extends Component {
         let generalOutputIndex = -1;
         for (let i = 0; i < generalOutput.length; i++) {
             if ((generalOutput[i].task === constant.PSFORM_SCREEN) &&
-                (generalOutput[i].data.questionCode === selectedQuestionCode)) {
+                (generalOutput[i].data.questionCode === result.questionCode)) {
                 generalOutputIndex = i;
                 break;
             }
         }
 
-
         if (generalOutputIndex === -1) {
             generalOutput.push({
                 userID: userID,
                 task: constant.PSFORM_SCREEN,
-                data: psFormValue,
-                timestamp: now,
+                data: result,
                 sync: constant.STATE_NOT_SYNC
             })
         } else {
             generalOutput[generalOutputIndex] = {
                 userID: userID,
                 task: constant.PSFORM_SCREEN,
-                data: psFormValue,
-                timestamp: now,
+                data: result,
                 sync: constant.STATE_NOT_SYNC
             }
         }
@@ -649,6 +501,12 @@ class Experiment extends Component {
         this.setState({
             outputPSForm: outputPSForm,
             generalOutput: generalOutput
+        }, () => {
+            console.log(this.state)
+            this._checkSyncGeneralData()
+
+            //we simulate a space btn pressed because Auction task already finishes with a space btn pressed
+            this._validatePressedSpaceKeyToNextPage()
         })
     }
 
@@ -659,20 +517,20 @@ class Experiment extends Component {
     visualPatternTaskHandler = (results) => {
         if (DEBUG) console.log(results)
 
-        const { generalOutput, userID } = this.state;
-        const now = Date.now();
+        const { generalOutput, userID, outputVisualPattern } = this.state;
 
         generalOutput.push({
             userID: userID,
             task: constant.VISUAL_PATTERN_SCREEN,
             data: results,
-            timestamp: now,
             sync: constant.STATE_NOT_SYNC
         })
 
+        outputVisualPattern.task = results
+
         //save results
         this.setState({
-            outputVisualPattern: results,
+            outputVisualPattern: outputVisualPattern,
             generalOutput: generalOutput
         }, () => {
             //we simulate a space btn pressed because VisualPattern already finishes with a space btn pressed
@@ -686,20 +544,20 @@ class Experiment extends Component {
      */
     visualPatternDemoTaskHandler = (results) => {
         if (DEBUG) console.log(results)
-        const { generalOutput, userID } = this.state;
-        const now = Date.now();
+        const { generalOutput, userID, outputVisualPattern } = this.state;
 
         generalOutput.push({
             userID: userID,
             task: constant.VISUAL_PATTERN_DEMO_SCREEN,
             data: results,
-            timestamp: now,
             sync: constant.STATE_NOT_SYNC
         })
 
+        outputVisualPattern.demo = results
+
         //save results
         this.setState({
-            outputVisualPatternDemo: results,
+            outputVisualPattern: outputVisualPattern,
             generalOutput: generalOutput
         }, () => {
             //we simulate a space btn pressed because VisualPattern already finishes with a space btn pressed
@@ -715,20 +573,18 @@ class Experiment extends Component {
     * Validate user form results
     */
     validateForm() {
-
-        const { outputFormData, inputParticipants, inputAppGeneralMessages } = this.state
-        const { sex, age, yearsEduc, levelEduc, profession } = outputFormData;
-        const { participants, config, groups } = inputParticipants
-
+        const { outputFormData, inputParticipants } = this.state
+        const { sex, age, yearsEduc, levelEduc } = outputFormData;
+        const groups = constant.PARTICIPANTS_GROUPS
         const firstGroupAgeLimit = groups[0]
         const secondGroupAgeLimit = groups[1]
         const thirdGroupAgeLimit = groups[2]
 
-        const participantsLimit = parseInt(config.participantsLimit)
-        const yearsEducLimit = parseInt(config.yearsEducLimit)
+        const participantsLimit = constant.PARTICIPANTS_PER_SEX_PER_GROUP_LIMIT
+        const yearsEducLimit = constant.YEARS_EDUCATION_LIMIT
 
-        const femaleParticipants = participants[0];
-        const maleParticipants = participants[1];
+        const femaleParticipants = inputParticipants[0];
+        const maleParticipants = inputParticipants[1];
 
         const indexFirstGroup = 0
         const indexSecondGroup = 1
@@ -738,38 +594,11 @@ class Experiment extends Component {
         if (DEBUG) console.log(outputFormData)
         let data = {
             isValid: false,
-            textError: constant.TEXT_EMPTY,
-            showError: false,
             redirect: false
         }
 
         let amountParticipant = 0;
         let ageIncorrectIntervalFlag = false;
-
-        // CONTROL OF EMPTY_TEXT
-        if (age === 0) {
-            const ERROR_5 = getAppMessage(constant.ERROR_5, inputAppGeneralMessages)
-            data.textError = ERROR_5;
-            data.showError = true;
-        } else if (profession === constant.TEXT_EMPTY) {
-            const ERROR_7 = getAppMessage(constant.ERROR_7, inputAppGeneralMessages)
-            data.textError = ERROR_7;
-            data.showError = true;
-        } else if (levelEduc === constant.FORM_LEVEL_EDUC_DEFAULT) {
-            const ERROR_11 = getAppMessage(constant.ERROR_11, inputAppGeneralMessages)
-            data.textError = ERROR_11;
-            data.showError = true;
-        } else if (yearsEduc === 0) {
-            const ERROR_6 = getAppMessage(constant.ERROR_6, inputAppGeneralMessages)
-            data.textError = ERROR_6;
-            data.showError = true;
-        } else if (sex === constant.TEXT_EMPTY) {
-            const ERROR_14 = getAppMessage(constant.ERROR_14, inputAppGeneralMessages)
-            data.textError = ERROR_14;
-            data.showError = true;
-        }
-
-        if (data.showError) return data;
 
         // CONTROL OF AMOUNT OF PARTICIPANTS
         if (age >= parseInt(firstGroupAgeLimit.minAge) &&
@@ -785,11 +614,10 @@ class Experiment extends Component {
             ageIncorrectIntervalFlag = true;
         }
 
+
         if (ageIncorrectIntervalFlag || parseInt(amountParticipant) >= participantsLimit ||
             levelEduc === constant.FORM_LEVEL_EDUC_INITIAL || yearsEduc < yearsEducLimit) {
-            const ERROR_12 = getAppMessage(constant.ERROR_12, inputAppGeneralMessages)
             data.redirect = true;
-            data.textError = ERROR_12;
         }
 
         if (!data.showError && !data.redirect) data.isValid = true;
@@ -802,40 +630,9 @@ class Experiment extends Component {
      * Validate PS Form questionaries results
      */
     validatePSForm() {
-        const { currentScreenNumber, inputNavigation, inputPSForm, inputAppGeneralMessages, outputPSForm } = this.state
+        const { inputPSForm, outputPSForm } = this.state
 
-        let data = {
-            isValid: true,
-            textError: constant.TEXT_EMPTY,
-            showError: false
-        }
-        let currentPSFormNumber = parseInt(inputNavigation[currentScreenNumber].pageId) - 1;
-        let currentInputPSForm = inputPSForm[currentPSFormNumber];
-
-        if (outputPSForm.length === 0) {
-            const ERROR_9 = getAppMessage(constant.ERROR_9, inputAppGeneralMessages)
-
-            data.isValid = false;
-            data.textError = ERROR_9;
-            data.showError = true;
-        } else {
-            let found = false;
-            for (let i = 0; i < outputPSForm.length; i++) {
-                if (currentInputPSForm.questionCode === outputPSForm[i].questionCode) {
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                const ERROR_10 = getAppMessage(constant.ERROR_10, inputAppGeneralMessages)
-
-                data.isValid = false;
-                data.textError = ERROR_10;
-                data.showError = true;
-            }
-        }
-        return data;
+        return { isValid: (outputPSForm.length === inputPSForm.length) }
     }
 
     /**
@@ -844,42 +641,16 @@ class Experiment extends Component {
     validateVisualPattern() {
         const { outputVisualPattern } = this.state;
 
-        let data = {
-            isValid: false,
-            textError: constant.TEXT_EMPTY,
-            showError: false
-        }
-
-        if (outputVisualPattern.length > 0) {
-            data.isValid = true;
-        } else {
-            data.textError = "Finish the task first!";
-            data.showError = true;
-        }
-
-        return data;
+        return { isValid: (outputVisualPattern.task.length > 0) }
     }
 
     /**
      * Validate Visual Pattern demo task results
      */
     validateVisualPatternDemo() {
-        const { outputVisualPatternDemo } = this.state;
+        const { outputVisualPattern } = this.state;
 
-        let data = {
-            isValid: false,
-            textError: constant.TEXT_EMPTY,
-            showError: false
-        }
-
-        if (outputVisualPatternDemo.length > 0) {
-            data.isValid = true;
-        } else {
-            data.textError = "Finish the task first!";
-            data.showError = true;
-        }
-
-        return data;
+        return { isValid: (outputVisualPattern.demo.length > 0) }
     }
 
     /**
@@ -887,53 +658,25 @@ class Experiment extends Component {
      */
     _validatePressedSpaceKeyToNextPage() {
         const { currentScreenNumber, inputNavigation } = this.state;
-        const currentScreen = inputNavigation[currentScreenNumber].screen;
+        const { screen, type } = inputNavigation[currentScreenNumber];
 
         let totalLength = inputNavigation.length;
 
         if (currentScreenNumber < totalLength) { //To prevent keep transition between pages
 
             console.log("Current Screen:")
-            console.log(currentScreen)
-            if (currentScreen.includes(constant.INSTRUCTION_SCREEN) ||
-                currentScreen === constant.REWARD_INFO_SCREEN) {
+            console.log(screen)
+            if (type === constant.INSTRUCTION_SCREEN) {
                 this._goToNextTaskInInputNavigation();
-            } else if (currentScreen === constant.PSFORM_SCREEN) {
+            } else if (screen === constant.PSFORM_SCREEN) {
                 let data = this.validatePSForm();
                 if (data.isValid) this._goToNextTaskInInputNavigation();
-                else {
-                    //Show errors!
-                    this.setState({
-                        error: {
-                            showError: data.showError,
-                            textError: data.textError
-                        }
-                    });
-                }
-            } else if (currentScreen === constant.VISUAL_PATTERN_SCREEN) {
+            } else if (screen === constant.VISUAL_PATTERN_SCREEN) {
                 let data = this.validateVisualPattern();
                 if (data.isValid) this._goToNextTaskInInputNavigation();
-                else {
-                    //Show errors!
-                    this.setState({
-                        error: {
-                            showError: data.showError,
-                            textError: data.textError
-                        }
-                    });
-                }
-            } else if (currentScreen === constant.VISUAL_PATTERN_DEMO_SCREEN) {
+            } else if (screen === constant.VISUAL_PATTERN_DEMO_SCREEN) {
                 let data = this.validateVisualPatternDemo();
                 if (data.isValid) this._goToNextTaskInInputNavigation();
-                else {
-                    //Show errors!
-                    this.setState({
-                        error: {
-                            showError: data.showError,
-                            textError: data.textError
-                        }
-                    });
-                }
             }
         }
     }
@@ -956,17 +699,9 @@ class Experiment extends Component {
 
                     this._goToNextTaskInInputNavigation();
                 } else {
-                    if (data.showError) {
-                        //Show errors!
-                        this.setState({
-                            error: {
-                                showError: data.showError,
-                                textError: data.textError
-                            }
-                        });
-                    } else if (data.redirect) {
+                    if (data.redirect) {
                         //we redirect to Ariadna
-                        alert(data.textError);
+                        alert(constant.ERROR_12);
                         this.setState({ showAlertWindowsClosing: false }, () => {
                             window.location.replace(ARIADNA_REDIRECT_REJECT);
                         })
@@ -978,20 +713,17 @@ class Experiment extends Component {
     }
 
     _syncDataAfterUserValidation() {
-        const { inputParticipants, outputFormData } = this.state;
+        const { outputFormData } = this.state;
         const { sex, age } = outputFormData;
-        const { groups } = inputParticipants
-
+        const groups = constant.PARTICIPANTS_GROUPS
         const firstGroupAgeLimit = groups[0]
         const secondGroupAgeLimit = groups[1]
         const thirdGroupAgeLimit = groups[2]
 
         let groupAge = 0
         //We are leaving user form screen, so we called texts whatever next page is (not only instructions)          
-        if (sex === constant.FEMALE_VALUE)
-            request.fetchAppTextFemale(this._onLoadAppTextCallBack.bind(this));
-        else
-            request.fetchAppTextMale(this._onLoadAppTextCallBack.bind(this));
+        request.fetchAppText(sex, this._onLoadAppTextCallBack.bind(this));
+        request.fetchPSFormData(sex, this._onLoadPSFormCallback.bind(this));
 
         if (age >= parseInt(firstGroupAgeLimit.minAge) &&
             age <= parseInt(firstGroupAgeLimit.maxAge)) { //firstGroup
@@ -1009,26 +741,23 @@ class Experiment extends Component {
      * We move to next page, according to inputNavigation input data
      */
     _goToNextTaskInInputNavigation() {
-        const { currentScreenNumber, inputNavigation, logTimestamp, showAlertWindowsClosing } = this.state;
-
         console.log("_goToNextTaskInInputNavigation")
+
+        const { currentScreenNumber, inputNavigation, logTimestamp, showAlertWindowsClosing } = this.state;
+        const { screen, timestamp } = logTimestamp
+
         let currentScreen = inputNavigation[currentScreenNumber].screen;
         let loading = (currentScreen === constant.USER_FORM_SCREEN); //show loading if we are leaving user form, because text is being call
         let now = Date.now();
-        let screens = logTimestamp.screen;
-        let timestamps = logTimestamp.timestamp;
-        let showPagination = false; //default
         let totalLength = inputNavigation.length;
-        let page = constant.TEXT_EMPTY;
         let nextScreenNumber = currentScreenNumber + 1;
         let showAlertWindowsClosingTmp = showAlertWindowsClosing;
 
         if (nextScreenNumber < totalLength) {
             let nextScreen = inputNavigation[nextScreenNumber].screen;
-            let progressBarNow = ((currentScreenNumber / totalLength) * 100) + 1; //progressBarNow init value is 1, so now we add +1 in order to continue that sequence
 
-            screens.push(nextScreen);//set timestamp
-            timestamps.push(now);
+            screen.push(nextScreen);//set timestamp
+            timestamp.push(now);
 
             if (nextScreenNumber === (totalLength - 1)) { //Last screen!
                 // SYNC DATA
@@ -1041,18 +770,11 @@ class Experiment extends Component {
                 showAlertWindowsClosing: showAlertWindowsClosingTmp,
                 currentScreenNumber: nextScreenNumber,
                 logTimestamp: {
-                    screen: screens,
-                    timestamp: timestamps
+                    screen: screen,
+                    timestamp: timestamp
                 },
-                error: {
-                    showError: false,
-                    textError: constant.TEXT_EMPTY
-                },
-                showPagination: showPagination,
-                page: page,
                 loading: loading,
                 modalOpen: false,
-                progressBarNow: progressBarNow
             }, () => {
                 if (DEBUG) console.log(this.state)
 
@@ -1082,8 +804,6 @@ class Experiment extends Component {
     handleKeyDownEvent = (event) => {
         if (event.keyCode === constant.SPACE_KEY_CODE) { //Transition between screens
             this._validatePressedSpaceKeyToNextPage()
-        } else if (event.keyCode === constant.ENTER_KEY_CODE) {
-            this._validatePressedEnterButtonToNextPage()
         }
     }
 
@@ -1135,14 +855,11 @@ class Experiment extends Component {
     }
 
     render() {
-        const { progressBarNow, loading, loadingSyncData, showPagination, page } = this.state;
+        const { loading, loadingSyncData } = this.state;
         const timeout = 1000 * 60 * (60 * 3); //3horas
 
         return (
             <main ref="main">
-                <div>
-                    <Progress value={progressBarNow} />
-                </div>
                 <section className="section-sm">
                     {changePages(this.state, this)}
                 </section>
@@ -1171,7 +888,6 @@ class Experiment extends Component {
                         loading={loadingSyncData}
                     />
                 </div>
-                {showPagination ? <div className="pagination">{page}</div> : <></>}
                 { isFooterShownInCurrentScreen(this.state)}
             </main>
         )
@@ -1182,85 +898,68 @@ function isFooterShownInCurrentScreen(state) {
     const { currentScreenNumber, inputNavigation } = state;
     if (inputNavigation.length === 0) return; //data was not loaded yet
 
-
-    const currentScreen = inputNavigation[currentScreenNumber].screen
+    const { screen, type } = inputNavigation[currentScreenNumber];
     let isFooterShown = false
     let footerText = constant.TEXT_FOOTER
 
-    if (currentScreen.includes(constant.INSTRUCTION_SCREEN)) {
-        if (currentScreen !== constant.VISUAL_PATTERN_INSTRUCTION_SCREEN &&
-            currentScreen !== constant.VISUAL_PATTERN_DEMO_INSTRUCTION_FINISH_SCREEN &&
-            currentScreen !== constant.VISUAL_PATTERN_INSTRUCTION_FINISH_SCREEN) {
+    if (type === constant.INSTRUCTION_SCREEN) {
+        if (screen.includes(constant.VISUAL_PATTERN)) {
             isFooterShown = true;
         }
-    } else if (currentScreen === constant.REWARD_INFO_SCREEN ||
-        currentScreen === constant.USER_FORM_SCREEN ||
-        currentScreen === constant.PSFORM_SCREEN) {
+    } else if (screen === constant.USER_FORM_SCREEN ||
+        screen === constant.PSFORM_SCREEN) {
         isFooterShown = true;
     }
 
-    if (currentScreen === constant.USER_FORM_SCREEN) {
+    if (screen === constant.USER_FORM_SCREEN) {
         footerText = constant.TEXT_FOOTER_ENTER
     }
 
-    return ((isFooterShown) ? <FooterV1 text={footerText} /> : <></>)
+    return ((isFooterShown) ? <Footer text={footerText} /> : <></>)
 }
 
 /**
  * Call to a specific component. Prepare the input data for the component
- * @param {*} state 
- * @param {*} formHandler
+ * @param {*} state
+ * @param {*} context
  */
 function changePages(state, context) {
 
     const { currentScreenNumber,
         inputNavigation,
         inputTextInstructions,
-        error,
-        inputPSForm,
-        outputPSForm,
-        inputAppGeneralMessages } = state;
+        inputPSForm } = state;
     const totalLength = inputNavigation.length;
 
     if (totalLength > 0) { //If input navigation has been called
-        const currentScreen = inputNavigation[currentScreenNumber].screen
-        const pageID = parseInt(inputNavigation[currentScreenNumber].pageId)
-        const text = getTextForCurrentScreen(inputTextInstructions, currentScreen);
-
-        document.body.style.backgroundColor = currentScreen.includes(constant.INSTRUCTION_SCREEN) ? constant.WHITE : constant.LIGHT_GRAY;
+        const { screen, type } = inputNavigation[currentScreenNumber];
+        document.body.style.backgroundColor = (type === constant.INSTRUCTION_SCREEN) ? constant.WHITE : constant.LIGHT_GRAY;
 
         if (currentScreenNumber < totalLength) { //To prevent keep transition between pages
-            if (currentScreen === constant.USER_FORM_SCREEN) {
-                return <UserForm
-                    action={context.formHandler}
-                    error={error}
-                />;
-            } else if (currentScreen.includes(constant.INSTRUCTION_SCREEN)) {
+
+            if (type === constant.INSTRUCTION_SCREEN) {
+                const text = getTextForCurrentScreen(inputTextInstructions, screen);
                 return <Instruction
                     text={text}
-                    name={currentScreen}
+                    name={screen}
                 />;
-            } else if (currentScreen === constant.VISUAL_PATTERN_SCREEN) {
+            } else if (screen === constant.USER_FORM_SCREEN) {
+                return <UserForm
+                    action={context.formHandler}
+                />;
+            } else if (screen === constant.VISUAL_PATTERN_SCREEN) {
                 return <VisualPatternTask
                     action={context.visualPatternTaskHandler}
-                    appMessages={inputAppGeneralMessages}
                 />;
-            } else if (currentScreen === constant.VISUAL_PATTERN_DEMO_SCREEN) {
+            } else if (screen === constant.VISUAL_PATTERN_DEMO_SCREEN) {
                 return <VisualPatternDemoTask
                     action={context.visualPatternDemoTaskHandler}
-                    appMessages={inputAppGeneralMessages}
                 />;
-            } else if (currentScreen === constant.PSFORM_SCREEN) {
-                const currentPSForm = inputPSForm[pageID - 1];
+            } else if (screen === constant.PSFORM_SCREEN) {
                 if (inputPSForm.length > 0) { //if we have received already the input data for psform
-                    const textPSForm = getTextForCurrentScreen(inputTextInstructions, currentPSForm.screen);
                     return <PSForm
                         action={context.psFormHandler}
-                        text={textPSForm}
-                        data={currentPSForm}
-                        questionsText={inputTextInstructions}
-                        output={outputPSForm}
-                        error={error}
+                        data={inputPSForm}
                     />;
                 }
             }
@@ -1315,4 +1014,4 @@ function getFontSize(item, fontSize, key) {
     }
 }
 
-export default Experiment;
+export default Index;

@@ -6,7 +6,18 @@ export const RED = "red";
 
 export const TEXT_EMPTY = "";
 
+//General config parameters
+export const PARTICIPANTS_PER_SEX_PER_GROUP_LIMIT = 30;
+export const YEARS_EDUCATION_LIMIT = 11;
+export const PARTICIPANTS_PER_SCENARIO_PER_GROUP_LIMIT = 30;
+export const PARTICIPANTS_GROUPS = [
+    { minAge: 19, maxAge: 30 },
+    { minAge: 42, maxAge: 53 },
+    { minAge: 65, maxAge: 76 }
+]
+
 //Visual Pattern
+export const VISUAL_PATTERN = "VisualPattern"
 export const TILE_SUCCESS = 1;
 export const TILE_EMPTY = 0;
 export const TILE_ERROR = 2;
@@ -25,13 +36,6 @@ export const VISUAL_PATTERN_DEMO_DIMENTION = [
 export const VISUAL_PATTERN_TIMESCREEN_SECS = 2;
 export const VISUAL_PATTERN_RETRY_ATTEMPTS = 2;
 export const VISUAL_PATTERN_DEMO_RETRY_ATTEMPTS = 1;
-
-//AuctionTask
-export const PRICE_STEP = 10;
-export const FREQ_CHANGE_MS = 500;
-export const BID_STATE_NOT_STARTED = 0;
-export const BID_STATE_RUNNING = 1;
-export const BID_STATE_FINISHED = 2;
 
 //SYNC
 export const STATE_SYNCING = 2;
@@ -84,49 +88,27 @@ export const EVENT_UNLOAD = "unload";
 //screen names
 export const USER_INFO_SCREEN = "UserInfo";
 export const USER_FORM_SCREEN = "UserForm";
-export const REWARD_INFO_SCREEN = "RewardScreen";
 export const INSTRUCTION_SCREEN = "Instruction";
 export const PSFORM_SCREEN = "PsychologyForm";
 export const VISUAL_PATTERN_SCREEN = "VisualPatternTask";
-export const VISUAL_PATTERN_DEMO_SCREEN = "VisualPatternTask Demo";
-export const VISUAL_PATTERN_INSTRUCTION_SCREEN = "VisualPatternInstruction";
-export const VISUAL_PATTERN_DEMO_INSTRUCTION_FINISH_SCREEN = "VisualPatternDemoInstructionFinish";
-export const VISUAL_PATTERN_INSTRUCTION_FINISH_SCREEN = "VisualPatternInstructionFinish";
-
-//Sheetnames
-export const USER_PARTICIPANTS_COUNTER_SHEETNAME = "input-userexperimentcount";
-export const USER_INFO_SHEETNAME = "userinfo";
-export const USER_LOGTIME_SHEETNAME = "userlogtime";
-export const USER_FORM_SHEETNAME = "userform";
-export const USER_GENERAL_DATA_SHEETNAME = "usergeneraldata";
-export const VERSIONS_SHEETNAME = "input-versions";
-export const INPUT_APP_MESSAGES = "input-app-messages";
-export const APP_TEXT_FEMALE_SHEETNAME = "input-text-female";
-export const APP_TEXT_MALE_SHEETNAME = "input-text-male";
-export const USER_VISUAL_PATTERN_SHEETNAME = "uservisualpattern";
-export const USER_PSFORM_SHEETNAME = "userpsform";
-export const PSFORM_SHEETNAME = "input-psychologyform";
-export const INPUT_REWARD_SHEETNAME = "input-reward";
-
+export const VISUAL_PATTERN_DEMO_SCREEN = "VisualPatternTaskDemo";
 
 //General App messages KEYS
-export const REWARD_RESULT_MESSAGE = "REWARD_RESULT_MESSAGE";
-export const REWARD_BONUS_MESSAGE = "REWARD_BONUS_MESSAGE";
-export const ERROR_1 = "ERROR_1";//"You have to select a choice first!"
-export const ERROR_5 = "ERROR_5";//Age field cannot be empty
-export const ERROR_6 = "ERROR_6";//Years Education field cannot be empty!
-export const ERROR_7 = "ERROR_7";//Profession field cannot be empty!
-export const ERROR_8 = "ERROR_8";//Please rate all the options first!
-export const ERROR_9 = "ERROR_9";//You need to complete the questions first!
-export const ERROR_10 = "ERROR_10";//Please verify all the questions were checked
-export const ERROR_11 = "ERROR_11";//You need to select an education level
-export const ERROR_12 = "ERROR_12"; //We are sorry, but unfortunately you do not meet all the conditions for participating in the study or the number of eligible participants is already exceeded
-export const ERROR_13 = "ERROR_13";//Please rate all the options first!
-export const ERROR_14 = "ERROR_14";//Age field cannot be empty
-export const SESSION_TIMEOUT_MESSAGE = "SESSION_TIMEOUT_MESSAGE";
-export const VISUAL_PATTERN_RESULTS_PRESS_SPACE = "VISUAL_PATTERN_RESULTS_PRESS_SPACE";
-export const VISUAL_PATTERN_RESULTS_FAILED = "VISUAL_PATTERN_RESULTS_FAILED";
-export const VISUAL_PATTERN_RESULTS_CORRECT = "VISUAL_PATTERN_RESULTS_CORRECT";
-export const VISUAL_PATTERN_TEXT_START_PRESS_SPACE = "VISUAL_PATTERN_TEXT_START_PRESS_SPACE";
-export const VISUAL_PATTERN_TEXT2 = "VISUAL_PATTERN_TEXT2";
+export const ERROR_1 = "Prosimy o dokonanie wyboru.";//"You have to select a choice first!"
+export const ERROR_5 = "Pole Wiek nie może pozostać puste.";//Age field cannot be empty
+export const ERROR_6 = "Pole Lata formalnej edukacji nie może pozostać puste.";//Years Education field cannot be empty!
+export const ERROR_7 = "Pole Zawód nie może pozostać puste.";//Profession field cannot be empty!
+export const ERROR_8 = "Proszę najpierw ocenić wszystkie opcje.";//Please rate all the options first!
+export const ERROR_9 = "Najpierw należy odpowiedzieć na wszystkie pytania.";//You need to complete the questions first!
+export const ERROR_10 = "Proszę upewnić się, że odpowiedź na pytanie została zaznaczona.";//Please verify all the questions were checked
+export const ERROR_11 = "Proszę wybrać poziom wykształcenia.";//You need to select an education level
+export const ERROR_12 = "Przepraszamy, ale niestety nie spełniasz wszystkich warunków uczestnictwa w badaniu lub przekroczona jest liczbę osób, która może wziąć w nim udział."; //We are sorry, but unfortunately you do not meet all the conditions for participating in the study or the number of eligible participants is already exceeded
+export const ERROR_13 = "Proszę najpierw wybrać conajmniej jedną opcję.";//Please rate all the options first!
+export const ERROR_14 = "Pole Płeć nie może pozostać puste.";//Age field cannot be empty
+export const SESSION_TIMEOUT_MESSAGE = "Z powodu upływu czasu sesja została zamknięta";
+export const VISUAL_PATTERN_RESULTS_PRESS_SPACE = "Naciśnij spację, aby przejść do kolejnej planszy.";
+export const VISUAL_PATTERN_RESULTS_FAILED = "Niestety nie udało Ci się poprawnie zaznaczyć wszystkich pól.";
+export const VISUAL_PATTERN_RESULTS_CORRECT = "Brawo! Udało Ci się poprawnie zaznaczyć wszystkie pola.";
+export const VISUAL_PATTERN_TEXT_START_PRESS_SPACE = "Naciśnij spację, aby przesłać swoje rozwiązanie.";
+export const VISUAL_PATTERN_INSTRUCTION = "Spróbuj odtworzyć wzór wyświetlony na poprzednim ekranie. Zaznaczasz i odznaczasz pola klikając na nie lewym przyciskiem myszy.";
 

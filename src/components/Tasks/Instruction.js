@@ -2,9 +2,7 @@ import React from "react";
 
 import { Container, Row } from "reactstrap";
 
-
-import "./Instruction.css";
-import "../font.css"
+import "./style.css";
 
 class Instruction extends React.Component {
     render() {
