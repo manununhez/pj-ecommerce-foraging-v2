@@ -62,10 +62,6 @@ class VisualPatternDemoTask extends React.Component {
             startPressSpace: VISUAL_PATTERN_TEXT_START_PRESS_SPACE,
             textInstruction: VISUAL_PATTERN_INSTRUCTION
         };
-
-        this.handleClick = this._handleClick.bind(this);
-        this.handleKeyDownEvent = this._handleKeyDownEvent.bind(this);
-
     }
 
     componentDidMount() {
@@ -152,7 +148,7 @@ class VisualPatternDemoTask extends React.Component {
         });
     }
 
-    _handleKeyDownEvent(event) {
+    handleKeyDownEvent = (event) => {
         if (event.keyCode === SPACE_KEY_CODE) { //Transition between screens
             const { matrixResult, showInitMessage, isLevelFinished, showCompletedTable, showResults, seconds } = this.state
             const isResultsShown = !showCompletedTable && !showInitMessage && showResults && isLevelFinished
@@ -265,7 +261,7 @@ class VisualPatternDemoTask extends React.Component {
     }
 
 
-    _handleClick(index) {
+    handleClick = (index) => {
         const { matrixResult, isLevelFinished } = this.state;
 
         if (!isLevelFinished) { //to avoid double click in a tile already selected

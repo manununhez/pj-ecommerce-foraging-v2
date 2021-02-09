@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 
 import {
     Card,
@@ -16,24 +16,23 @@ import NumberFormat from 'react-number-format';
 
 import * as constant from '../../helpers/constants';
 
-class PSForm extends React.Component {
-    constructor(props) {
-        super(props);
+export default function PSForm(props) {
+    const defaultError = {
+        showError: false,
+        textError: constant.TEXT_EMPTY
+    }
+    const [error, setError] = useState(defaultError);
+    const [result, setResult] = useState(constant.TEXT_EMPTY);
+    const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
 
-        this.state = {
-            currentQuestion: this.props.data[0],
-            currentQuestionNumber: 0,
-            currentResult: constant.TEXT_EMPTY,
-            error: {
-                showError: false,
-                textError: constant.TEXT_EMPTY
+    useEffect(() => {
+        const handleKeyDownEvent = (event) => {
+            if (event.keyCode === constant.SPACE_KEY_CODE) { //Transition between screens
+                validateResults()
             }
         }
-    }
 
-    componentDidMount() {
-        //for keyboard detection
-        document.addEventListener(constant.EVENT_KEY_DOWN, this.handleKeyDownEvent, false);
+        document.addEventListener(constant.EVENT_KEY_DOWN, handleKeyDownEvent, false);
 
         // HTML prevent space bar from scrolling page
         window.addEventListener(constant.EVENT_KEY_DOWN, function (e) {
@@ -41,229 +40,198 @@ class PSForm extends React.Component {
                 e.preventDefault();
             }
         });
-    }
 
-    componentWillUnmount() {
-        document.removeEventListener(constant.EVENT_KEY_DOWN, this.handleKeyDownEvent, false);
-    }
+        return () => {
+            document.removeEventListener(constant.EVENT_KEY_DOWN, handleKeyDownEvent, false);
+        };
+    });
 
-    handleKeyDownEvent = (event) => {
-        if (event.keyCode === constant.SPACE_KEY_CODE) { //Transition between screens
-            this._validateResults()
-        }
-    }
-
-    _validateResults() {
-        const { currentQuestionNumber, currentResult } = this.state
-
-        if (currentResult === undefined || currentResult === constant.TEXT_EMPTY) {
+    const validateResults = () => {
+        if (result === undefined || result === constant.TEXT_EMPTY) {
             const error = { showError: true, textError: constant.ERROR_9 }
-            this.setState({ error: error })
+            setError(error);
         } else {
-            if (currentQuestionNumber === (this.props.data.length - 1)) {
-                this._finishAndSendResults()
+            const currentQuestion = props.data[currentQuestionNumber]
+            if (currentQuestion.number === (props.data.length - 1)) {
+                finishAndSendResults()
             } else {
-                this._goToNextQuestion()
+                goToNextQuestion()
             }
         }
     }
 
-    _goToNextQuestion() {
-        const { currentResult, currentQuestion } = this.state
-        const result = { questionCode: currentQuestion.questionCode, answer: currentResult }
-        const error = { showError: false, textError: constant.TEXT_EMPTY }
+    const goToNextQuestion = () => {
+        const currentQuestion = props.data[currentQuestionNumber]
 
-        this.setState(({ currentQuestionNumber }) => ({
-            currentQuestionNumber: currentQuestionNumber + 1,
-            currentQuestion: this.props.data[currentQuestionNumber + 1],
-            currentResult: constant.TEXT_EMPTY,
-            error: error
-        }), () => {
-            this.props.action(result)
-        })
+        props.action({ questionCode: currentQuestion.questionCode, answer: result })
+
+        setCurrentQuestionNumber(currentQuestionNumber + 1)
+        setResult(constant.TEXT_EMPTY)
+        setError(defaultError)
     }
 
-    _finishAndSendResults() {
-        const { currentResult, currentQuestion } = this.state
-        const result = { questionCode: currentQuestion.questionCode, answer: currentResult }
-        const error = { showError: false, textError: constant.TEXT_EMPTY }
+    const finishAndSendResults = () => {
+        const currentQuestion = props.data[currentQuestionNumber]
 
-        this.setState(({
-            currentResult: constant.TEXT_EMPTY,
-            error: error
-        }), () => {
-            this.props.action(result)
-        })
+        props.action({ questionCode: currentQuestion.questionCode, answer: result })
+
+        setResult(constant.TEXT_EMPTY)
+        setError(defaultError)//This would clean the previous error message, if it was shown
     }
 
-    validateInput = (id, numberFormat) => {
+    function handleInputResult(id, numberFormat) {
         const value = numberFormat.formattedValue
-        const error = { showError: false, textError: constant.TEXT_EMPTY } //This would clean the previous error message, if it was shown
 
         if (isNaN(value)) return
 
-        this.setState({ currentResult: value, error: error })
+        setResult(value)
+        setError(defaultError)//This would clean the previous error message, if it was shown
     }
 
-    validateMultipleChoicesType = (evt) => {
+    function handleMultipleChoicesResult(evt) {
         const id = evt.target.id
         const value = evt.target.value
-        const error = { showError: false, textError: constant.TEXT_EMPTY } //This would clean the previous error message, if it was shown
 
         if (id === undefined || id === constant.TEXT_EMPTY ||
             value === undefined || value === constant.TEXT_EMPTY) return
 
-        this.setState({ currentResult: value, error: error })
-    }
-
-    render() {
-        const { currentQuestion, error } = this.state
-        const { showError, textError } = error
-
-        return (
-            <Container fluid="md">
-                <Row className="justify-content-md-center" style={{ padding: "10px" }}>
-                    {formatTitle(currentQuestion)}
-                </Row>
-                <Alert style={{ fontSize: "1.0rem" }} color="warning" isOpen={showError}>
-                    <span className="alert-inner--text ml-1">
-                        {textError}
-                    </span>
-                </Alert>
-                {getQuestions(currentQuestion, this.validateMultipleChoicesType, this.validateInput)}
-            </Container>
-        )
-    };
-}
-
-function formatTitle(question) {
-    let txtFormatted = question.title.split('\\n').map(function (item, key) { //replace \n with margin bottom to emulate break line
-        return (<div className="instr" key={key}>{item}</div>)
-    })
-    let key = "KEY_" + txtFormatted.length
-
-    return getFontSizeTitle(txtFormatted, question.titleFontSize, key)
-}
-
-/**
- * 
- * @param {*} data 
- * @param {*} questions 
- * @param {*} action 
- * @param {*} selectedAnswer 
- * @param {*} validateInput 
- */
-function getQuestions(question, validateMultipleChoices, validateInput) {
-
-    let questionScheme = []
-    // pregunta
-    questionScheme.push(
-        getFontSizeQuestion(question.question, question.questionFontSize, question.questionCode)
-    );
-    // respuesta
-    if (question.type === constant.INPUT_TYPE) {
-        questionScheme.push(
-            <div style={{ display: "flex", alignItems: 'center' }}>
-                <NumberFormat id={question.questionCode} autoFocus={true} onValueChange={validateInput.bind(this, question.questionCode)} decimalSeparator="," />
-                <pre style={{ margingBottom: '0rem' }}> <h6>{question.answer}</h6></pre>
-            </div>
-        );
-    } else if (question.type === constant.MULTIPLE_CHOICES_TYPE) {
-        questionScheme.push(
-            getMultipleOptions(question.answer, question.questionCode, validateMultipleChoices)
-        );
+        setResult(value)
+        setError(defaultError)//This would clean the previous error message, if it was shown
     }
 
     return (
-        <Card>
-            <CardBody style={{ padding: '2em' }} key={question.questionCode}>{questionScheme}</CardBody>
-        </Card>);// marginTop: '20px',
+        <Container fluid="md">
+            <PSTitle question={props.data[currentQuestionNumber]} />
+            <Alert style={{ fontSize: "1.0rem" }} color="warning" isOpen={error.showError}>
+                <span className="alert-inner--text ml-1">
+                    {error.textError}
+                </span>
+            </Alert>
+            <PSQuestion question={props.data[currentQuestionNumber]} inputResult={handleInputResult} multipleChoicesResult={handleMultipleChoicesResult} />
+        </Container>
+    );
 }
 
-/**
- * 
- * @param {*} answers 
- * @param {*} questionCode 
- * @param {*} action 
- * @param {*} selectedAnswer 
- */
-function getMultipleOptions(answers, questionCode, validateMultipleChoices) {
-    let children = answers
-        .filter((answer) => answer !== '' && answer !== null)
-        .map((answer) => {
-            return (
-                <FormGroup check>
-                    <Label>
-                        <Input type="radio"
-                            id={questionCode}
-                            name="radio-button-demo"
-                            value={answer}
-                            onChange={validateMultipleChoices}
-                        />{' '}
-                        {answer}
-                    </Label>
-                </FormGroup>
-            )
-        });
+function PSTitle(props) {
+    const question = props.question
 
-    return (<Col lg="auto" style={{ marginTop: '1.5em' }}>{children}</Col>)
-}
+    const formatTitle = () => {
+        let txtFormatted = question.title.split('\\n').map(function (item, key) { //replace \n with margin bottom to emulate break line
+            return (<div className="instr" key={key}>{item}</div>)
+        })
+        let key = "KEY_" + txtFormatted.length
 
-/**
- * 
- * @param {*} item 
- * @param {*} fontSize 
- * @param {*} key 
- */
-function getFontSizeQuestion(item, fontSize, key) {
-    let children = [];
-
-    if (item !== constant.TEXT_EMPTY) {
-        switch (fontSize) {
-            case constant.FONT_SIZE_HEADING1:
-                children.push(<h1 className="mb-2" key={"KEY_" + key}>{item}</h1>)
-                break;
-            case constant.FONT_SIZE_HEADING2:
-                children.push(<h2 className="mb-2" key={"KEY_" + key}>{item}</h2>)
-                break;
-            case constant.FONT_SIZE_HEADING3:
-                children.push(<h3 className="mb-2" key={"KEY_" + key}>{item}</h3>)
-                break;
-            case constant.FONT_SIZE_HEADING4:
-                children.push(<h4 className="mb-2" key={"KEY_" + key}>{item}</h4>)
-                break;
-            case constant.FONT_SIZE_HEADING5:
-                children.push(<h5 className="mb-2" key={"KEY_" + key}>{item}</h5>)
-                break;
-            case constant.FONT_SIZE_HEADING6:
-                children.push(<h6 className="mb-2" key={"KEY_" + key}>{item}</h6>)
-                break;
-            default:
-        }
+        return getFontSizeTitle(txtFormatted, question.titleFontSize, key)
     }
 
-    return children;
-}
-
-function getFontSizeTitle(item, fontSize, key) {
-    if (item !== constant.TEXT_EMPTY) {
-        switch (fontSize) {
-            case constant.FONT_SIZE_HEADING1:
-                return (<div className="instr-h1" key={key}>{item}</div>)
-            case constant.FONT_SIZE_HEADING2:
-                return (<div className="instr-h2" key={key}>{item}</div>)
-            case constant.FONT_SIZE_HEADING3:
-                return (<div className="instr-h3" key={key}>{item}</div>)
-            case constant.FONT_SIZE_HEADING4:
-                return (<div className="instr-h4" key={key}>{item}</div>)
-            case constant.FONT_SIZE_HEADING5:
-                return (<div className="instr-h5" key={key}>{item}</div>)
-            case constant.FONT_SIZE_HEADING6:
-                return (<div className="instr-h6" key={key}>{item}</div>)
-            default:
-                return (<div className="instr-h3" key={key}>{item}</div>)
+    const getFontSizeTitle = (item, fontSize, key) => {
+        if (item !== constant.TEXT_EMPTY) {
+            switch (fontSize) {
+                case constant.FONT_SIZE_HEADING1:
+                    return (<div className="instr-h1" key={key}>{item}</div>)
+                case constant.FONT_SIZE_HEADING2:
+                    return (<div className="instr-h2" key={key}>{item}</div>)
+                case constant.FONT_SIZE_HEADING3:
+                    return (<div className="instr-h3" key={key}>{item}</div>)
+                case constant.FONT_SIZE_HEADING4:
+                    return (<div className="instr-h4" key={key}>{item}</div>)
+                case constant.FONT_SIZE_HEADING5:
+                    return (<div className="instr-h5" key={key}>{item}</div>)
+                case constant.FONT_SIZE_HEADING6:
+                    return (<div className="instr-h6" key={key}>{item}</div>)
+                default:
+                    return (<div className="instr-h3" key={key}>{item}</div>)
+            }
         }
     }
+    return (<Row className="justify-content-md-center" style={{ padding: "10px" }}>
+        {formatTitle()}
+    </Row>);
 }
 
-export default PSForm;
+function PSQuestionTitle(props) {
+    const question = props.question
+
+    const getFontSizeQuestion = (item, fontSize, key) => {
+        let children = [];
+
+        if (item !== constant.TEXT_EMPTY) {
+            switch (fontSize) {
+                case constant.FONT_SIZE_HEADING1:
+                    children.push(<h1 className="mb-2" key={"KEY_" + key}>{item}</h1>)
+                    break;
+                case constant.FONT_SIZE_HEADING2:
+                    children.push(<h2 className="mb-2" key={"KEY_" + key}>{item}</h2>)
+                    break;
+                case constant.FONT_SIZE_HEADING3:
+                    children.push(<h3 className="mb-2" key={"KEY_" + key}>{item}</h3>)
+                    break;
+                case constant.FONT_SIZE_HEADING4:
+                    children.push(<h4 className="mb-2" key={"KEY_" + key}>{item}</h4>)
+                    break;
+                case constant.FONT_SIZE_HEADING5:
+                    children.push(<h5 className="mb-2" key={"KEY_" + key}>{item}</h5>)
+                    break;
+                case constant.FONT_SIZE_HEADING6:
+                    children.push(<h6 className="mb-2" key={"KEY_" + key}>{item}</h6>)
+                    break;
+                default:
+            }
+        }
+
+        return children;
+    }
+
+    return (getFontSizeQuestion(question.question, question.questionFontSize, question.questionCode));
+}
+
+function PSQuestionInputType(props) {
+    const question = props.question
+
+    return (<div style={{ display: "flex", alignItems: 'center' }}>
+        <NumberFormat id={question.questionCode} autoFocus={true} onValueChange={props.inputResult.bind(this, question.questionCode)} decimalSeparator="," />
+        <pre style={{ margingBottom: '0rem' }}> <h6>{question.answer}</h6></pre>
+    </div>);
+}
+
+function PSQuestionChoiceType(props) {
+    const question = props.question
+
+    const getMultipleOptions = () => {
+        const { answer, questionCode } = question
+        let children = answer
+            .filter((item) => item !== '' && item !== null)
+            .map((item) => {
+                return (
+                    <FormGroup check>
+                        <Label>
+                            <Input type="radio"
+                                id={questionCode}
+                                name="radio-button-demo"
+                                value={item}
+                                onChange={props.multipleChoicesResult}
+                            />{' '}
+                            {item}
+                        </Label>
+                    </FormGroup>
+                )
+            });
+
+        return children
+    }
+
+    return (<Col lg="auto" style={{ marginTop: '1.5em' }}>{getMultipleOptions()}</Col>);
+}
+
+function PSQuestion(props) {
+    const question = props.question
+
+    const answer = (question.type === constant.INPUT_TYPE) ? <PSQuestionInputType question={question} inputResult={props.inputResult} /> : <PSQuestionChoiceType question={question} multipleChoicesResult={props.multipleChoicesResult} />
+
+    return (<Card>
+        <CardBody style={{ padding: '2em' }} key={question.questionCode}>
+            <PSQuestionTitle question={question} />
+            {answer}
+        </CardBody>
+    </Card>);// marginTop: '20px',);
+}
