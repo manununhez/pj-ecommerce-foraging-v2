@@ -25,6 +25,7 @@ import "./style.css"
 import * as request from '../../helpers/fetch';
 import * as constant from '../../helpers/constants';
 import { USER_INFO } from '../../helpers/utils';
+import BargainTask from "./BargainTask";
 
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 const ARIADNA_REDIRECT_REJECT = process.env.REACT_APP_ARIADNA_REDIRECT_REJECT;
@@ -861,7 +862,8 @@ class Index extends Component {
         return (
             <main ref="main">
                 <section className="section-sm">
-                    {changePages(this.state, this)}
+                    <BargainTask />
+                    {/* {changePages(this.state, this)} */}
                 </section>
                 <div>
                     <IdleTimer
