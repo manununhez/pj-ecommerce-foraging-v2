@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from 'reactstrap';
 import PropTypes from "prop-types";
 import ScrollMenu from "react-horizontal-scrolling-menu";
 import ReactStars from "react-rating-stars-component";
+
+import StickmanLoading from './StickmanLoading';
 import "./style.css"
 
 export default function BargainTask(props) {
@@ -37,7 +39,7 @@ export default function BargainTask(props) {
     ];
 
     const [selected, setSelected] = useState([]);
-
+    const [currentStore, setCurrentStore] = useState({ storeNumber: 1, bargainsNumber: 10, delay: 15 })
     const menu = Menu(list, selected);
 
     const onFirstItemVisible = () => {
@@ -92,10 +94,15 @@ export default function BargainTask(props) {
                     wheel={false}
                 />
             </div>
+
             <div className="text-center store-btn">
                 <Button outline color="secondary" size="lg" onClick={() => onGoStoreBtnClick()}> Go to new store</Button > {' '}
             </div>
+
+            <StickmanLoading currentStore={currentStore} />
         </>);
+
+
 }
 
 const RatingBar = (value) => {
@@ -129,7 +136,6 @@ const MenuItem = (item, selected) => {
 export const Menu = (list, selected) =>
     list.map(item => {
         const isSelected = selected.includes(item.productNumber)
-        console.log(isSelected)
         return MenuItem(item, isSelected);
     });
 

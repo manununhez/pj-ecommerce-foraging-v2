@@ -22,6 +22,7 @@
     "react-scripts": "4.0.1",
     "react-spinners": "^0.9.0",
     "reactstrap": "^8.7.1",
+    "styled-components": "^5.2.1",
     "ua-parser-js": "^0.7.22",
     "web-vitals": "^0.2.4"
   },

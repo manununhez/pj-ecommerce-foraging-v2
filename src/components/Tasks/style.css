@@ -201,3 +201,28 @@ form {
     margin-top: 20px;
 }
 
+.line{
+    width: 112px;
+    /* height: 47px; */
+    border-bottom: 10px solid black;
+    position: absolute;
+}
+
+.square {
+  height: 140px;
+  width: 75px;
+  /* opacity: 0.5; */
+  background-color: white;
+  display: inline-block;
+ vertical-align: bottom;
+}
+
+.stack-top{
+    z-index: 1;
+}
+.stack-bottom{
+    z-index: -1;
+    position:relative;
+}
+
+
