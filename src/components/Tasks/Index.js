@@ -25,7 +25,7 @@ import "./style.css"
 import * as request from '../../helpers/fetch';
 import * as constant from '../../helpers/constants';
 import { USER_INFO } from '../../helpers/utils';
-import BargainTask from "./BargainTask";
+import BargainTask from "./BargainTask/BargainTask";
 
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 const ARIADNA_REDIRECT_REJECT = process.env.REACT_APP_ARIADNA_REDIRECT_REJECT;

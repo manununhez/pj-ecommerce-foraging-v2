@@ -1,11 +1,13 @@
 import React from 'react';
 import styled, { keyframes } from "styled-components";
 
-import "./style.css"
+import "../style.css"
 
-import loading from '../../assets/stickman-walking.gif';
+import loading from '../../../assets/stickman-walking.gif';
 
 export default function StickmanLoading(props) {
+    console.log(props.currentStore)
+
     const currentStore = props.currentStore
     const marginOffSet = 50
 
@@ -22,8 +24,8 @@ export default function StickmanLoading(props) {
 
     // Here we create a component that will rotate everything we pass in over two seconds
     const SlideRightFadeOutImg = styled.img`
-        -webkit-animation: ${slideToRightAnimation} ${currentStore.delay}s linear forwards infinite;
-        animation: ${slideToRightAnimation} ${currentStore.delay}s linear forwards infinite;
+        -webkit-animation: ${slideToRightAnimation} ${currentStore.delay}s linear forwards;
+        animation: ${slideToRightAnimation} ${currentStore.delay}s linear forwards;
         vertical-align: bottom;
         margin-left: -75px;
     `;
@@ -46,7 +48,7 @@ export default function StickmanLoading(props) {
                 <SlideRightFadeOutImg
                     className="stack-bottom"
                     style={{ display: "inline-block" }}
-                    onAnimationEnd={() => console.log("Animation END")}
+                    onAnimationEnd={props.onLoadingFinished}
                     src={loading}
                     alt="loading..."
                 />

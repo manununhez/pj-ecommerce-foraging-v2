@@ -150,10 +150,6 @@ form {
   border: 1px blue solid;
 }
 
-.card.active {
-  background-color: grey;
-}
-
 .menu-item.active {
   border: 1px green solid;
 }
@@ -187,6 +183,10 @@ form {
 .product-card {
     padding: 10px;
     margin: 5px;
+}
+
+.product-card.active {
+  background-color: grey;
 }
 
 .arrow-next {
