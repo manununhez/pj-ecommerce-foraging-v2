@@ -51,19 +51,21 @@ const RatingBar = (value) => {
 }
 
 const Menu = (list, selected) =>
-    list.map(item => {
-        const isSelected = selected.includes(item.productNumber)
+    list.map((item, index) => {
+        console.log(`Index: ${index}`)
+        const isSelected = selected.includes(index)
 
-        return MenuItem(item, isSelected);
+        return MenuItem(item, index, isSelected);
     });
 
-const MenuItem = (item, isSelected) => {
+const MenuItem = (item, productIndex, isSelected) => {
     const discountPercentage = (item.discount * 100).toFixed()
     console.log(`${item.productNumber}: ${isSelected}`)
     return (
-        <div key={item.productNumber}>
+        <div key={productIndex}>
             <div className="card product-card"
                 style={{ backgroundColor: isSelected ? "grey" : "white" }}>
+                <div>product#:{item.productNumber} bargain:{item.isBargain ? "T" : "F"}</div>
                 <div>
                     <h4 style={{ float: "left" }}>{discountPercentage}% OFF!!</h4>
                     <div style={{ float: "right" }}>{RatingBar(item.numOfStars)}</div>
