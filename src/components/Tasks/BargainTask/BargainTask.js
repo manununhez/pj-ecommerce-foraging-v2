@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import StickmanLoading from './StickmanLoading';
 import ProductsMenu from './ProductsMenu';
 import "../style.css";
-import { keyframes } from 'styled-components';
+import { randomNumber } from '../../../helpers/utils';
 
 export default function BargainTask(props) {
+    const PRODUCTS_PER_ROW = 5
 
     const list = [
         {
@@ -41,8 +42,6 @@ export default function BargainTask(props) {
         }
     ];
 
-    // When the last product in the store is displayed, the application should randomly select 5 previously shown products(not bargains) whenever the belt is moved again.
-
     const [selectedProducts, setSelectedProducts] = useState([])
     const [currentStoreIndex, setCurrentStoreIndex] = useState(0)
     const [showProducts, setShowProducts] = useState(true)
@@ -50,7 +49,9 @@ export default function BargainTask(props) {
     const [productsSeenCounter, setProductsSeenCounter] = useState(1) //Initially, the user already see 5 products = productsSeenCounter * 5 = 1 * 5 = 5
     const [storesVisitedCounter, setStoresVisitedCounter] = useState(0)
     const [lastProductDisplayed, setLastProductDisplayed] = useState([]) //[5, 25] --> index 0: lastProduct# 5, index1: lastProduct#25
-    const currentStore = list[currentStoreIndex]
+    const [storeLists, setStoreLists] = useState(list)
+    const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState(storeLists[currentStoreIndex].products.filter(item => item.isBargain === false))
+
     const onFirstItemVisible = () => {
         console.log("first item is visible");
     };
@@ -61,19 +62,57 @@ export default function BargainTask(props) {
 
     const onShowNextProducts = ({ translate }) => {
         console.log(`onShowNextProducts`);
-        setProductsSeenCounter(productsSeenCounter + 1)
+
+        const newProductsSeenCounter = productsSeenCounter + 1
+        const isNeededGenerateNewProducts = ((newProductsSeenCounter) * PRODUCTS_PER_ROW) === storeLists[currentStoreIndex].products.length
+
+        setProductsSeenCounter(newProductsSeenCounter)
+
+        // Update menu belt products with new random generated products when we reached the end of the product list
+        if (isNeededGenerateNewProducts) {
+            console.log("New products!!")
+
+            storeLists[currentStoreIndex].products = storeLists[currentStoreIndex].products.concat(generateRandomProductList())
+
+            setStoreLists(storeLists)
+
+            console.log(storeLists)
+        }
     };
+
+    const generateRandomProductList = () => {
+        let count = 0
+        let newList = []
+        let randomNumbersList = []
+
+        while (count < PRODUCTS_PER_ROW) {
+            const randomProduct = currentProductListWithoutBargains[randomNumber(0, currentProductListWithoutBargains.length - 1)]
+
+            if (!randomNumbersList.includes(randomProduct.productNumber)) {
+                randomNumbersList.push(randomProduct.productNumber)
+                newList.push(randomProduct)
+                count++;
+            }
+        }
+
+        return newList;
+
+    }
 
     const onProductSelected = key => {
         console.log(`onProductSelected: ${key}`);
 
         if (!selectedProducts.includes(parseInt(key))) {
+            const newBargainCounter = bargainCounter + 1
+
             let selected = [...selectedProducts]
+
             selected.push(parseInt(key))
+
             setSelectedProducts(selected)
 
-            if (currentStore.products[parseInt(key)].isBargain) {
-                setBargainCounter(bargainCounter + 1)
+            if (storeLists[currentStoreIndex].products[parseInt(key)].isBargain) {
+                setBargainCounter(newBargainCounter)
             }
 
             console.log(bargainCounter)
@@ -83,26 +122,32 @@ export default function BargainTask(props) {
     const onShowNextStore = () => {
         console.log("onGoStoreBtnClick")
 
-        const lastProductNumber = currentStore.products[(productsSeenCounter * 5) - 1].productNumber
+        const newStoresVisitedCounter = storesVisitedCounter + 1
+        const lastProductNumber = storeLists[currentStoreIndex].products[(productsSeenCounter * PRODUCTS_PER_ROW) - 1].productNumber
+
         lastProductDisplayed.push(lastProductNumber)
 
         setLastProductDisplayed(lastProductDisplayed)
         setShowProducts(false)
-        setStoresVisitedCounter(storesVisitedCounter + 1)
+        setStoresVisitedCounter(newStoresVisitedCounter)
+
         console.log(lastProductDisplayed)
     }
 
     const onLoadingFinished = () => {
+        const newCurrentStoreIndex = currentStoreIndex + 1
+
         setShowProducts(true)
-        setCurrentStoreIndex(currentStoreIndex + 1)
+        setCurrentStoreIndex(newCurrentStoreIndex)
         setSelectedProducts([])
+        setCurrentProductListWithoutBargains(storeLists[newCurrentStoreIndex].products.filter(item => item.isBargain === false))
     }
 
     return (<>
-        {`Store#:${currentStore.storeNumber}`}
+        {`Store#:${storeLists[currentStoreIndex].storeNumber}`}
         {showProducts ?
             <ProductsMenu
-                products={currentStore.products}
+                products={storeLists[currentStoreIndex].products}
                 selected={selectedProducts}
                 onFirstItemVisible={onFirstItemVisible}
                 onLastItemVisible={onLastItemVisible}
@@ -110,7 +155,7 @@ export default function BargainTask(props) {
                 onUpdate={onShowNextProducts}
                 onGoStoreBtnClick={onShowNextStore}
             /> :
-            <StickmanLoading currentStore={currentStore} onLoadingFinished={onLoadingFinished} />
+            <StickmanLoading currentStore={storeLists[currentStoreIndex]} onLoadingFinished={onLoadingFinished} />
         }
     </>);
 }

@@ -52,7 +52,7 @@ const RatingBar = (value) => {
 
 const Menu = (list, selected) =>
     list.map((item, index) => {
-        console.log(`Index: ${index}`)
+        // console.log(`Index: ${index}`)
         const isSelected = selected.includes(index)
 
         return MenuItem(item, index, isSelected);
@@ -60,7 +60,7 @@ const Menu = (list, selected) =>
 
 const MenuItem = (item, productIndex, isSelected) => {
     const discountPercentage = (item.discount * 100).toFixed()
-    console.log(`${item.productNumber}: ${isSelected}`)
+    // console.log(`${item.productNumber}: ${isSelected}`)
     return (
         <div key={productIndex}>
             <div className="card product-card"
