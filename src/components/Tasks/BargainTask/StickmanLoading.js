@@ -9,7 +9,7 @@ export default function StickmanLoading(props) {
     console.log(props.currentStore)
 
     const currentStore = props.currentStore
-    const marginOffSet = 50
+    const marginOffSet = 40
 
     const slideToRightAnimation = keyframes`
         0%{

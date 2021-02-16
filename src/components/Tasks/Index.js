@@ -26,6 +26,7 @@ import * as request from '../../helpers/fetch';
 import * as constant from '../../helpers/constants';
 import { USER_INFO } from '../../helpers/utils';
 import BargainTask from "./BargainTask/BargainTask";
+import BargainDemoTask from "./BargainTask/BargainDemoTask";
 
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 const ARIADNA_REDIRECT_REJECT = process.env.REACT_APP_ARIADNA_REDIRECT_REJECT;
@@ -76,6 +77,7 @@ class Index extends Component {
             inputTextInstructions: [],
             inputParticipants: [],
             inputPSForm: [],
+            inputStores: { storesLong: [], storesShort: [] },
             //Variables for output data (results)
             generalOutput: generalOutputDefault,
             generalOutputIndexes: [],
@@ -216,25 +218,68 @@ class Index extends Component {
      */
     _onLoadInitialDataCallBack(data, error) {
         if (data) {
-            //Loggin the first screen of the navigation
-            let timestamp = [];
-            let screenTmp = [];
-            screenTmp.push(data.screens[0].screen); //we grap the first screen
-            timestamp.push(Date.now()); //we log the first screen we are entering in
-
             this.setState({
-                loading: false, //Hide loading
-                logTimestamp: {
-                    screen: screenTmp,
-                    timestamp: timestamp
-                },
                 inputNavigation: data.screens,
                 inputParticipants: data.participants
             })
 
             if (DEBUG) console.log(data)
+            request.fetchStores(constant.STORES_LONG_TYPE, this._onLoadStoresLongDataCallBack.bind(this))
+        } else {
+            this.setState({
+                loading: false,
+            }, () => {
+                alert(`${error}. Please refresh page.`)
+                if (DEBUG) console.log(error)
+            })
         }
-        else {
+    }
+
+    /**
+     * Once the navigation screen structure have been loaded from the spreadsheet
+     * @param {*} data 
+     * @param {*} error 
+     */
+    _onLoadStoresLongDataCallBack(data, error) {
+        if (data) {
+
+            const { inputStores } = this.state
+            inputStores.storesLong = data.response
+
+            this.setState({
+                inputStores: inputStores
+            })
+
+            if (DEBUG) console.log(data)
+            request.fetchStores(constant.STORES_SHORT_TYPE, this._onLoadStoresShortDataCallBack.bind(this))
+        } else {
+            this.setState({
+                loading: false,
+            }, () => {
+                alert(`${error}. Please refresh page.`)
+                if (DEBUG) console.log(error)
+            })
+        }
+    }
+
+    _onLoadStoresShortDataCallBack(data, error) {
+        if (data) {
+            //Loggin the first screen of the navigation
+            const { inputStores, inputNavigation } = this.state
+
+            inputStores.storesShort = data.response
+
+            this.setState({
+                loading: false, //Hide loading
+                logTimestamp: {
+                    screen: [inputNavigation[0].screen],//we grap the first screen
+                    timestamp: [Date.now()]//we log the first screen we are entering in
+                },
+                inputStores: inputStores
+            })
+
+            if (DEBUG) console.log(data)
+        } else {
             this.setState({
                 loading: false,
             }, () => {
@@ -257,8 +302,7 @@ class Index extends Component {
             })
             if (DEBUG) console.log(data)
 
-        }
-        else {
+        } else {
             this.setState({
                 loading: false,
             }, () => {
@@ -282,8 +326,7 @@ class Index extends Component {
             }, () => {
                 if (DEBUG) console.log(this.state)
             });
-        }
-        else {
+        } else {
             this.setState({
                 loading: false,
             }, () => {
@@ -862,8 +905,7 @@ class Index extends Component {
         return (
             <main ref="main">
                 <section className="section-sm">
-                    <BargainTask />
-                    {/* {changePages(this.state, this)} */}
+                    {changePages(this.state, this)}
                 </section>
                 <div>
                     <IdleTimer
@@ -930,7 +972,7 @@ function changePages(state, context) {
     const { currentScreenNumber,
         inputNavigation,
         inputTextInstructions,
-        inputPSForm } = state;
+        inputPSForm, inputStores } = state;
     const totalLength = inputNavigation.length;
 
     if (totalLength > 0) { //If input navigation has been called
@@ -958,12 +1000,16 @@ function changePages(state, context) {
                     action={context.visualPatternDemoTaskHandler}
                 />;
             } else if (screen === constant.PSFORM_SCREEN) {
-                if (inputPSForm.length > 0) { //if we have received already the input data for psform
-                    return <PSForm
-                        action={context.psFormHandler}
-                        data={inputPSForm}
-                    />;
-                }
+                return <PSForm
+                    action={context.psFormHandler}
+                    data={inputPSForm}
+                />;
+            } else if (screen === constant.BARGAIN_DEMO_SCREEN) {
+                return <BargainDemoTask />;
+            } else if (screen === constant.BARGAIN_SCREEN_COND1) {
+                return <BargainTask data={inputStores} />;
+            } else if (screen === constant.BARGAIN_SCREEN_COND2) {
+                return <BargainTask data={inputStores} />;
             }
         }
     }

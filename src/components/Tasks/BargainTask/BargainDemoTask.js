@@ -5,10 +5,42 @@ import ProductsMenu from './ProductsMenu';
 import "../style.css";
 import { randomNumber } from '../../../helpers/utils';
 
-export default function BargainTask(props) {
+export default function BargainDemoTask(props) {
     const PRODUCTS_PER_ROW = 5
 
-    const list = props.data.storesLong;
+    const list = [
+        {
+            storeNumber: 1, bargainsNumber: 10, delay: 15, products: [
+                { productNumber: 1, isBargain: false, oldPrice: 100, newPrice: 95.0, discount: 0.55, numOfStars: 4, img: "https://via.placeholder.com/150" },
+                { productNumber: 2, isBargain: false, oldPrice: 80, newPrice: 45.0, discount: 0.50, numOfStars: 1, img: "https://via.placeholder.com/150" },
+                { productNumber: 3, isBargain: false, oldPrice: 70, newPrice: 35.0, discount: 0.60, numOfStars: 2, img: "https://via.placeholder.com/150" },
+                { productNumber: 4, isBargain: false, oldPrice: 1700, newPrice: 1445.0, discount: 0.70, numOfStars: 4, img: "https://via.placeholder.com/150" },
+                { productNumber: 5, isBargain: false, oldPrice: 200, newPrice: 145.0, discount: 0.40, numOfStars: 6, img: "https://via.placeholder.com/150" },
+                { productNumber: 6, isBargain: true, oldPrice: 100, newPrice: 55.0, discount: 0.25, numOfStars: 4, img: "https://via.placeholder.com/150" },
+                { productNumber: 7, isBargain: false, oldPrice: 1100, newPrice: 845.0, discount: 0.55, numOfStars: 5, img: "https://via.placeholder.com/150" },
+                { productNumber: 8, isBargain: false, oldPrice: 300, newPrice: 145.0, discount: 0.10, numOfStars: 4, img: "https://via.placeholder.com/150" },
+                { productNumber: 9, isBargain: true, oldPrice: 60, newPrice: 45.0, discount: 0.85, numOfStars: 3, img: "https://via.placeholder.com/150" },
+                { productNumber: 10, isBargain: false, oldPrice: 800, newPrice: 645.0, discount: 0.90, numOfStars: 2, img: "https://via.placeholder.com/150" }]
+        },
+        {
+            storeNumber: 2, bargainsNumber: 10, delay: 15, products: [
+                { productNumber: 1, isBargain: true, oldPrice: 180, newPrice: 145.0, discount: 0.70, numOfStars: 1, img: "https://via.placeholder.com/150" },
+                { productNumber: 2, isBargain: false, oldPrice: 230, newPrice: 215.0, discount: 0.55, numOfStars: 6, img: "https://via.placeholder.com/150" },
+                { productNumber: 3, isBargain: false, oldPrice: 500, newPrice: 405.0, discount: 0.55, numOfStars: 5, img: "https://via.placeholder.com/150" },
+                { productNumber: 4, isBargain: true, oldPrice: 100, newPrice: 95.0, discount: 0.55, numOfStars: 4, img: "https://via.placeholder.com/150" },
+                { productNumber: 5, isBargain: true, oldPrice: 80, newPrice: 45.0, discount: 0.55, numOfStars: 1, img: "https://via.placeholder.com/150" },
+                { productNumber: 6, isBargain: false, oldPrice: 70, newPrice: 35.0, discount: 0.55, numOfStars: 2, img: "https://via.placeholder.com/150" },
+                { productNumber: 7, isBargain: false, oldPrice: 1700, newPrice: 1445.0, discount: 0.55, numOfStars: 4, img: "https://via.placeholder.com/150" },
+                { productNumber: 8, isBargain: false, oldPrice: 200, newPrice: 145.0, discount: 0.55, numOfStars: 6, img: "https://via.placeholder.com/150" },
+                { productNumber: 9, isBargain: true, oldPrice: 100, newPrice: 55.0, discount: 0.55, numOfStars: 4, img: "https://via.placeholder.com/150" },
+                { productNumber: 10, isBargain: false, oldPrice: 1100, newPrice: 845.0, discount: 0.55, numOfStars: 5, img: "https://via.placeholder.com/150" },
+                { productNumber: 11, isBargain: false, oldPrice: 300, newPrice: 145.0, discount: 0.55, numOfStars: 4, img: "https://via.placeholder.com/150" },
+                { productNumber: 12, isBargain: true, oldPrice: 60, newPrice: 45.0, discount: 0.55, numOfStars: 3, img: "https://via.placeholder.com/150" },
+                { productNumber: 13, isBargain: false, oldPrice: 800, newPrice: 645.0, discount: 0.55, numOfStars: 2, img: "https://via.placeholder.com/150" },
+                { productNumber: 14, isBargain: false, oldPrice: 180, newPrice: 145.0, discount: 0.55, numOfStars: 1, img: "https://via.placeholder.com/150" },
+                { productNumber: 15, isBargain: true, oldPrice: 230, newPrice: 215.0, discount: 0.55, numOfStars: 6, img: "https://via.placeholder.com/150" }]
+        }
+    ];
 
     const [selectedProducts, setSelectedProducts] = useState([])
     const [currentStoreIndex, setCurrentStoreIndex] = useState(0)

@@ -92,6 +92,17 @@ export const INSTRUCTION_SCREEN = "Instruction";
 export const PSFORM_SCREEN = "PsychologyForm";
 export const VISUAL_PATTERN_SCREEN = "VisualPatternTask";
 export const VISUAL_PATTERN_DEMO_SCREEN = "VisualPatternTaskDemo";
+export const BARGAIN_DEMO_INSTRUCTION_COND1 = "BargainDemoTaskInstructionCond1";
+export const BARGAIN_DEMO_INSTRUCTION_COND2 = "BargainDemoTaskInstructionCond2";
+export const BARGAIN_DEMO_SCREEN = "BargainDemoTask";
+export const BARGAIN_DEMO_FINISH_INSTRUCTION = "BargainDemoTaskInstructionFinish";
+export const BARGAIN_SCREEN_COND1 = "BargainTaskCond1";
+export const BARGAIN_SCREEN_COND2 = "BargainTaskCond2";
+
+export const STORES_SHORT_TYPE = "Stores-short";
+export const STORES_LONG_TYPE = "Stores-long";
+
+
 
 //General App messages KEYS
 export const ERROR_1 = "Prosimy o dokonanie wyboru.";//"You have to select a choice first!"

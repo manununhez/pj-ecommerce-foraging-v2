@@ -178,6 +178,7 @@ form {
     margin-top: 20px; 
     margin-bottom: 20px; 
     max-height: 150px;
+    max-width: 120px;
 }
 
 .product-card {
@@ -212,9 +213,9 @@ form {
   height: 140px;
   width: 75px;
   /* opacity: 0.5; */
-  background-color: white;
+  background-color: #e9ecef;
   display: inline-block;
- vertical-align: bottom;
+  vertical-align: bottom;
 }
 
 .stack-top{
@@ -225,4 +226,7 @@ form {
     position:relative;
 }
 
-
+/* BARGAIN DEMO INSTRUCTION */
+.text-highlight{
+  color: red;
+}

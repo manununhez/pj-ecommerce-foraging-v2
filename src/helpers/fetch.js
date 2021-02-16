@@ -1,16 +1,18 @@
 // Fetch.js
-import * as constant from '../helpers/constants';
+import * as constant from '../helpers/constants'
 
 // const _apiHost = 'https://api.swps-pjatk-experiment.pl/v2/'; //'http://localhost:5000/'
-const _apiHost = 'http://localhost:5000/';
+const _apiHost = 'http://localhost:5000/'
 const fetch_versions_url = 'versions'
 const fetch_psform_url = 'psform'
 const fetch_apptext_url = 'apptext'
 const fetch_inituserdata_url = 'inituserdata'
-const save_visualpattern_url = 'visualpattern';
-const save_userinfo_url = 'userinfo';
-const save_userlogtime_url = 'userlogtime';
-const save_usegeneraldata_url = 'usergeneraldata';
+const fetch_stores_short_url = 'stores-short'
+const fetch_stores_long_url = 'stores-long'
+const save_visualpattern_url = 'visualpattern'
+const save_userinfo_url = 'userinfo'
+const save_userlogtime_url = 'userlogtime'
+const save_usegeneraldata_url = 'usergeneraldata'
 
 async function request(url, params, method = 'GET') {
 
@@ -111,6 +113,23 @@ export function fetchUserInitialData(typeTask, callback) {
             }
 
             callback({ screens, participants });
+        }, (response) => {
+            callback(false, response);
+        });
+}
+
+export function fetchStores(type, callback) {
+    let url = ''
+
+    if(type === constant.STORES_SHORT_TYPE){
+        url = fetch_stores_short_url
+    } else if(type === constant.STORES_LONG_TYPE){
+        url = fetch_stores_long_url
+    }
+
+    get(url, {})
+        .then((response) => {
+            callback({ response });
         }, (response) => {
             callback(false, response);
         });
