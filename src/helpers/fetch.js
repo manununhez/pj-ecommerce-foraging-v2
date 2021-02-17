@@ -1,8 +1,7 @@
 // Fetch.js
 import * as constant from '../helpers/constants'
 
-// const _apiHost = 'https://api.swps-pjatk-experiment.pl/v2/'; //'http://localhost:5000/'
-const _apiHost = 'http://localhost:5000/'
+const _apiHost = 'https://api.swps-pjatk-experiment.pl/v3/' //'http://localhost:5000/'
 const fetch_versions_url = 'versions'
 const fetch_psform_url = 'psform'
 const fetch_apptext_url = 'apptext'
@@ -121,9 +120,9 @@ export function fetchUserInitialData(typeTask, callback) {
 export function fetchStores(type, callback) {
     let url = ''
 
-    if(type === constant.STORES_SHORT_TYPE){
+    if (type === constant.STORES_SHORT_TYPE) {
         url = fetch_stores_short_url
-    } else if(type === constant.STORES_LONG_TYPE){
+    } else if (type === constant.STORES_LONG_TYPE) {
         url = fetch_stores_long_url
     }
 
