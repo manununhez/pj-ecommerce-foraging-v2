@@ -797,39 +797,40 @@ class Index extends Component {
         let nextScreenNumber = currentScreenNumber + 1;
         let showAlertWindowsClosingTmp = showAlertWindowsClosing;
 
-        if (nextScreenNumber < totalLength) {
-            let nextScreen = inputNavigation[nextScreenNumber].screen;
+        if (nextScreenNumber >= totalLength) return
 
-            screen.push(nextScreen);//set timestamp
-            timestamp.push(now);
+        let nextScreen = inputNavigation[nextScreenNumber].screen;
+
+        screen.push(nextScreen);//set timestamp
+        timestamp.push(now);
+
+        if (nextScreenNumber === (totalLength - 1)) { //Last screen!
+            // SYNC DATA
+            showAlertWindowsClosingTmp = false
+            loading = true //Show Loading
+        }
+
+
+        this.setState({
+            showAlertWindowsClosing: showAlertWindowsClosingTmp,
+            currentScreenNumber: nextScreenNumber,
+            logTimestamp: {
+                screen: screen,
+                timestamp: timestamp
+            },
+            loading: loading,
+            modalOpen: false,
+        }, () => {
+            if (DEBUG) console.log(this.state)
 
             if (nextScreenNumber === (totalLength - 1)) { //Last screen!
-                // SYNC DATA
-                showAlertWindowsClosingTmp = false
-                loading = true //Show Loading
+                this._syncData() //call syncdata after the experiment is completed and updated its value to true
             }
 
+            this._checkSyncGeneralData()
 
-            this.setState({
-                showAlertWindowsClosing: showAlertWindowsClosingTmp,
-                currentScreenNumber: nextScreenNumber,
-                logTimestamp: {
-                    screen: screen,
-                    timestamp: timestamp
-                },
-                loading: loading,
-                modalOpen: false,
-            }, () => {
-                if (DEBUG) console.log(this.state)
+        });
 
-                if (nextScreenNumber === (totalLength - 1)) { //Last screen!
-                    // SYNC DATA
-                    this._syncData() //call syncdata after the experiment is completed and updated its value to true
-                } else {
-                    this._checkSyncGeneralData()
-                }
-            });
-        }
     }
 
     _checkSyncGeneralData() {
@@ -939,15 +940,16 @@ class Index extends Component {
 }
 
 function isFooterShownInCurrentScreen(state) {
-    const { currentScreenNumber, inputNavigation } = state;
-    if (inputNavigation.length === 0) return; //data was not loaded yet
+    if (state.inputNavigation.length === 0) return //not input data received yet
 
+    const { currentScreenNumber, inputNavigation } = state;
     const { screen, type } = inputNavigation[currentScreenNumber];
+
     let isFooterShown = false
     let footerText = constant.TEXT_FOOTER
 
     if (type === constant.INSTRUCTION_SCREEN) {
-        if (screen.includes(constant.VISUAL_PATTERN)) {
+        if (screen.includes(constant.VISUAL_PATTERN) || screen.includes("Bargain")) {
             isFooterShown = true;
         }
     } else if (screen === constant.USER_FORM_SCREEN ||
@@ -975,90 +977,40 @@ function changePages(state, context) {
         inputPSForm, inputStores } = state;
     const totalLength = inputNavigation.length;
 
-    if (totalLength > 0) { //If input navigation has been called
-        const { screen, type } = inputNavigation[currentScreenNumber];
-        document.body.style.backgroundColor = (type === constant.INSTRUCTION_SCREEN) ? constant.WHITE : constant.LIGHT_GRAY;
+    if (totalLength === 0 || currentScreenNumber >= totalLength) return //To prevent keep transition between pages
 
-        if (currentScreenNumber < totalLength) { //To prevent keep transition between pages
+    const { screen, type } = inputNavigation[currentScreenNumber];
 
-            if (type === constant.INSTRUCTION_SCREEN) {
-                const text = getTextForCurrentScreen(inputTextInstructions, screen);
-                return <Instruction
-                    text={text}
-                    name={screen}
-                />;
-            } else if (screen === constant.USER_FORM_SCREEN) {
-                return <UserForm
-                    action={context.formHandler}
-                />;
-            } else if (screen === constant.VISUAL_PATTERN_SCREEN) {
-                return <VisualPatternTask
-                    action={context.visualPatternTaskHandler}
-                />;
-            } else if (screen === constant.VISUAL_PATTERN_DEMO_SCREEN) {
-                return <VisualPatternDemoTask
-                    action={context.visualPatternDemoTaskHandler}
-                />;
-            } else if (screen === constant.PSFORM_SCREEN) {
-                return <PSForm
-                    action={context.psFormHandler}
-                    data={inputPSForm}
-                />;
-            } else if (screen === constant.BARGAIN_DEMO_SCREEN) {
-                return <BargainDemoTask />;
-            } else if (screen === constant.BARGAIN_SCREEN_COND1) {
-                return <BargainTask data={inputStores} />;
-            } else if (screen === constant.BARGAIN_SCREEN_COND2) {
-                return <BargainTask data={inputStores} />;
-            }
-        }
-    }
-}
+    document.body.style.backgroundColor = (type === constant.INSTRUCTION_SCREEN) ? constant.WHITE : constant.LIGHT_GRAY;
 
-/**
- * Map the current screen with the correspondent text instruction to display
- * @param {*} inputTextInstructions 
- * @param {*} screen 
- */
-function getTextForCurrentScreen(inputTextInstructions, screen) { //TODO when FirstTask, we should cache the text so we dont iterate every time
-    let children = inputTextInstructions
-        .filter((instruction) => instruction.screen === screen)
-        .map((instruction, index) => {
-            let txtFormatted = instruction.text.split('\\n').map(function (item, key) { //replace \n with margin bottom to emulate break line
-                return (<div className="instr" key={key}>{item}</div>)
-            })
-            let key = "KEY_" + txtFormatted.length + "_" + index
-
-            return getFontSize(txtFormatted, instruction.size, key)
-        });
-
-    return children;
-}
-
-/**
- * Map the correspondent font size for the text instruction
- * @param {*} item 
- * @param {*} fontSize 
- * @param {*} key 
- */
-function getFontSize(item, fontSize, key) {
-    if (item !== constant.TEXT_EMPTY) {
-        switch (fontSize) {
-            case constant.FONT_SIZE_HEADING1:
-                return (<div className="instr-h1" key={key}>{item}</div>)
-            case constant.FONT_SIZE_HEADING2:
-                return (<div className="instr-h2" key={key}>{item}</div>)
-            case constant.FONT_SIZE_HEADING3:
-                return (<div className="instr-h3" key={key}>{item}</div>)
-            case constant.FONT_SIZE_HEADING4:
-                return (<div className="instr-h4" key={key}>{item}</div>)
-            case constant.FONT_SIZE_HEADING5:
-                return (<div className="instr-h5" key={key}>{item}</div>)
-            case constant.FONT_SIZE_HEADING6:
-                return (<div className="instr-h6" key={key}>{item}</div>)
-            default:
-                return (<div className="instr-h3" key={key}>{item}</div>)
-        }
+    if (type === constant.INSTRUCTION_SCREEN) {
+        return <Instruction
+            text={inputTextInstructions}
+            name={screen}
+        />;
+    } else if (screen === constant.USER_FORM_SCREEN) {
+        return <UserForm
+            action={context.formHandler}
+        />;
+    } else if (screen === constant.VISUAL_PATTERN_SCREEN) {
+        return <VisualPatternTask
+            action={context.visualPatternTaskHandler}
+        />;
+    } else if (screen === constant.VISUAL_PATTERN_DEMO_SCREEN) {
+        return <VisualPatternDemoTask
+            action={context.visualPatternDemoTaskHandler}
+        />;
+    } else if (screen === constant.PSFORM_SCREEN) {
+        return <PSForm
+            action={context.psFormHandler}
+            data={inputPSForm}
+        />;
+    } else if (screen === constant.BARGAIN_DEMO_SCREEN) {
+        return <BargainDemoTask />;
+    } else if (screen === constant.BARGAIN_SCREEN_COND1) {
+        return <BargainTask data={inputStores} />;
+    } else if (screen === constant.BARGAIN_SCREEN_COND2) {
+        return <BargainTask data={inputStores} />;
     }
 }
 
