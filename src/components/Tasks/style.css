@@ -233,3 +233,13 @@ form {
 .text-highlight{
   color: red;
 }
+.helper {
+  --reactour-accent: #5cb7b7;
+  line-height: 1.3;
+  color: #000000;
+}
+
+.mask {
+  color: #021d1d;
+  opacity: 0.8;
+}

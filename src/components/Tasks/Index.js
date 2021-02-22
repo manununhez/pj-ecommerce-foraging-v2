@@ -12,6 +12,14 @@ import queryString from 'query-string'
 import FadeLoader from "react-spinners/FadeLoader";
 import SyncLoader from "react-spinners/SyncLoader";
 
+//Style
+import "./style.css"
+
+// helpers
+import * as request from '../../helpers/fetch';
+import * as constant from '../../helpers/constants';
+import { USER_INFO } from '../../helpers/utils';
+
 // Views
 import Footer from "../Footers/Footer";
 import Instruction from "./Instruction"
@@ -19,14 +27,9 @@ import UserForm from "./UserForm";
 import VisualPatternTask from "./VisualPatternTask";
 import VisualPatternDemoTask from "./VisualPatternDemoTask";
 import PSForm from "./PSForm";
-import "./style.css"
-
-// helpers
-import * as request from '../../helpers/fetch';
-import * as constant from '../../helpers/constants';
-import { USER_INFO } from '../../helpers/utils';
 import BargainTask from "./BargainTask/BargainTask";
 import BargainDemoTask from "./BargainTask/BargainDemoTask";
+
 
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 const ARIADNA_REDIRECT_REJECT = process.env.REACT_APP_ARIADNA_REDIRECT_REJECT;
@@ -83,6 +86,7 @@ class Index extends Component {
             generalOutputIndexes: [],
             outputFormData: userFormDefault,
             outputPSForm: [],
+            outputBargainTask: { task: [], demo: false },
             outputVisualPattern: { task: [], demo: [] },
             //utils
             logTimestamp: { screen: [], timestamp: [] },
@@ -609,6 +613,21 @@ class Index extends Component {
         })
     }
 
+    bargainTaskDemoTaskHandler = (isTaskCompleted) => {
+        if (DEBUG) console.log(isTaskCompleted)
+        const { outputBargainTask } = this.state;
+
+        outputBargainTask.demo = isTaskCompleted
+
+        //save results
+        this.setState({
+            outputBargainTask: outputBargainTask
+        }, () => {
+            //we simulate a space btn pressed because VisualPattern already finishes with a space btn pressed
+            this._validatePressedSpaceKeyToNextPage()
+        })
+    }
+
     /*********************************************************
      * VALIDATE DATA OF EACH COMPONENT BEFORE GOING TO NEXT PAGE
      **********************************************************/
@@ -697,6 +716,12 @@ class Index extends Component {
         return { isValid: (outputVisualPattern.demo.length > 0) }
     }
 
+    validateBargainDemo() {
+        const { outputBargainTask } = this.state;
+
+        return { isValid: (outputBargainTask.demo) }
+    }
+
     /**
      * Validate components before navigating between pages. Space key pressed
      */
@@ -720,6 +745,9 @@ class Index extends Component {
                 if (data.isValid) this._goToNextTaskInInputNavigation();
             } else if (screen === constant.VISUAL_PATTERN_DEMO_SCREEN) {
                 let data = this.validateVisualPatternDemo();
+                if (data.isValid) this._goToNextTaskInInputNavigation();
+            } else if (screen === constant.BARGAIN_DEMO_SCREEN) {
+                let data = this.validateBargainDemo();
                 if (data.isValid) this._goToNextTaskInInputNavigation();
             }
         }
@@ -1006,7 +1034,7 @@ function changePages(state, context) {
             data={inputPSForm}
         />;
     } else if (screen === constant.BARGAIN_DEMO_SCREEN) {
-        return <BargainDemoTask />;
+        return <BargainDemoTask action={context.bargainTaskDemoTaskHandler} />;
     } else if (screen === constant.BARGAIN_SCREEN_COND1) {
         return <BargainTask data={inputStores} />;
     } else if (screen === constant.BARGAIN_SCREEN_COND2) {

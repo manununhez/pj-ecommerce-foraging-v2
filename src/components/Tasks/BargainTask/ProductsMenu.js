@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import ScrollMenu from "react-horizontal-scrolling-menu";
 import ReactStars from "react-rating-stars-component";
 
+const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
+
 export default function ProductsMenu(props) {
 
     const menu = Menu(props.products, props.selected)
@@ -35,7 +37,7 @@ export default function ProductsMenu(props) {
         </div>
 
         <div className="text-center store-btn">
-            <Button outline color="secondary" size="lg" onClick={props.onGoStoreBtnClick}> Go to new store</Button > {' '}
+            <Button data-tut="reactour__button" outline color="secondary" size="lg" onClick={props.onGoStoreBtnClick}> Go to new store</Button > {' '}
         </div>
     </div>
     )
@@ -62,25 +64,37 @@ const MenuItem = (item, productIndex, isSelected) => {
     const discountPercentage = (item.discount * 100).toFixed()
     // console.log(`${item.productNumber}: ${isSelected}`)
     return (
-        <div key={productIndex}>
-            <div className="card product-card"
-                style={{ backgroundColor: isSelected ? "grey" : "white" }}>
-                <div>product#:{item.productNumber} bargain:{item.isBargain ? "T" : "F"}</div>
-                <div>
-                    <h4 style={{ float: "left" }}>{discountPercentage}% OFF!!</h4>
-                    <div style={{ float: "right" }}>{RatingBar(item.numOfStars)}</div>
-                </div>
-                <img className="responsive-images product-image"
-                    src={item.img}
-                    alt={item.productNumber} />
-                <h4 className="strikethrough">{item.oldPrice}</h4>
-                <h4>{item.newPrice}</h4>
-            </div>
-        </div>);
+        <div key={productIndex} data-tut={"reactour__product_" + productIndex}>
+            <ProductItem productIndex={productIndex} item={item} isSelected={isSelected} discountPercentage={discountPercentage} />
+        </div>
+    );
 };
 
+function ProductItem(props) {
+    const productIndex = props.productIndex
+    const item = props.item
+    const isSelected = props.isSelected
+    const discountPercentage = props.discountPercentage
+
+    return (
+        <div className="card product-card"
+            style={{ backgroundColor: isSelected ? "grey" : "white" }}>
+            {DEBUG ? <div>product#:{item.productNumber} bargain:{item.isBargain ? "T" : "F"}</div> : <></>}
+            <div data-tut={"reactour__bargain_details_" + productIndex}>
+                <h4 style={{ float: "left" }}>{discountPercentage}% OFF!!</h4>
+                <div style={{ float: "right" }}>{RatingBar(item.numOfStars)}</div>
+            </div>
+            <img className="responsive-images product-image"
+                src={item.img}
+                alt={item.productNumber} />
+            <h4 className="strikethrough">{item.oldPrice}</h4>
+            <h4>{item.newPrice}</h4>
+        </div>
+    )
+}
+
 const Arrow = ({ text, className }) => {
-    return <div className={className}>{text}</div>;
+    return <div data-tut="reactour__more_products" className={className}>{text}</div>;
 };
 
 Arrow.propTypes = {

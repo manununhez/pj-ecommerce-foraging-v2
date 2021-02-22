@@ -22,6 +22,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^2.0.5",
     "react-spinners": "^0.9.0",
+    "reactour": "^1.18.1",
     "reactstrap": "^8.7.1",
     "styled-components": "^5.2.1",
     "ua-parser-js": "^0.7.22",

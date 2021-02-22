@@ -5,6 +5,8 @@ import ProductsMenu from './ProductsMenu';
 import "../style.css";
 import { randomNumber } from '../../../helpers/utils';
 
+const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
+
 export default function BargainTask(props) {
     const PRODUCTS_PER_ROW = 5
 
@@ -104,15 +106,18 @@ export default function BargainTask(props) {
 
     const onLoadingFinished = () => {
         const newCurrentStoreIndex = currentStoreIndex + 1
-
+        console.log(storeLists[currentStoreIndex])
+        console.log(newCurrentStoreIndex)
+        const filteredNotBargainList = storeLists[newCurrentStoreIndex].products.filter(item => item.isBargain === false)
+        console.log(filteredNotBargainList)
         setShowProducts(true)
         setCurrentStoreIndex(newCurrentStoreIndex)
         setSelectedProducts([])
-        setCurrentProductListWithoutBargains(storeLists[newCurrentStoreIndex].products.filter(item => item.isBargain === false))
+        setCurrentProductListWithoutBargains(filteredNotBargainList)
     }
 
     return (<>
-        {`Store#:${storeLists[currentStoreIndex].storeNumber}`}
+        { DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}` : ""}
         {showProducts ?
             <ProductsMenu
                 products={storeLists[currentStoreIndex].products}
