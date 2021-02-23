@@ -217,7 +217,7 @@ export default function BargainTask(props) {
         { DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}` : ""}
         {showProducts ?
             <ProductsMenu
-                products={storeLists[currentStoreIndex].products}
+                products={currentProducts}
                 selected={selectedProducts}
                 onFirstItemVisible={onFirstItemVisible}
                 onLastItemVisible={onLastItemVisible}
