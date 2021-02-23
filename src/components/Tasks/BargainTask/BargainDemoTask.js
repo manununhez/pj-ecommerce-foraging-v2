@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import Tour from "reactour";
-// import { Button } from 'reactstrap';
 
-// import { TEXT_FOOTER, SPACE_KEY_CODE, EVENT_KEY_DOWN } from '../../../helpers/constants'
 import StickmanLoading from './StickmanLoading';
 import ProductsMenu from './ProductsMenu';
-// import Footer from "../../Footers/Footer";
 
 import "../style.css";
 
@@ -13,25 +10,9 @@ const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 
 export default function BargainDemoTask(props) {
 
-    // useEffect(() => {
-    //     const handleKeyDownEvent = event => {
-    //         const { key, keyCode } = event;
-    //         if (keyCode === SPACE_KEY_CODE) { //Transition between screens
-    //             console.log(`Key: ${key}; keyCode: ${keyCode}`)
+    const currentStoreIndex = 0
 
-    //             if (showFooter) {
-    //                 props.action(true)
-    //             }
-    //         }
-    //     }
-
-    //     document.addEventListener(EVENT_KEY_DOWN, handleKeyDownEvent);
-    //     return () => {
-    //         document.removeEventListener(EVENT_KEY_DOWN, handleKeyDownEvent);
-    //     };
-    // });
-
-    const list = [{
+    const storeLists = [{
         storeNumber: 1, bargainsNumber: 4, delay: 15, products: [
             { productNumber: 1, isBargain: false, oldPrice: 258, newPrice: 167.7, discount: 0.35, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/2picture.jpg" },
             { productNumber: 2, isBargain: true, oldPrice: 282, newPrice: 126.9, discount: 0.55, numOfStars: 3, img: "https://api.swps-pjatk-experiment.pl/v3/img/17picture.jpg" },
@@ -80,28 +61,25 @@ export default function BargainDemoTask(props) {
 
     const [isTourOpen, setIsTourOpen] = useState(true)
     const [selectedProducts, setSelectedProducts] = useState([])
-    const [currentStoreIndex, setCurrentStoreIndex] = useState(0)
     const [showProducts, setShowProducts] = useState(true)
     const [storesVisitedCounter, setStoresVisitedCounter] = useState(0)
-    const [storeLists, setStoreLists] = useState(list)
     const [tourConfigProduct, setTourConfigProduct] = useState({
         productBargainIndex: 3,
         productIndex: 1,
         productBargainText: "This is a bargain...",
         productText: "To select a bargain item,left- click on it."
     })
-    // const [showFooter, setShowFooter] = useState(false)
 
     const onFirstItemVisible = () => {
-        console.log("first item is visible");
+        if (DEBUG) console.log("first item is visible");
     };
 
     const onLastItemVisible = () => {
-        console.log("last item is visible");
+        if (DEBUG) console.log("last item is visible");
     };
 
     const onShowNextProducts = ({ translate }) => {
-        console.log(`onShowNextProducts`);
+        if (DEBUG) console.log(`onShowNextProducts`);
         setTourConfigProduct(
             {
                 productBargainIndex: 5,
@@ -109,13 +87,12 @@ export default function BargainDemoTask(props) {
                 productBargainText: "This is another bargain...",
                 productText: "To select a bargain item,left- click on it."
             })
-        // setProductBargainTutoIndex(7)
-        // setProductTutoIndex(9)
-        console.log(tourConfig)
+
+        if (DEBUG) console.log(tourConfig)
     };
 
     const onProductSelected = key => {
-        console.log(`onProductSelected: ${key}`);
+        if (DEBUG) console.log(`onProductSelected: ${key}`);
 
         if (!selectedProducts.includes(parseInt(key))) {
             let selected = [...selectedProducts]
@@ -127,7 +104,7 @@ export default function BargainDemoTask(props) {
     };
 
     const onShowNextStore = () => {
-        console.log("onGoStoreBtnClick")
+        if (DEBUG) console.log("onGoStoreBtnClick")
 
         const newStoresVisitedCounter = storesVisitedCounter + 1
 
@@ -137,13 +114,9 @@ export default function BargainDemoTask(props) {
     }
 
     const onLoadingFinished = () => {
-        // const newCurrentStoreIndex = currentStoreIndex + 1
+        setSelectedProducts([])
 
         props.action(true)
-        // setShowProducts(true)
-        // setCurrentStoreIndex(newCurrentStoreIndex)
-        // setShowFooter(true)
-        setSelectedProducts([])
     }
 
     const tourConfig = [
@@ -164,12 +137,10 @@ export default function BargainDemoTask(props) {
         {
             selector: '[data-tut="reactour__more_products"]',
             content: `Click here if you want to move the belt and see more products.`,
-            // stepInteraction: false
         },
         {
             selector: '[data-tut="reactour__button"]',
             content: `Click here if you want to go to another store.`,
-            // stepInteraction: false
         }]
 
     const accentColor = "#5cb7b7";
@@ -191,10 +162,7 @@ export default function BargainDemoTask(props) {
                 currentStore={storeLists[currentStoreIndex]}
                 onLoadingFinished={onLoadingFinished} />
         }
-        {/* {(showFooter) ? <Footer text={TEXT_FOOTER} /> : <></>} */}
         <Tour
-            // lastStepNextButton={<Button>"Done! Close the tour"</Button>}
-            // onRequestClose={onCloseTour}
             steps={tourConfig}
             isOpen={isTourOpen}
             maskClassName="mask"
@@ -202,15 +170,8 @@ export default function BargainDemoTask(props) {
             rounded={5}
             accentColor={accentColor}
             closeWithMask={false}
-            // showNavigationNumber={false}
-            // disableDotsNavigation={true}
             showCloseButton={false}
             onRequestClose={() => setIsTourOpen(false)}
-        // onAfterOpen={this.disableBody}
-        // onBeforeClose={() => setShowFooter(true)}
         />
     </>);
 }
-
-
-

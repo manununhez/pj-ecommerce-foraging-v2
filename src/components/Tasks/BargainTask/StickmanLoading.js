@@ -6,8 +6,6 @@ import "../style.css"
 import loading from '../../../assets/stickman-walking.gif';
 
 export default function StickmanLoading(props) {
-    console.log(props.currentStore)
-
     const currentStore = props.currentStore
     const marginOffSet = 40
 
