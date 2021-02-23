@@ -35,22 +35,18 @@ export default function StickmanLoading(props) {
         display: "inline-block"
     });
 
-    const squareRightStyle = ({
-        marginLeft: (currentStore.delay * marginOffSet - 70)
-    });
-
     return (
         <div style={{ textAlign: "center" }}>
             <div style={{ verticalAlign: "bottom" }}>
-                <div className="square stack-top" ></div>
+                <div className="square square-left stack-top"></div>
                 <SlideRightFadeOutImg
-                    className="stack-bottom"
+                    className="square-left stack-bottom"
                     style={{ display: "inline-block" }}
                     onAnimationEnd={props.onLoadingFinished}
                     src={loading}
                     alt="loading..."
                 />
-                <div className="square stack-top" style={squareRightStyle} ></div>
+                <div className="square square-right stack-top"></div>
             </div>
 
             <div style={lineStyle}></div>

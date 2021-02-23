@@ -215,10 +215,19 @@ form {
 .square {
   height: 140px;
   width: 75px;
-  /* opacity: 0.5; */
+   /* opacity: 0.5;  */
   background-color: #e9ecef;
   display: inline-block;
   vertical-align: bottom;
+}
+
+.square-left{
+  float:left;
+  margin-left: -70px;
+}
+.square-right{
+  float:right;
+  margin-right: -70px;
 }
 
 .stack-top{
