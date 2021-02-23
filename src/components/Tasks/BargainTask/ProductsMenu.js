@@ -54,7 +54,7 @@ const RatingBar = (value) => {
 
 const Menu = (list, selected) =>
     list.map((item, index) => {
-        // console.log(`Index: ${index}`)
+        if (DEBUG) console.log(`Index: ${index}`)
         const isSelected = selected.includes(index)
 
         return MenuItem(item, index, isSelected);
@@ -62,7 +62,7 @@ const Menu = (list, selected) =>
 
 const MenuItem = (item, productIndex, isSelected) => {
     const discountPercentage = (item.discount * 100).toFixed()
-    // console.log(`${item.productNumber}: ${isSelected}`)
+    if (DEBUG) console.log(`${item.productNumber}: ${isSelected}`)
     return (
         <div key={productIndex} data-tut={"reactour__product_" + productIndex}>
             <ProductItem productIndex={productIndex} item={item} isSelected={isSelected} discountPercentage={discountPercentage} />

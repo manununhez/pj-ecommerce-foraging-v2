@@ -31,7 +31,7 @@ export default function UserForm(props) {
     const handleKeyDownEvent = event => {
       const { key, keyCode } = event;
       if (keyCode === constant.ENTER_KEY_CODE) { //Transition between screens
-        console.log(`Key: ${key}; keyCode: ${keyCode}`)
+        if (DEBUG) console.log(`Key: ${key}; keyCode: ${keyCode}`)
         let error = {
           showError: false,
           textError: constant.TEXT_EMPTY

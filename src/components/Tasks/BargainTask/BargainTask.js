@@ -13,12 +13,11 @@ import { randomNumber } from '../../../helpers/utils';
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 
 export default function BargainTask(props) {
-
     const showFeedback = true
     const PRODUCTS_PER_ROW = 5
 
-    // const list = props.data.storesLong
-    const list = [{
+    const list = props.data.storesLong
+    const testList = [{
         storeNumber: 1, bargainsNumber: 4, delay: 15, products: [
             { productNumber: 1, isBargain: false, oldPrice: 258, newPrice: 167.7, discount: 0.35, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/2picture.jpg" },
             { productNumber: 2, isBargain: true, oldPrice: 282, newPrice: 126.9, discount: 0.55, numOfStars: 3, img: "https://api.swps-pjatk-experiment.pl/v3/img/17picture.jpg" },
@@ -53,7 +52,7 @@ export default function BargainTask(props) {
     const [productsSeenCounter, setProductsSeenCounter] = useState(1) //Initially, the user already see 5 products = productsSeenCounter * 5 = 1 * 5 = 5
     const [storesVisitedCounter, setStoresVisitedCounter] = useState(0)
     const [lastProductDisplayed, setLastProductDisplayed] = useState([]) //[5, 25] --> index 0: lastProduct# 5, index1: lastProduct#25
-    const [storeLists, setStoreLists] = useState(list)
+    const [storeLists, setStoreLists] = (props.typeTask.includes("TEST")) ? useState(testList) : useState(list)
     const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState([])
     const [currentProducts, setCurrentProducts] = useState(storeLists[currentStoreIndex].products.slice(0, PRODUCTS_PER_ROW * 2))
 
@@ -183,7 +182,7 @@ export default function BargainTask(props) {
     }
 
     const checkMissedBargains = () => {
-        console.log("checkMissedBargains")
+        if (DEBUG) console.log("checkMissedBargains")
 
         const from = (productsSeenCounter - 1) * PRODUCTS_PER_ROW
         const to = from + PRODUCTS_PER_ROW
@@ -193,7 +192,7 @@ export default function BargainTask(props) {
         let selectedBargainsCounter = 0
         for (let i = from; i <= to; i++) {
             if (selectedProducts.includes(i)) {
-                console.log(storeLists[currentStoreIndex].products[i])
+                if (DEBUG) console.log(storeLists[currentStoreIndex].products[i])
                 if (storeLists[currentStoreIndex].products[i].isBargain) {
                     selectedBargainsCounter++
                 }
@@ -218,7 +217,7 @@ export default function BargainTask(props) {
         { DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}` : ""}
         {showProducts ?
             <ProductsMenu
-                products={currentProducts}
+                products={storeLists[currentStoreIndex].products}
                 selected={selectedProducts}
                 onFirstItemVisible={onFirstItemVisible}
                 onLastItemVisible={onLastItemVisible}
@@ -226,7 +225,10 @@ export default function BargainTask(props) {
                 onUpdate={onShowNextProducts}
                 onGoStoreBtnClick={onShowNextStore}
             /> :
-            <StickmanLoading currentStore={storeLists[currentStoreIndex]} onLoadingFinished={onLoadingFinished} />
+            <div className="centered">
+                <StickmanLoading
+                    currentStore={storeLists[currentStoreIndex]}
+                    onLoadingFinished={onLoadingFinished} /></div>
         }
     </>);
 }

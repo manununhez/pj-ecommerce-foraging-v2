@@ -67,7 +67,7 @@ export default function BargainDemoTask(props) {
         productBargainIndex: 3,
         productIndex: 1,
         productBargainText: "This is a bargain...",
-        productText: "To select a bargain item,left- click on it."
+        productText: "To select a bargain item, left-click on it."
     })
 
     const onFirstItemVisible = () => {
@@ -85,7 +85,7 @@ export default function BargainDemoTask(props) {
                 productBargainIndex: 5,
                 productIndex: 7,
                 productBargainText: "This is another bargain...",
-                productText: "To select a bargain item,left- click on it."
+                productText: "To select a bargain item, left-click on it."
             })
 
         if (DEBUG) console.log(tourConfig)
@@ -121,8 +121,13 @@ export default function BargainDemoTask(props) {
 
     const tourConfig = [
         {
+            selector: `[data-tut="reactour__"]`,
+            content: 'Init tour',
+            stepInteraction: false
+        },
+        {
             selector: `[data-tut="reactour__product_${tourConfigProduct.productIndex}"]`,
-            content: tourConfigProduct.productText,
+            content: tourConfigProduct.productText
         },
         {
             selector: `[data-tut="reactour__product_${tourConfigProduct.productBargainIndex}"]`,
@@ -158,9 +163,10 @@ export default function BargainDemoTask(props) {
                 onUpdate={onShowNextProducts}
                 onGoStoreBtnClick={onShowNextStore}
             /> :
-            <StickmanLoading
-                currentStore={storeLists[currentStoreIndex]}
-                onLoadingFinished={onLoadingFinished} />
+            <div className="centered">
+                <StickmanLoading
+                    currentStore={storeLists[currentStoreIndex]}
+                    onLoadingFinished={onLoadingFinished} /></div>
         }
         <Tour
             steps={tourConfig}
@@ -168,9 +174,12 @@ export default function BargainDemoTask(props) {
             maskClassName="mask"
             className="helper"
             rounded={5}
+            disableKeyboardNavigation={true}
             accentColor={accentColor}
             closeWithMask={false}
             showCloseButton={false}
+            showNumber={false}
+            showNavigation={false}
             onRequestClose={() => setIsTourOpen(false)}
         />
     </>);

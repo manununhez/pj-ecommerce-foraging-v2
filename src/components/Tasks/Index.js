@@ -550,7 +550,7 @@ class Index extends Component {
             outputPSForm: outputPSForm,
             generalOutput: generalOutput
         }, () => {
-            console.log(this.state)
+            if (DEBUG) console.log(this.state)
             this._checkSyncGeneralData()
 
             //we simulate a space btn pressed because Auction task already finishes with a space btn pressed
@@ -733,8 +733,8 @@ class Index extends Component {
 
         if (currentScreenNumber < totalLength) { //To prevent keep transition between pages
 
-            console.log("Current Screen:")
-            console.log(screen)
+            if (DEBUG) console.log("Current Screen:")
+            if (DEBUG) console.log(screen)
             if (type === constant.INSTRUCTION_SCREEN) {
                 this._goToNextTaskInInputNavigation();
             } else if (screen === constant.PSFORM_SCREEN) {
@@ -813,7 +813,7 @@ class Index extends Component {
      * We move to next page, according to inputNavigation input data
      */
     _goToNextTaskInInputNavigation() {
-        console.log("_goToNextTaskInInputNavigation")
+        if (DEBUG) console.log("_goToNextTaskInInputNavigation")
 
         const { currentScreenNumber, inputNavigation, logTimestamp, showAlertWindowsClosing } = this.state;
         const { screen, timestamp } = logTimestamp
@@ -1002,7 +1002,7 @@ function changePages(state, context) {
     const { currentScreenNumber,
         inputNavigation,
         inputTextInstructions,
-        inputPSForm, inputStores } = state;
+        inputPSForm, inputStores, typeTask } = state;
     const totalLength = inputNavigation.length;
 
     if (totalLength === 0 || currentScreenNumber >= totalLength) return //To prevent keep transition between pages
@@ -1036,9 +1036,9 @@ function changePages(state, context) {
     } else if (screen === constant.BARGAIN_DEMO_SCREEN) {
         return <BargainDemoTask action={context.bargainTaskDemoTaskHandler} />;
     } else if (screen === constant.BARGAIN_SCREEN_COND1) {
-        return <BargainTask data={inputStores} />;
+        return <BargainTask data={inputStores} typeTask={typeTask} />;
     } else if (screen === constant.BARGAIN_SCREEN_COND2) {
-        return <BargainTask data={inputStores} />;
+        return <BargainTask data={inputStores} typeTask={typeTask} />;
     }
 }
 
