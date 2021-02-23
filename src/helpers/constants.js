@@ -123,3 +123,8 @@ export const VISUAL_PATTERN_RESULTS_CORRECT = "Brawo! Udało Ci się poprawnie z
 export const VISUAL_PATTERN_TEXT_START_PRESS_SPACE = "Naciśnij spację, aby przesłać swoje rozwiązanie.";
 export const VISUAL_PATTERN_INSTRUCTION = "Spróbuj odtworzyć wzór wyświetlony na poprzednim ekranie. Zaznaczasz i odznaczasz pola klikając na nie lewym przyciskiem myszy.";
 
+export const BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE = (bargainCounter) => { return `${bargainCounter} bargains in basket.` }
+export const BARGAIN_ERROR_SELECTED_ALERT_MESSAGE = "This is not a bargain."
+export const BARGAIN_MISSED_SELECTED_ALERT_MESSAGE = "Missed bargain."
+
+
