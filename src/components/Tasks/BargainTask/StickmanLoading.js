@@ -7,7 +7,7 @@ import loading from '../../../assets/stickman-walking.gif';
 
 export default function StickmanLoading(props) {
     const currentStore = props.currentStore
-    const marginOffSet = 40
+    const marginOffSet = 30
 
     const slideToRightAnimation = keyframes`
         0%{
@@ -29,26 +29,22 @@ export default function StickmanLoading(props) {
     `;
 
     const lineStyle = ({
-        marginTop: "-10px",
-        width: `${currentStore.delay * marginOffSet - 70}px`,
+        width: `${currentStore.delay * marginOffSet - 60}px`,
         borderBottom: "10px solid black",
-        display: "inline-block"
+        display: "flex"
     });
 
     return (
-        <div style={{ textAlign: "center" }}>
-            <div style={{ verticalAlign: "bottom" }}>
-                <div className="square square-left stack-top"></div>
-                <SlideRightFadeOutImg
-                    className="square-left stack-bottom"
-                    style={{ display: "inline-block" }}
-                    onAnimationEnd={props.onLoadingFinished}
-                    src={loading}
-                    alt="loading..."
-                />
-                <div className="square square-right stack-top"></div>
-            </div>
-
+        <div style={{ display: "inline" }}>
+            <div className="square square-left stack-top"></div>
+            <SlideRightFadeOutImg
+                className="square-left stack-bottom"
+                style={{ display: "inline-block" }}
+                onAnimationEnd={props.onLoadingFinished}
+                src={loading}
+                alt="loading..."
+            />
+            <div className="square square-right stack-top"></div>
             <div style={lineStyle}></div>
         </div>);
 }

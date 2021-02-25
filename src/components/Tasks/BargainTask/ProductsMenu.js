@@ -81,14 +81,14 @@ function ProductItem(props) {
             style={{ backgroundColor: isSelected ? "grey" : "white" }}>
             {DEBUG ? <div>product#:{item.productNumber} bargain:{item.isBargain ? "T" : "F"}</div> : <></>}
             <div data-tut={"reactour__bargain_details_" + productIndex}>
-                <h4 style={{ float: "left" }}>{discountPercentage}% OFF!!</h4>
+                <h5 style={{ float: "left" }}>{discountPercentage}% OFF!!</h5>
                 <div style={{ float: "right" }}>{RatingBar(item.numOfStars)}</div>
             </div>
             <img className="responsive-images product-image"
                 src={item.img}
                 alt={item.productNumber} />
-            <h4 className="strikethrough">{item.oldPrice}</h4>
-            <h4>{item.newPrice}</h4>
+            <h5 className="strikethrough">{item.oldPrice}</h5>
+            <h5>{item.newPrice}</h5>
         </div>
     )
 }

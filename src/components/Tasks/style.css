@@ -123,14 +123,14 @@ form {
 .scroll-menu {
     border-style: solid;
     border-color: grey;
-    width: 1310px; 
+    width: 1100px; 
     margin-left: auto;
     margin-right: auto;
     padding: 5px;
 }
 
 .scroll-menu-arrow {
-  padding: 20px;
+  padding: 5px;
   cursor: pointer;
 }
 
@@ -173,20 +173,20 @@ form {
 }
 
 .product-image {
-    height: 150px;
+    height: 120px;
     margin-left: auto; 
     margin-right: auto; 
     margin-top: 20px; 
     margin-bottom: 20px; 
-    max-height: 150px;
-    max-width: 120px;
+    max-height: 120px;
+    max-width: 110px;
 }
 
 .product-card {
-    width: 233px;
-    height: 348px;
+    width: 200px;/*233px;*/
+    height: 275px;/*348px;*/
     padding: 10px;
-    margin: 5px;
+    margin: 3px;
 }
 
 .product-card.active {
@@ -207,27 +207,24 @@ form {
 
 .line{
     width: 112px;
-    /* height: 47px; */
     border-bottom: 10px solid black;
     position: absolute;
 }
 
 .square {
-  height: 140px;
-  width: 75px;
-   /* opacity: 0.5;  */
+  height: 130px;
+  width: 70px;
+  /* opacity: 0.5;   */
   background-color: #e9ecef;
-  display: inline-block;
-  vertical-align: bottom;
 }
 
 .square-left{
   float:left;
-  margin-left: -70px;
+  margin-left: -67px;
 }
 .square-right{
   float:right;
-  margin-right: -70px;
+  margin-right: -67px;
 }
 
 .stack-top{
