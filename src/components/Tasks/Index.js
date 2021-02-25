@@ -266,6 +266,11 @@ class Index extends Component {
         }
     }
 
+    /**
+     * 
+     * @param {*} data 
+     * @param {*} error 
+     */
     _onLoadStoresShortDataCallBack(data, error) {
         if (data) {
             //Loggin the first screen of the navigation
@@ -394,10 +399,10 @@ class Index extends Component {
     }
 
     /**
-   * Results from saving user ps questionaries data
-   * @param {*} data 
-   * @param {*} error 
-   */
+    * Results from saving user ps questionaries data
+    * @param {*} data 
+    * @param {*} error 
+    */
     _onSaveUserPSFormCallBack(data, error) {
         if (DEBUG) console.log(data);
         if (data) {
@@ -488,7 +493,7 @@ class Index extends Component {
             outputFormData: formData,
             generalOutput: generalOutput
         }, () => {
-            this._validatePressedEnterButtonToNextPage()
+            this._validateToNextPage()
         })
     }
 
@@ -554,7 +559,7 @@ class Index extends Component {
             this._checkSyncGeneralData()
 
             //we simulate a space btn pressed because Auction task already finishes with a space btn pressed
-            this._validatePressedSpaceKeyToNextPage()
+            this._validateToNextPage()
         })
     }
 
@@ -582,7 +587,7 @@ class Index extends Component {
             generalOutput: generalOutput
         }, () => {
             //we simulate a space btn pressed because VisualPattern already finishes with a space btn pressed
-            this._validatePressedSpaceKeyToNextPage()
+            this._validateToNextPage()
         })
     }
 
@@ -609,7 +614,7 @@ class Index extends Component {
             generalOutput: generalOutput
         }, () => {
             //we simulate a space btn pressed because VisualPattern already finishes with a space btn pressed
-            this._validatePressedSpaceKeyToNextPage()
+            this._validateToNextPage()
         })
     }
 
@@ -624,8 +629,14 @@ class Index extends Component {
             outputBargainTask: outputBargainTask
         }, () => {
             //we simulate a space btn pressed because VisualPattern already finishes with a space btn pressed
-            this._validatePressedSpaceKeyToNextPage()
+            this._validateToNextPage()
         })
+    }
+
+    instructionHandler = (isValidToAdvance) => {
+        if (isValidToAdvance) {
+            this._validateToNextPage()
+        }
     }
 
     /*********************************************************
@@ -725,14 +736,13 @@ class Index extends Component {
     /**
      * Validate components before navigating between pages. Space key pressed
      */
-    _validatePressedSpaceKeyToNextPage() {
+    _validateToNextPage() {
         const { currentScreenNumber, inputNavigation } = this.state;
         const { screen, type } = inputNavigation[currentScreenNumber];
 
         let totalLength = inputNavigation.length;
 
         if (currentScreenNumber < totalLength) { //To prevent keep transition between pages
-
             if (DEBUG) console.log("Current Screen:")
             if (DEBUG) console.log(screen)
             if (type === constant.INSTRUCTION_SCREEN) {
@@ -749,21 +759,7 @@ class Index extends Component {
             } else if (screen === constant.BARGAIN_DEMO_SCREEN) {
                 let data = this.validateBargainDemo();
                 if (data.isValid) this._goToNextTaskInInputNavigation();
-            }
-        }
-    }
-
-    /**
-     * Validate components before navigating between pages. Enter key pressed
-     */
-    _validatePressedEnterButtonToNextPage() {
-        const { currentScreenNumber, inputNavigation } = this.state;
-        const currentScreen = inputNavigation[currentScreenNumber].screen;
-
-        let totalLength = inputNavigation.length;
-
-        if (currentScreenNumber < totalLength) { //To prevent keep transition between pages
-            if (currentScreen === constant.USER_FORM_SCREEN) {
+            } else if (screen === constant.USER_FORM_SCREEN) {
                 let data = this.validateForm();
 
                 if (data.isValid) {
@@ -779,11 +775,13 @@ class Index extends Component {
                         })
                     }
                 }
-
             }
         }
     }
 
+    /**
+     * 
+     */
     _syncDataAfterUserValidation() {
         const { outputFormData } = this.state;
         const { sex, age } = outputFormData;
@@ -856,27 +854,18 @@ class Index extends Component {
             }
 
             this._checkSyncGeneralData()
-
         });
-
     }
 
+    /**
+     * 
+     */
     _checkSyncGeneralData() {
         const { generalOutput } = this.state
         let itemsNotSyncedAmount = generalOutput.filter(item => item.sync === constant.STATE_NOT_SYNC).length
 
         if (itemsNotSyncedAmount >= constant.SYNC_AMOUN_ITEMS) {
             this._syncGeneralData()
-        }
-    }
-
-    /**
-     * Manage keyboard user interactions
-     * @param {*} event 
-     */
-    handleKeyDownEvent = (event) => {
-        if (event.keyCode === constant.SPACE_KEY_CODE) { //Transition between screens
-            this._validatePressedSpaceKeyToNextPage()
         }
     }
 
@@ -902,9 +891,6 @@ class Index extends Component {
         document.scrollingElement.scrollTop = 0;
         this.refs.main.scrollTop = 0;
 
-        //listener for keyboard detection
-        document.addEventListener(constant.EVENT_KEY_DOWN, this.handleKeyDownEvent, false);
-
         // HTML prevent space bar from scrolling page
         window.addEventListener(constant.EVENT_KEY_DOWN, function (e) {
             if (e.keyCode === constant.SPACE_KEY_CODE && e.target === document.body) {
@@ -921,7 +907,6 @@ class Index extends Component {
     }
 
     componentWillUnmount() {
-        document.removeEventListener(constant.EVENT_KEY_DOWN, this.handleKeyDownEvent, false);
         this._asyncData();
 
         window.removeEventListener(constant.EVENT_BEFORE_UNLOAD, this.handleWindowClose);
@@ -977,15 +962,18 @@ function isFooterShownInCurrentScreen(state) {
     let footerText = constant.TEXT_FOOTER
 
     if (type === constant.INSTRUCTION_SCREEN) {
-        if (screen.includes(constant.VISUAL_PATTERN) || screen.includes("Bargain")) {
+        if (screen.includes(constant.VISUAL_PATTERN)) {
             isFooterShown = true;
+        } else if (screen.includes("Bargain")) {
+            isFooterShown = true;
+            if (!screen.includes("Finish")) {
+                footerText = constant.TEXT_FOOTER_ENTER
+            }
         }
-    } else if (screen === constant.USER_FORM_SCREEN ||
-        screen === constant.PSFORM_SCREEN) {
+    } else if (screen === constant.PSFORM_SCREEN) {
         isFooterShown = true;
-    }
-
-    if (screen === constant.USER_FORM_SCREEN) {
+    } else if (screen === constant.USER_FORM_SCREEN) {
+        isFooterShown = true;
         footerText = constant.TEXT_FOOTER_ENTER
     }
 
@@ -1013,6 +1001,7 @@ function changePages(state, context) {
 
     if (type === constant.INSTRUCTION_SCREEN) {
         return <Instruction
+            action={context.instructionHandler}
             text={inputTextInstructions}
             name={screen}
         />;

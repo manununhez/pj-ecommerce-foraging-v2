@@ -3,6 +3,7 @@ export const WHITE = "white";
 export const BLUE = "#123abc";
 export const GREEN = "green";
 export const RED = "red";
+export const accentColor = "#5cb7b7";
 
 export const TEXT_EMPTY = "";
 
@@ -126,5 +127,13 @@ export const VISUAL_PATTERN_INSTRUCTION = "Spróbuj odtworzyć wzór wyświetlon
 export const BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE = (bargainCounter) => { return `${bargainCounter} bargains in basket.` }
 export const BARGAIN_ERROR_SELECTED_ALERT_MESSAGE = "This is not a bargain."
 export const BARGAIN_MISSED_SELECTED_ALERT_MESSAGE = "Missed bargain."
+
+export const TOUR_BARGAIN = "This is a bargain..."
+export const TOUR_BARGAIN2 = "This is another bargain..."
+export const TOUR_BARGAIN_SELECTION = "To select a bargain item, left-click on it."
+export const TOUR_INIT = "Training stage"
+export const TOUR_TEXT_BARGAIN_DEF = "...a bargain: discount >= 50% AND number of stars >= 4"
+export const TOUR_TEXT_MORE_PRODUCTS = "Click here if you want to move the belt and see more products."
+export const TOUR_TEXT_ANOTHER_STORE = "Click here if you want to go to another store."
 
 

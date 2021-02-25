@@ -6,6 +6,36 @@ import "./style.css";
 import * as constant from '../../helpers/constants';
 
 class Instruction extends React.Component {
+    handleKeyDownEvent = (event) => {
+        if (event.keyCode === constant.SPACE_KEY_CODE) { //Transition between screens
+            if (this.props.name.includes("Bargain") && this.props.name.includes("Finish")) {
+                this.props.action(true)
+            } else if (!this.props.name.includes("Bargain")) {
+                this.props.action(true)
+            }
+        } else if (event.keyCode === constant.ENTER_KEY_CODE) { //Transition between screens
+            if (this.props.name.includes("Bargain") && !this.props.name.includes("Finish")) {
+                this.props.action(true)
+            }
+        }
+    }
+
+    componentDidMount() {
+        //for keyboard detection
+        document.addEventListener(constant.EVENT_KEY_DOWN, this.handleKeyDownEvent, false);
+
+        // HTML prevent space bar from scrolling page
+        window.addEventListener(constant.EVENT_KEY_DOWN, function (e) {
+            if (e.keyCode === constant.SPACE_KEY_CODE && e.target === document.body) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener(constant.EVENT_KEY_DOWN, this.handleKeyDownEvent, false);
+    }
+
     render() {
         // const text = getTextForCurrentScreen(this.props.text, this.props.name);
 

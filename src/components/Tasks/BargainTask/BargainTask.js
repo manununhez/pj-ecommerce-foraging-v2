@@ -13,12 +13,11 @@ import { randomNumber } from '../../../helpers/utils';
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 
 export default function BargainTask(props) {
-    const showFeedback = true
     const PRODUCTS_PER_ROW = 5
 
     const list = props.data.storesLong
     const testList = [{
-        storeNumber: 1, bargainsNumber: 4, delay: 15, products: [
+        storeNumber: 1, bargainsNumber: 4, delay: 15, showFeedback: true, products: [
             { productNumber: 1, isBargain: false, oldPrice: 258, newPrice: 167.7, discount: 0.35, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/2picture.jpg" },
             { productNumber: 2, isBargain: true, oldPrice: 282, newPrice: 126.9, discount: 0.55, numOfStars: 3, img: "https://api.swps-pjatk-experiment.pl/v3/img/17picture.jpg" },
             { productNumber: 3, isBargain: false, oldPrice: 165, newPrice: 84.15, discount: 0.49, numOfStars: 1, img: "https://api.swps-pjatk-experiment.pl/v3/img/11picture.jpg" },
@@ -31,7 +30,7 @@ export default function BargainTask(props) {
             { productNumber: 10, isBargain: false, oldPrice: 206, newPrice: 131.84, discount: 0.36, numOfStars: 1, img: "https://api.swps-pjatk-experiment.pl/v3/img/23electron_picture.jpg" }
         ]
     }, {
-        storeNumber: 2, bargainsNumber: 15, delay: 15, products: [
+        storeNumber: 2, bargainsNumber: 15, delay: 15, showFeedback: false, products: [
             { productNumber: 1, isBargain: false, oldPrice: 269, newPrice: 201.75, discount: 0.25, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/62jewelry_picture.jpg" },
             { productNumber: 2, isBargain: false, oldPrice: 109, newPrice: 85.02, discount: 0.22, numOfStars: 4, img: "https://api.swps-pjatk-experiment.pl/v3/img/68jewelry_picture.jpg" },
             { productNumber: 3, isBargain: false, oldPrice: 127, newPrice: 85.09, discount: 0.33, numOfStars: 4, img: "https://api.swps-pjatk-experiment.pl/v3/img/8picture.jpg" },
@@ -55,7 +54,7 @@ export default function BargainTask(props) {
     const [storeLists, setStoreLists] = (props.typeTask.includes("TEST")) ? useState(testList) : useState(list)
     const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState([])
     const [currentProducts, setCurrentProducts] = useState(storeLists[currentStoreIndex].products.slice(0, PRODUCTS_PER_ROW * 2))
-
+    const [showFeedback, setShowFeedback] = useState(storeLists[currentStoreIndex].showFeedback)
     // USAMOS PRODUCTS_PER_ROW * 2 o simplement PRODUCTS_PER_ROW ??? Verificar donde USAMOS
     // En generateRandomProductList() generamos ahora PRODUCTS_PER_ROW.Deberia ser PRODUCTS_PER_ROW * 2?
     // VERIFICAR
@@ -179,6 +178,7 @@ export default function BargainTask(props) {
         setStoresVisitedCounter(newStoresVisitedCounter)
         setProductsSeenCounter(1)
         setCurrentProducts(storeLists[newStoresVisitedCounter].products.slice(0, PRODUCTS_PER_ROW * 2))
+        setShowFeedback(storeLists[newStoresVisitedCounter].showFeedback)
     }
 
     const checkMissedBargains = () => {
@@ -216,15 +216,17 @@ export default function BargainTask(props) {
     return (<>
         { DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}` : ""}
         {showProducts ?
-            <ProductsMenu
-                products={currentProducts}
-                selected={selectedProducts}
-                onFirstItemVisible={onFirstItemVisible}
-                onLastItemVisible={onLastItemVisible}
-                onSelect={onProductSelected}
-                onUpdate={onShowNextProducts}
-                onGoStoreBtnClick={onShowNextStore}
-            /> :
+            <div className="top-quarter">
+                <ProductsMenu
+                    products={currentProducts}
+                    selected={selectedProducts}
+                    onFirstItemVisible={onFirstItemVisible}
+                    onLastItemVisible={onLastItemVisible}
+                    onSelect={onProductSelected}
+                    onUpdate={onShowNextProducts}
+                    onGoStoreBtnClick={onShowNextStore}
+                /></div>
+            :
             <div className="centered">
                 <StickmanLoading
                     currentStore={storeLists[currentStoreIndex]}

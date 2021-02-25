@@ -4,6 +4,17 @@ import Tour from "reactour";
 import StickmanLoading from './StickmanLoading';
 import ProductsMenu from './ProductsMenu';
 
+import {
+    TOUR_BARGAIN,
+    TOUR_BARGAIN2,
+    TOUR_BARGAIN_SELECTION,
+    TOUR_INIT,
+    TOUR_TEXT_ANOTHER_STORE,
+    TOUR_TEXT_BARGAIN_DEF,
+    TOUR_TEXT_MORE_PRODUCTS,
+    accentColor
+} from '../../../helpers/constants';
+
 import "../style.css";
 
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
@@ -13,7 +24,7 @@ export default function BargainDemoTask(props) {
     const currentStoreIndex = 0
 
     const storeLists = [{
-        storeNumber: 1, bargainsNumber: 4, delay: 15, products: [
+        storeNumber: 1, bargainsNumber: 4, delay: 15, showFeedback: false, products: [
             { productNumber: 1, isBargain: false, oldPrice: 258, newPrice: 167.7, discount: 0.35, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/2picture.jpg" },
             { productNumber: 2, isBargain: true, oldPrice: 282, newPrice: 126.9, discount: 0.55, numOfStars: 3, img: "https://api.swps-pjatk-experiment.pl/v3/img/17picture.jpg" },
             { productNumber: 3, isBargain: false, oldPrice: 165, newPrice: 84.15, discount: 0.49, numOfStars: 1, img: "https://api.swps-pjatk-experiment.pl/v3/img/11picture.jpg" },
@@ -66,8 +77,8 @@ export default function BargainDemoTask(props) {
     const [tourConfigProduct, setTourConfigProduct] = useState({
         productBargainIndex: 3,
         productIndex: 1,
-        productBargainText: "This is a bargain...",
-        productText: "To select a bargain item, left-click on it."
+        productBargainText: TOUR_BARGAIN,
+        productText: TOUR_BARGAIN_SELECTION
     })
 
     const onFirstItemVisible = () => {
@@ -84,8 +95,8 @@ export default function BargainDemoTask(props) {
             {
                 productBargainIndex: 5,
                 productIndex: 7,
-                productBargainText: "This is another bargain...",
-                productText: "To select a bargain item, left-click on it."
+                productBargainText: TOUR_BARGAIN2,
+                productText: TOUR_BARGAIN_SELECTION
             })
 
         if (DEBUG) console.log(tourConfig)
@@ -122,7 +133,7 @@ export default function BargainDemoTask(props) {
     const tourConfig = [
         {
             selector: `[data-tut="reactour__"]`,
-            content: 'Init tour',
+            content: TOUR_INIT,
             stepInteraction: false
         },
         {
@@ -136,37 +147,37 @@ export default function BargainDemoTask(props) {
         },
         {
             selector: `[data-tut="reactour__bargain_details_${tourConfigProduct.productBargainIndex}"]`,
-            content: "...a bargain: discount >= 50% or number of stars >= 4",
+            content: TOUR_TEXT_BARGAIN_DEF,
             stepInteraction: false
         },
         {
             selector: '[data-tut="reactour__more_products"]',
-            content: `Click here if you want to move the belt and see more products.`,
+            content: TOUR_TEXT_MORE_PRODUCTS
         },
         {
             selector: '[data-tut="reactour__button"]',
-            content: `Click here if you want to go to another store.`,
+            content: TOUR_TEXT_ANOTHER_STORE
         }]
-
-    const accentColor = "#5cb7b7";
 
     return (<>
         {DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}` : ""}
 
         {showProducts ?
-            <ProductsMenu
-                products={storeLists[currentStoreIndex].products}
-                selected={selectedProducts}
-                onFirstItemVisible={onFirstItemVisible}
-                onLastItemVisible={onLastItemVisible}
-                onSelect={onProductSelected}
-                onUpdate={onShowNextProducts}
-                onGoStoreBtnClick={onShowNextStore}
-            /> :
+            <div className="top-quarter">
+                <ProductsMenu
+                    products={storeLists[currentStoreIndex].products}
+                    selected={selectedProducts}
+                    onFirstItemVisible={onFirstItemVisible}
+                    onLastItemVisible={onLastItemVisible}
+                    onSelect={onProductSelected}
+                    onUpdate={onShowNextProducts}
+                    onGoStoreBtnClick={onShowNextStore}
+                /></div> :
             <div className="centered">
                 <StickmanLoading
                     currentStore={storeLists[currentStoreIndex]}
                     onLoadingFinished={onLoadingFinished} /></div>
+
         }
         <Tour
             steps={tourConfig}
