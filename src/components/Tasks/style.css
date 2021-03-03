@@ -257,5 +257,13 @@ form {
 }
 
 .top-quarter {
-  margin-top: 7%
+  margin-top: 13%
+}
+
+.modal-alert{
+  position: fixed;
+  transform: translate(-50%, -50%);
+  top: -3%;
+  left: 41%;
+  min-width: 300px;
 }

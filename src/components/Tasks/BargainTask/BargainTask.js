@@ -1,21 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import StickmanLoading from './StickmanLoading';
-import ProductsMenu from './ProductsMenu';
-import "../style.css";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
 import {
     BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE,
     BARGAIN_ERROR_SELECTED_ALERT_MESSAGE,
-    BARGAIN_MISSED_SELECTED_ALERT_MESSAGE
+    BARGAIN_MISSED_SELECTED_ALERT_MESSAGE,
+    STORES_NOT_AVAILABLE,
+    MIDDLE_EXPERIMENT_ALERT,
+    ONE_SECOND_MS
 } from '../../../helpers/constants';
 import { randomNumber } from '../../../helpers/utils';
+import StickmanLoading from './StickmanLoading';
+import ProductsMenu from './ProductsMenu';
+import "../style.css";
 
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 
 export default function BargainTask(props) {
+    // const showFeedback = true
     const PRODUCTS_PER_ROW = 5
+    const EXPERIMENT_DURATION_SECS = 1 * 60
 
-    const list = props.data.storesLong
     const testList = [{
         storeNumber: 1, bargainsNumber: 4, delay: 15, showFeedback: true, products: [
             { productNumber: 1, isBargain: false, oldPrice: 258, newPrice: 167.7, discount: 0.35, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/2picture.jpg" },
@@ -44,21 +50,42 @@ export default function BargainTask(props) {
         ]
     }];
 
-    const [selectedProducts, setSelectedProducts] = useState([])
-    const [currentStoreIndex, setCurrentStoreIndex] = useState(0)
-    const [showProducts, setShowProducts] = useState(true)
+    const setConditionalList = () => {
+        if (props.typeTask.includes("TEST")) {
+            return testList
+        } else if (props.typeTask === "LONG-SHORT") {
+            return props.data.storesLong
+        } else if (props.typeTask === "SHORT-LONG") {
+            return props.data.storesShort
+        }
+    }
+
+
     const [bargainCounter, setBargainCounter] = useState(0) //isBargain TRUE
-    const [productsSeenCounter, setProductsSeenCounter] = useState(1) //Initially, the user already see 5 products = productsSeenCounter * 5 = 1 * 5 = 5
-    const [storesVisitedCounter, setStoresVisitedCounter] = useState(0)
-    const [lastProductDisplayed, setLastProductDisplayed] = useState([]) //[5, 25] --> index 0: lastProduct# 5, index1: lastProduct#25
-    const [storeLists, setStoreLists] = (props.typeTask.includes("TEST")) ? useState(testList) : useState(list)
+    const [currentStoreIndex, setCurrentStoreIndex] = useState(0)
     const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState([])
+    const [delay, setDelay] = useState(ONE_SECOND_MS)
+    const [lastProductDisplayed, setLastProductDisplayed] = useState([]) //[5, 25] --> index 0: lastProduct# 5, index1: lastProduct#25
+    const [modalAlertConfig, setModalAlertConfig] = useState({ isVisible: false, text: "", title: "" })
+    const [productsSeenCounter, setProductsSeenCounter] = useState(1) //Initially, the user already see 5 products = productsSeenCounter * 5 = 1 * 5 = 5 
+    const [selectedProducts, setSelectedProducts] = useState([])
+
+    const [showInstruction, setShowInstruction] = useState(false)
+    const [showProducts, setShowProducts] = useState(true)
+    const [storeLists, setStoreLists] = useState(setConditionalList())
+    const [storesVisitedCounter, setStoresVisitedCounter] = useState(0)
+    const [timer, setTimer] = useState({ counter: EXPERIMENT_DURATION_SECS })
+
+
     const [currentProducts, setCurrentProducts] = useState(storeLists[currentStoreIndex].products.slice(0, PRODUCTS_PER_ROW * 2))
     const [showFeedback, setShowFeedback] = useState(storeLists[currentStoreIndex].showFeedback)
     // USAMOS PRODUCTS_PER_ROW * 2 o simplement PRODUCTS_PER_ROW ??? Verificar donde USAMOS
     // En generateRandomProductList() generamos ahora PRODUCTS_PER_ROW.Deberia ser PRODUCTS_PER_ROW * 2?
     // VERIFICAR
 
+    /**
+     * MENU ITEM CALLBACKS
+     */
     const onFirstItemVisible = () => {
         if (DEBUG) console.log("first item is visible");
     };
@@ -66,19 +93,104 @@ export default function BargainTask(props) {
     const onLastItemVisible = () => {
         if (DEBUG) console.log("last item is visible");
 
+        generateNewProductListToDisplay()
+    };
+
+    const onUpdate = translate => {
+        //TODO verificar la funcion de productsSeenCounter
+        if (DEBUG) console.log(`onShowNextProducts`);
+
+        if (showFeedback) { checkMissedBargains() }
+
+        showNextProducts()
+
+    };
+
+    const onSelect = key => {
+        if (DEBUG) console.log(`onProductSelected: ${key}`);
+        productSelected(key)
+    };
+
+    const onShowNextStore = () => {
+        if (DEBUG) console.log("onGoStoreBtnClick")
+
+        if (showFeedback) { checkMissedBargains() }
+
+        displayNewStore()
+    }
+
+    /**
+     * Helper Functions
+     */
+
+    const productSelected = key => {
+        const productIndex = parseInt(key)
+
+        if (!selectedProducts.includes(productIndex)) {
+            const isBargain = storeLists[currentStoreIndex].products[productIndex].isBargain
+            let selected = [...selectedProducts]
+
+            selected.push(productIndex)
+
+            setSelectedProducts(selected)
+
+            //Check BARGAIN selection
+            if (isBargain) {
+                const newBargainCounter = bargainCounter + 1
+
+                if (showFeedback) {
+                    modalAlert("Great!", BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE(newBargainCounter))
+                }
+
+                setBargainCounter(newBargainCounter)
+            } else {
+                if (showFeedback) {
+                    modalAlert("Ups!", BARGAIN_ERROR_SELECTED_ALERT_MESSAGE)
+                }
+            }
+        }
+    }
+
+    const displayNewStore = () => {
+        if (storesVisitedCounter + 1 >= storeLists.length) {
+            modalAlert("Ups!", STORES_NOT_AVAILABLE)
+            return
+        }
+
+        const newStoresVisitedCounter = storesVisitedCounter + 1
+        const lastProductNumber = storeLists[currentStoreIndex].products[(productsSeenCounter * PRODUCTS_PER_ROW) - 1].productNumber
+        const newCurrentStoreIndex = currentStoreIndex + 1
+
+        lastProductDisplayed.push(lastProductNumber)
+
+        //Save results and clear state for a new store to show
+        setLastProductDisplayed(lastProductDisplayed)
+        setShowProducts(false)
+        setStoresVisitedCounter(newStoresVisitedCounter)
+        setProductsSeenCounter(1)
+        setCurrentProducts(storeLists[newStoresVisitedCounter].products.slice(0, PRODUCTS_PER_ROW * 2))
+        setShowFeedback(storeLists[newStoresVisitedCounter].showFeedback)
+        setCurrentStoreIndex(newCurrentStoreIndex)
+        setSelectedProducts([])
+        setCurrentProductListWithoutBargains([])
+    }
+
+    const showNextProducts = () => {
+        const newProductsSeenCounter = productsSeenCounter + 1
+
+        setProductsSeenCounter(newProductsSeenCounter)
+    }
+
+    const generateNewProductListToDisplay = () => {
         const from = productsSeenCounter * PRODUCTS_PER_ROW
         const to = from + (PRODUCTS_PER_ROW * 2)
         const isNeededGenerateNewProducts = currentProducts.length === storeLists[currentStoreIndex].products.length
+
         let tmp = []
 
-        if (DEBUG) console.log(currentProducts)
-        if (DEBUG) console.log(storeLists[currentStoreIndex].products)
-
         if (!isNeededGenerateNewProducts) {
-            if (DEBUG) console.log("Not needed new products")
             tmp = storeLists[currentStoreIndex].products.slice(from, to)
         } else {
-            if (DEBUG) console.log("Needed new products")
             // Update menu belt products with new random generated products when we reached the end of the product list
             let filteredNotBargainList = currentProductListWithoutBargains
 
@@ -97,18 +209,7 @@ export default function BargainTask(props) {
 
         //update current product list
         setCurrentProducts(currentProducts.concat(tmp))
-    };
-
-    const onShowNextProducts = ({ translate }) => {
-        //TODO verificar la funcion de productsSeenCounter
-        if (DEBUG) console.log(`onShowNextProducts`);
-
-        if (showFeedback) { checkMissedBargains() }
-
-        const newProductsSeenCounter = productsSeenCounter + 1
-
-        setProductsSeenCounter(newProductsSeenCounter)
-    };
+    }
 
     const generateRandomProductList = (filteredNotBargainList) => {
         let count = 0
@@ -118,119 +219,169 @@ export default function BargainTask(props) {
         //TODO what happened in case of an infinite loop here => there are not enough not bargain product lists
         while (count < PRODUCTS_PER_ROW) {
             const randomProduct = filteredNotBargainList[randomNumber(0, filteredNotBargainList.length - 1)]
+            const randomProductNumber = randomProduct.productNumber
 
-            if (!randomNumbersList.includes(randomProduct.productNumber)) {
-                randomNumbersList.push(randomProduct.productNumber)
+            if (!randomNumbersList.includes(randomProductNumber)) {
+                randomNumbersList.push(randomProductNumber)
                 newList.push(randomProduct)
-                count++;
+                count += 1;
             }
         }
 
         return newList;
     }
 
-    const onProductSelected = key => {
-        if (DEBUG) console.log(`onProductSelected: ${key}`);
-        const productIndex = parseInt(key)
-
-        if (!selectedProducts.includes(productIndex)) {
-            let selected = [...selectedProducts]
-
-            selected.push(productIndex)
-
-            setSelectedProducts(selected)
-
-            //Check BARGAIN selection
-            if (storeLists[currentStoreIndex].products[productIndex].isBargain) {
-                const newBargainCounter = bargainCounter + 1
-
-                if (showFeedback) {
-                    alert(BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE(newBargainCounter))
-                }
-
-                setBargainCounter(newBargainCounter)
-                if (DEBUG) console.log(newBargainCounter)
-            } else {
-                if (showFeedback) {
-                    alert(BARGAIN_ERROR_SELECTED_ALERT_MESSAGE)
-                }
-            }
-        }
-    };
-
-    const onShowNextStore = () => {
-        if (DEBUG) console.log("onGoStoreBtnClick")
-
-        if (showFeedback) { checkMissedBargains() }
-
-        if (storesVisitedCounter + 1 >= storeLists.length) {
-            alert("No more stores available. Please wait.")
-            return
-        }
-
-        const newStoresVisitedCounter = storesVisitedCounter + 1
-        const lastProductNumber = storeLists[currentStoreIndex].products[(productsSeenCounter * PRODUCTS_PER_ROW) - 1].productNumber
-
-        lastProductDisplayed.push(lastProductNumber)
-
-        setLastProductDisplayed(lastProductDisplayed)
-        setShowProducts(false)
-        setStoresVisitedCounter(newStoresVisitedCounter)
-        setProductsSeenCounter(1)
-        setCurrentProducts(storeLists[newStoresVisitedCounter].products.slice(0, PRODUCTS_PER_ROW * 2))
-        setShowFeedback(storeLists[newStoresVisitedCounter].showFeedback)
-    }
-
     const checkMissedBargains = () => {
-        if (DEBUG) console.log("checkMissedBargains")
-
         const from = (productsSeenCounter - 1) * PRODUCTS_PER_ROW
         const to = from + PRODUCTS_PER_ROW
-
-        const bargainProductListInThisIteration = storeLists[currentStoreIndex].products.slice(from, to).filter(product => product.isBargain === true)
+        const productListInThisIteration = storeLists[currentStoreIndex].products.slice(from, to)
+        const bargainProductListInThisIteration = productListInThisIteration.filter(product => product.isBargain === true)
 
         let selectedBargainsCounter = 0
+
         for (let i = from; i <= to; i++) {
             if (selectedProducts.includes(i)) {
-                if (DEBUG) console.log(storeLists[currentStoreIndex].products[i])
-                if (storeLists[currentStoreIndex].products[i].isBargain) {
-                    selectedBargainsCounter++
+                const product = storeLists[currentStoreIndex].products[i]
+
+                if (product.isBargain) {
+                    selectedBargainsCounter += 1
                 }
             }
         }
 
         if (selectedBargainsCounter !== bargainProductListInThisIteration.length) {
-            alert(BARGAIN_MISSED_SELECTED_ALERT_MESSAGE)
+            modalAlert("Ups!", BARGAIN_MISSED_SELECTED_ALERT_MESSAGE)
         }
     }
 
     const onLoadingFinished = () => {
-        const newCurrentStoreIndex = currentStoreIndex + 1
-
         setShowProducts(true)
-        setCurrentStoreIndex(newCurrentStoreIndex)
+    }
+
+    const modalAlert = (title, text, isVisible = true) => {
+        setModalAlertConfig({ isVisible: isVisible, text: text, title: title })
+    }
+
+    const onModalOpened = () => {
+        console.log("Model onOpened")
+    }
+
+    const onModalClosed = () => {
+        console.log("Model onClosed")
+        modalAlert("", "", false)
+    }
+
+    const onPauseTest = () => {
+        setDelay(ONE_SECOND_MS)
+        setShowProducts(true)
+        setShowInstruction(false)
+    }
+
+    const setNewStoreList = () => {
+        const newListToDisplay = JSON.stringify(storeLists) === JSON.stringify(props.data.storesLong) ? props.data.storesShort : props.data.storesLong
+        const newStoresVisitedCounter = storesVisitedCounter + 1
+
+        setStoreLists(newListToDisplay) //we change the stores lists by Conditions (Long/short)
+        setDelay(null)
+        setShowInstruction(true)
+        setShowProducts(false)
+
+        setCurrentStoreIndex(0)
         setSelectedProducts([])
         setCurrentProductListWithoutBargains([])
+
+        setStoresVisitedCounter(newStoresVisitedCounter)
+        setProductsSeenCounter(1)
+        setCurrentProducts(newListToDisplay[newStoresVisitedCounter].products.slice(0, PRODUCTS_PER_ROW * 2))
+        setShowFeedback(newListToDisplay[newStoresVisitedCounter].showFeedback)
+    }
+
+    useEffect(() => {//component didmount
+        let id = null
+        function tick() {
+            console.log(timer.counter)
+            if (timer.counter === 0) {
+                modalAlert("Ups!", "Timeout")
+
+                timer.counter = -1
+
+                clearInterval(id)
+                //When timer 0, the experiment finishes
+                props.action(true)
+            } else if (timer.counter === (EXPERIMENT_DURATION_SECS / 2)) {
+                // modalAlert("Info", "We reached the middle of the experiment")
+                timer.counter -= 1;
+
+                setNewStoreList()
+            } else {
+                timer.counter -= 1;//we dont use SetTimer here, to avoid re-render every second. Is it good?
+            }
+        }
+
+        if (delay !== null) {
+            id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+    }, [delay]);
+
+    const displayBodyConfig = (showProducts, showInstruction) => {
+        if (showProducts) {
+            return (<div className="top-quarter"><ProductsMenu
+                products={currentProducts}
+                selected={selectedProducts}
+                onFirstItemVisible={onFirstItemVisible}
+                onLastItemVisible={onLastItemVisible}
+                onSelect={onSelect}
+                onUpdate={onUpdate}
+                onGoStoreBtnClick={onShowNextStore} /></div>)
+        } else if (showInstruction) {
+            return (<div className="centered" style={{ textAlign: "center" }}>
+                <h3>{MIDDLE_EXPERIMENT_ALERT}</h3>
+                <br />
+                <br />
+                <Button color="secondary" size='sm' onClick={onPauseTest}>Continue</Button></div>)
+        } else {
+            return (<div className="centered">
+                <StickmanLoading
+                    currentStore={storeLists[currentStoreIndex]}
+                    onLoadingFinished={onLoadingFinished} /></div>)
+        }
     }
 
     return (<>
         { DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}` : ""}
-        {showProducts ?
-            <div className="top-quarter">
-                <ProductsMenu
-                    products={currentProducts}
-                    selected={selectedProducts}
-                    onFirstItemVisible={onFirstItemVisible}
-                    onLastItemVisible={onLastItemVisible}
-                    onSelect={onProductSelected}
-                    onUpdate={onShowNextProducts}
-                    onGoStoreBtnClick={onShowNextStore}
-                /></div>
-            :
-            <div className="centered">
-                <StickmanLoading
-                    currentStore={storeLists[currentStoreIndex]}
-                    onLoadingFinished={onLoadingFinished} /></div>
-        }
+
+        {modalAlertConfig.isVisible ?
+            <ModalAlert
+                title={modalAlertConfig.title}
+                text={modalAlertConfig.text}
+                onOpened={onModalOpened}
+                onClosed={onModalClosed} /> : <></>}
+
+        { displayBodyConfig(showProducts, showInstruction)}
     </>);
+}
+
+function ModalAlert(props) {
+    const { text, title } = props;
+    const [modal, setModal] = useState(true);
+
+    const toggle = () => setModal(modal => !modal);
+
+    return (
+        <div>
+            <Modal
+                isOpen={modal}
+                className="modal-alert"
+                toggle={toggle}
+                size='sm'
+                keyboard={false}
+                onOpened={props.onOpened}
+                onClosed={props.onClosed}>
+                <ModalHeader>{title}</ModalHeader>
+                <ModalBody>{text}</ModalBody>
+                <ModalFooter><Button color="secondary" size='sm' onClick={toggle}>Close</Button></ModalFooter>
+            </Modal>
+        </div>
+    );
 }

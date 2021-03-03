@@ -97,8 +97,7 @@ export const BARGAIN_DEMO_INSTRUCTION_COND1 = "BargainDemoTaskInstructionCond1";
 export const BARGAIN_DEMO_INSTRUCTION_COND2 = "BargainDemoTaskInstructionCond2";
 export const BARGAIN_DEMO_SCREEN = "BargainDemoTask";
 export const BARGAIN_DEMO_FINISH_INSTRUCTION = "BargainDemoTaskInstructionFinish";
-export const BARGAIN_SCREEN_COND1 = "BargainTaskCond1";
-export const BARGAIN_SCREEN_COND2 = "BargainTaskCond2";
+export const BARGAIN_SCREEN = "BargainTask";
 
 export const STORES_SHORT_TYPE = "Stores-short";
 export const STORES_LONG_TYPE = "Stores-long";
@@ -127,6 +126,9 @@ export const VISUAL_PATTERN_INSTRUCTION = "Spróbuj odtworzyć wzór wyświetlon
 export const BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE = (bargainCounter) => { return `${bargainCounter} bargains in basket.` }
 export const BARGAIN_ERROR_SELECTED_ALERT_MESSAGE = "This is not a bargain."
 export const BARGAIN_MISSED_SELECTED_ALERT_MESSAGE = "Missed bargain."
+
+export const STORES_NOT_AVAILABLE = "No more stores available. Please wait."
+export const MIDDLE_EXPERIMENT_ALERT = "We reached the middle of the experiment. Now the list will change. Click to continue to the next part of the experiment."
 
 export const TOUR_BARGAIN = "This is a bargain..."
 export const TOUR_BARGAIN2 = "This is another bargain..."

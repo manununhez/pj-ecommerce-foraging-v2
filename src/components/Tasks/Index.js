@@ -633,6 +633,21 @@ class Index extends Component {
         })
     }
 
+    bargainTaskHandler = (isTaskCompleted) => {
+        if (DEBUG) console.log(isTaskCompleted)
+        const { outputBargainTask } = this.state;
+
+        outputBargainTask.task = isTaskCompleted
+
+        //save results
+        this.setState({
+            outputBargainTask: outputBargainTask
+        }, () => {
+            //we simulate a space btn pressed because VisualPattern already finishes with a space btn pressed
+            this._validateToNextPage()
+        })
+    }
+
     instructionHandler = (isValidToAdvance) => {
         if (isValidToAdvance) {
             this._validateToNextPage()
@@ -733,6 +748,12 @@ class Index extends Component {
         return { isValid: (outputBargainTask.demo) }
     }
 
+    validateBargainTask() {
+        const { outputBargainTask } = this.state;
+
+        return { isValid: (outputBargainTask.task) }
+    }
+
     /**
      * Validate components before navigating between pages. Space key pressed
      */
@@ -758,6 +779,9 @@ class Index extends Component {
                 if (data.isValid) this._goToNextTaskInInputNavigation();
             } else if (screen === constant.BARGAIN_DEMO_SCREEN) {
                 let data = this.validateBargainDemo();
+                if (data.isValid) this._goToNextTaskInInputNavigation();
+            } else if (screen === constant.BARGAIN_SCREEN) {
+                let data = this.validateBargainTask();
                 if (data.isValid) this._goToNextTaskInInputNavigation();
             } else if (screen === constant.USER_FORM_SCREEN) {
                 let data = this.validateForm();
@@ -844,8 +868,7 @@ class Index extends Component {
                 screen: screen,
                 timestamp: timestamp
             },
-            loading: loading,
-            modalOpen: false,
+            loading: loading
         }, () => {
             if (DEBUG) console.log(this.state)
 
@@ -1000,34 +1023,19 @@ function changePages(state, context) {
     document.body.style.backgroundColor = (type === constant.INSTRUCTION_SCREEN) ? constant.WHITE : constant.LIGHT_GRAY;
 
     if (type === constant.INSTRUCTION_SCREEN) {
-        return <Instruction
-            action={context.instructionHandler}
-            text={inputTextInstructions}
-            name={screen}
-        />;
+        return <Instruction action={context.instructionHandler} text={inputTextInstructions} name={screen} />;
     } else if (screen === constant.USER_FORM_SCREEN) {
-        return <UserForm
-            action={context.formHandler}
-        />;
+        return <UserForm action={context.formHandler} />;
     } else if (screen === constant.VISUAL_PATTERN_SCREEN) {
-        return <VisualPatternTask
-            action={context.visualPatternTaskHandler}
-        />;
+        return <VisualPatternTask action={context.visualPatternTaskHandler} />;
     } else if (screen === constant.VISUAL_PATTERN_DEMO_SCREEN) {
-        return <VisualPatternDemoTask
-            action={context.visualPatternDemoTaskHandler}
-        />;
+        return <VisualPatternDemoTask action={context.visualPatternDemoTaskHandler} />;
     } else if (screen === constant.PSFORM_SCREEN) {
-        return <PSForm
-            action={context.psFormHandler}
-            data={inputPSForm}
-        />;
+        return <PSForm action={context.psFormHandler} data={inputPSForm} />;
     } else if (screen === constant.BARGAIN_DEMO_SCREEN) {
         return <BargainDemoTask action={context.bargainTaskDemoTaskHandler} />;
-    } else if (screen === constant.BARGAIN_SCREEN_COND1) {
-        return <BargainTask data={inputStores} typeTask={typeTask} />;
-    } else if (screen === constant.BARGAIN_SCREEN_COND2) {
-        return <BargainTask data={inputStores} typeTask={typeTask} />;
+    } else if (screen === constant.BARGAIN_SCREEN) {
+        return <BargainTask action={context.bargainTaskHandler} data={inputStores} typeTask={typeTask} />;
     }
 }
 

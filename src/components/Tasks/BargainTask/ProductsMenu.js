@@ -65,7 +65,11 @@ const MenuItem = (item, productIndex, isSelected) => {
     if (DEBUG) console.log(`${item.productNumber}: ${isSelected}`)
     return (
         <div key={productIndex} data-tut={"reactour__product_" + productIndex}>
-            <ProductItem productIndex={productIndex} item={item} isSelected={isSelected} discountPercentage={discountPercentage} />
+            <ProductItem
+                productIndex={productIndex}
+                item={item}
+                isSelected={isSelected}
+                discountPercentage={discountPercentage} />
         </div>
     );
 };
