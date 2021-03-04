@@ -201,9 +201,9 @@ function PSQuestionChoiceType(props) {
         const { answer, questionCode } = question
         let children = answer
             .filter((item) => item !== '' && item !== null)
-            .map((item) => {
+            .map((item, id) => {
                 return (
-                    <FormGroup check>
+                    <FormGroup check key={questionCode + "_" + id}>
                         <Label>
                             <Input type="radio"
                                 id={questionCode}
@@ -226,7 +226,7 @@ function PSQuestionChoiceType(props) {
 function PSQuestion(props) {
     const question = props.question
 
-    const answer = (question.type === constant.INPUT_TYPE) ? <PSQuestionInputType question={question} inputResult={props.inputResult} /> : <PSQuestionChoiceType question={question} multipleChoicesResult={props.multipleChoicesResult} />
+    const answer = (question.type === constant.INPUT_TYPE) ? <PSQuestionInputType key={question.questionCode} question={question} inputResult={props.inputResult} /> : <PSQuestionChoiceType key={question.questionCode} question={question} multipleChoicesResult={props.multipleChoicesResult} />
 
     return (<Card>
         <CardBody style={{ padding: '2em' }} key={question.questionCode}>

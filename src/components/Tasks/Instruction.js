@@ -63,7 +63,7 @@ const HtmlFormattedText = ({ text, screen }) => {
                 })
             let key = "KEY_" + txtFormatted.length + "_" + index
 
-            return <HtmlTextFontSize text={txtFormatted} fontSize={instruction.size} key={key} />
+            return HtmlTextFontSize(txtFormatted, instruction.size, key)
         });
 
     return children;
@@ -73,7 +73,7 @@ const HtmlFormattedText = ({ text, screen }) => {
  * Map the correspondent font size for the text instruction
  * @param {Map the correspondent font size for the text instruction} param0 
  */
-const HtmlTextFontSize = ({ text, fontSize, key }) => {
+const HtmlTextFontSize = (text, fontSize, key) => {
     switch (fontSize) {
         case constant.FONT_SIZE_HEADING1:
             return (<div className="instr-h1" key={key}>{text}</div>)
