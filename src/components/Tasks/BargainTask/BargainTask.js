@@ -60,28 +60,54 @@ export default function BargainTask(props) {
         }
     }
 
+    const [storeLists, setStoreLists] = useState(setConditionalList())
 
-    const [bargainCounter, setBargainCounter] = useState(0) //isBargain TRUE
+    const initializeProducts = () => {
+        return storeLists[0].products.slice(0, PRODUCTS_PER_ROW * 2)
+    }
+
+
+    // const [bargainCounter, setBargainCounter] = useState(0) //isBargain TRUE
+    // const [shownBargainsCounter, setShownBargainsCounter] = useState(0)
+    // const [storesVisitedCounter, setStoresVisitedCounter] = useState(0)
+
+    const [currentBeltIteration, setCurrentBeltIteration] = useState(1) //Initially, the user already see 5 products = currentBeltIteration * 5 = 1 * 5 = 5 
+    const [currentProducts, setCurrentProducts] = useState(initializeProducts())
     const [currentStoreIndex, setCurrentStoreIndex] = useState(0)
     const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState([])
+
+    const initNewStoreResult = (store) => {
+        const from = 0
+        const to = from + PRODUCTS_PER_ROW
+        const productListInThisIteration = store.products.slice(from, to)
+        const bargainNumberInThisIteration = productListInThisIteration.filter(product => product.isBargain === true).length
+        const lastProductNumber = store.products[PRODUCTS_PER_ROW - 1].productNumber
+        return {
+            storeNumber: store.storeNumber,
+            enterStoreTimestamp: Date.now(),
+            leaveStoreTimestamp: Date.now(),
+            productsSeen: PRODUCTS_PER_ROW,
+            lastProductDisplayed: lastProductNumber,
+            bargainTakenNumber: 0,
+            bargainShownNumber: bargainNumberInThisIteration
+        }
+    }
+
+    const [results, setResults] = useState([initNewStoreResult(storeLists[currentStoreIndex])])
+
     const [delay, setDelay] = useState(ONE_SECOND_MS)
-    const [lastProductDisplayed, setLastProductDisplayed] = useState([]) //[5, 25] --> index 0: lastProduct# 5, index1: lastProduct#25
     const [modalAlertConfig, setModalAlertConfig] = useState({ isVisible: false, text: "", title: "" })
-    const [productsSeenCounter, setProductsSeenCounter] = useState(1) //Initially, the user already see 5 products = productsSeenCounter * 5 = 1 * 5 = 5 
     const [selectedProducts, setSelectedProducts] = useState([])
 
-    const [showInstruction, setShowInstruction] = useState(false)
-    const [showProducts, setShowProducts] = useState(true)
-    const [storeLists, setStoreLists] = useState(setConditionalList())
-    const [storesVisitedCounter, setStoresVisitedCounter] = useState(0)
     const [timer, setTimer] = useState({ counter: EXPERIMENT_DURATION_SECS })
 
-
-    const [currentProducts, setCurrentProducts] = useState(storeLists[currentStoreIndex].products.slice(0, PRODUCTS_PER_ROW * 2))
     const [showFeedback, setShowFeedback] = useState(storeLists[currentStoreIndex].showFeedback)
+    const [showInstruction, setShowInstruction] = useState(false)
+    const [showProducts, setShowProducts] = useState(true)
     // USAMOS PRODUCTS_PER_ROW * 2 o simplement PRODUCTS_PER_ROW ??? Verificar donde USAMOS
     // En generateRandomProductList() generamos ahora PRODUCTS_PER_ROW.Deberia ser PRODUCTS_PER_ROW * 2?
     // VERIFICAR
+
 
     /**
      * MENU ITEM CALLBACKS
@@ -97,10 +123,10 @@ export default function BargainTask(props) {
     };
 
     const onUpdate = translate => {
-        //TODO verificar la funcion de productsSeenCounter
+        //TODO verificar la funcion de currentBeltIteration
         if (DEBUG) console.log(`onShowNextProducts`);
 
-        if (showFeedback) { checkMissedBargains() }
+        checkMissedBargains()
 
         showNextProducts()
 
@@ -114,7 +140,7 @@ export default function BargainTask(props) {
     const onShowNextStore = () => {
         if (DEBUG) console.log("onGoStoreBtnClick")
 
-        if (showFeedback) { checkMissedBargains() }
+        checkMissedBargains()
 
         displayNewStore()
     }
@@ -136,13 +162,15 @@ export default function BargainTask(props) {
 
             //Check BARGAIN selection
             if (isBargain) {
-                const newBargainCounter = bargainCounter + 1
+                const newBargainCounter = results[results.length - 1].bargainTakenNumber + 1
 
                 if (showFeedback) {
                     modalAlert("Great!", BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE(newBargainCounter))
                 }
 
-                setBargainCounter(newBargainCounter)
+                saveResultsNewBargainTaken(newBargainCounter)
+
+                // setBargainCounter(newBargainCounter)
             } else {
                 if (showFeedback) {
                     modalAlert("Ups!", BARGAIN_ERROR_SELECTED_ALERT_MESSAGE)
@@ -152,37 +180,41 @@ export default function BargainTask(props) {
     }
 
     const displayNewStore = () => {
-        if (storesVisitedCounter + 1 >= storeLists.length) {
+        if (results.length + 1 >= storeLists.length) {
             modalAlert("Ups!", STORES_NOT_AVAILABLE)
             return
         }
 
-        const newStoresVisitedCounter = storesVisitedCounter + 1
-        const lastProductNumber = storeLists[currentStoreIndex].products[(productsSeenCounter * PRODUCTS_PER_ROW) - 1].productNumber
+        // const newStoresVisitedCounter = storesVisitedCounter + 1
         const newCurrentStoreIndex = currentStoreIndex + 1
+        const newStore = storeLists[newCurrentStoreIndex]
 
-        lastProductDisplayed.push(lastProductNumber)
+        saveResultsBeforeLeavingStore(storeLists[currentStoreIndex])
+        results.push(initNewStoreResult(newStore))
 
         //Save results and clear state for a new store to show
-        setLastProductDisplayed(lastProductDisplayed)
         setShowProducts(false)
-        setStoresVisitedCounter(newStoresVisitedCounter)
-        setProductsSeenCounter(1)
-        setCurrentProducts(storeLists[newStoresVisitedCounter].products.slice(0, PRODUCTS_PER_ROW * 2))
-        setShowFeedback(storeLists[newStoresVisitedCounter].showFeedback)
+        // setStoresVisitedCounter(newStoresVisitedCounter)
+        setCurrentBeltIteration(1)
+        setCurrentProducts(newStore.products.slice(0, PRODUCTS_PER_ROW * 2))
+        setShowFeedback(newStore.showFeedback)
         setCurrentStoreIndex(newCurrentStoreIndex)
         setSelectedProducts([])
         setCurrentProductListWithoutBargains([])
     }
 
-    const showNextProducts = () => {
-        const newProductsSeenCounter = productsSeenCounter + 1
 
-        setProductsSeenCounter(newProductsSeenCounter)
+
+    const showNextProducts = () => {
+        const newCurrentBeltIteration = currentBeltIteration + 1
+
+        setCurrentBeltIteration(newCurrentBeltIteration)
+
+        saveResultsBeforeChangingBelt()
     }
 
     const generateNewProductListToDisplay = () => {
-        const from = productsSeenCounter * PRODUCTS_PER_ROW
+        const from = currentBeltIteration * PRODUCTS_PER_ROW
         const to = from + (PRODUCTS_PER_ROW * 2)
         const isNeededGenerateNewProducts = currentProducts.length === storeLists[currentStoreIndex].products.length
 
@@ -232,12 +264,18 @@ export default function BargainTask(props) {
     }
 
     const checkMissedBargains = () => {
-        const from = (productsSeenCounter - 1) * PRODUCTS_PER_ROW
+        const from = (currentBeltIteration - 1) * PRODUCTS_PER_ROW
         const to = from + PRODUCTS_PER_ROW
         const productListInThisIteration = storeLists[currentStoreIndex].products.slice(from, to)
-        const bargainProductListInThisIteration = productListInThisIteration.filter(product => product.isBargain === true)
+        const bargainNumberInThisIteration = productListInThisIteration.filter(product => product.isBargain === true).length
 
         let selectedBargainsCounter = 0
+
+        // if (bargainNumberInThisIteration > 0) {
+        //     setShownBargainsCounter(shownBargainsCounter + bargainNumberInThisIteration)
+        // }
+
+        if (!showFeedback) { return }
 
         for (let i = from; i <= to; i++) {
             if (selectedProducts.includes(i)) {
@@ -249,7 +287,7 @@ export default function BargainTask(props) {
             }
         }
 
-        if (selectedBargainsCounter !== bargainProductListInThisIteration.length) {
+        if (selectedBargainsCounter !== bargainNumberInThisIteration) {
             modalAlert("Ups!", BARGAIN_MISSED_SELECTED_ALERT_MESSAGE)
         }
     }
@@ -277,9 +315,78 @@ export default function BargainTask(props) {
         setShowInstruction(false)
     }
 
+    const saveResultsBeforeLeavingStore = (storeList) => {
+        console.log("saveResultsBeforeLeavingStore===")
+        const from = currentBeltIteration * PRODUCTS_PER_ROW
+        const lastProductNumber = storeList.products[from - 1].productNumber
+
+        console.log("BEFORE===")
+        console.log(results)
+
+        results[results.length - 1] = {
+            ...results[results.length - 1],
+            lastProductDisplayed: lastProductNumber,
+            leaveStoreTimestamp: Date.now()
+        }
+
+        console.log("AFTER===")
+        console.log(results)
+
+        // setResults(results)
+    }
+
+    const saveResultsBeforeChangingBelt = () => {
+
+        console.log("saveResultsBeforeChangingBelt===")
+        const store = storeLists[currentStoreIndex]
+
+        const newCurrentBeltIteration = currentBeltIteration + 1
+
+        const from = newCurrentBeltIteration * PRODUCTS_PER_ROW
+        const to = from + PRODUCTS_PER_ROW
+        const productListInThisIteration = store.products.slice(from, to)
+        const bargainNumberInThisIteration = productListInThisIteration.filter(product => product.isBargain === true).length
+        const lastProductNumber = store.products[from - 1].productNumber
+
+        console.log("BEFORE===")
+        console.log(results)
+
+        results[results.length - 1] = {
+            ...results[results.length - 1],
+            productsSeen: from,
+            lastProductDisplayed: lastProductNumber,
+            bargainShownNumber: results[results.length - 1].bargainShownNumber + bargainNumberInThisIteration
+        }
+
+        console.log("AFTER===")
+        console.log(results)
+
+        // setResults(results)
+    }
+
+    const saveResultsNewBargainTaken = (newBargainCounter) => {
+        console.log("saveResultsNewBargainTaken===")
+        console.log("BEFORE===")
+        console.log(results)
+
+        results[results.length - 1] = {
+            ...results[results.length - 1],
+            bargainTakenNumber: newBargainCounter
+        }
+
+        console.log("AFTER===")
+        console.log(results)
+
+        // setResults(results)
+    }
+
     const setNewStoreList = () => {
         const newListToDisplay = JSON.stringify(storeLists) === JSON.stringify(props.data.storesLong) ? props.data.storesShort : props.data.storesLong
-        const newStoresVisitedCounter = storesVisitedCounter + 1
+        const newStoresVisitedCounter = results.length + 1
+
+
+        saveResultsBeforeLeavingStore(storeLists[currentStoreIndex])
+        results.push(initNewStoreResult(newListToDisplay[0]))
 
         setStoreLists(newListToDisplay) //we change the stores lists by Conditions (Long/short)
         setDelay(null)
@@ -290,10 +397,13 @@ export default function BargainTask(props) {
         setSelectedProducts([])
         setCurrentProductListWithoutBargains([])
 
-        setStoresVisitedCounter(newStoresVisitedCounter)
-        setProductsSeenCounter(1)
+        // setStoresVisitedCounter(newStoresVisitedCounter)
+        setCurrentBeltIteration(1)
         setCurrentProducts(newListToDisplay[newStoresVisitedCounter].products.slice(0, PRODUCTS_PER_ROW * 2))
         setShowFeedback(newListToDisplay[newStoresVisitedCounter].showFeedback)
+
+
+
     }
 
     useEffect(() => {//component didmount
@@ -306,8 +416,17 @@ export default function BargainTask(props) {
                 timer.counter = -1
 
                 clearInterval(id)
+
+                // results[results.length - 1] = {
+                //     ...results[results.length - 1],
+                //     leaveStoreTimestamp: Date.now()
+                // }
+
                 //When timer 0, the experiment finishes
-                props.action(true)
+                props.action({
+                    isTaskCompleted: true,
+                    results: results
+                })
             } else if (timer.counter === (EXPERIMENT_DURATION_SECS / 2)) {
                 // modalAlert("Info", "We reached the middle of the experiment")
                 timer.counter -= 1;
@@ -349,7 +468,7 @@ export default function BargainTask(props) {
     }
 
     return (<>
-        { DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}` : ""}
+        { DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}    CurrentBelt:${currentBeltIteration}` : ""}
 
         {modalAlertConfig.isVisible ?
             <ModalAlert

@@ -86,7 +86,7 @@ class Index extends Component {
             generalOutputIndexes: [],
             outputFormData: userFormDefault,
             outputPSForm: [],
-            outputBargainTask: { task: [], demo: false },
+            outputBargainTask: { task: [], demo: [] },
             outputVisualPattern: { task: [], demo: [] },
             //utils
             logTimestamp: { screen: [], timestamp: [] },
@@ -375,28 +375,29 @@ class Index extends Component {
         if (DEBUG) console.log(data);
         if (data) {
             if (DEBUG) console.log("SaveUserLogTime");
-            request.saveUserVisualPattern(this.state, this._onSaveUserVisualPatternCallBack.bind(this))
+            // request.saveUserVisualPattern(this.state, this._onSaveUserVisualPatternCallBack.bind(this))
+            request.saveUserPSForm(this.state, this._onSaveUserPSFormCallBack.bind(this))
         } else {
             if (DEBUG) console.log("Error saving user logtime")
             this.setState({ loading: false });
         }
     }
 
-    /**
-     * Results from saving user visual pattern data
-     * @param {*} data 
-     * @param {*} error 
-     */
-    _onSaveUserVisualPatternCallBack(data, error) {
-        if (DEBUG) console.log(data);
-        if (data) {
-            if (DEBUG) console.log("SaveUserVisualPattern");
-            request.saveUserPSForm(this.state, this._onSaveUserPSFormCallBack.bind(this))
-        } else {
-            if (DEBUG) console.log("Error saving user visualPattern")
-            this.setState({ loading: false });
-        }
-    }
+    // /**
+    //  * Results from saving user visual pattern data
+    //  * @param {*} data 
+    //  * @param {*} error 
+    //  */
+    // _onSaveUserVisualPatternCallBack(data, error) {
+    //     if (DEBUG) console.log(data);
+    //     if (data) {
+    //         if (DEBUG) console.log("SaveUserVisualPattern");
+    //         request.saveUserPSForm(this.state, this._onSaveUserPSFormCallBack.bind(this))
+    //     } else {
+    //         if (DEBUG) console.log("Error saving user visualPattern")
+    //         this.setState({ loading: false });
+    //     }
+    // }
 
     /**
     * Results from saving user ps questionaries data
@@ -408,11 +409,29 @@ class Index extends Component {
         if (data) {
             if (DEBUG) console.log("SaveUserPSForm");
 
+            request.saveBargains(this.state, this._onSaveUserBargainCallBack.bind(this))
+
+        } else {
+            if (DEBUG) console.log("Error saving user psform")
+            this.setState({ loading: false });
+        }
+    }
+
+    /**
+     * 
+     * @param {*} data 
+     * @param {*} error 
+     */
+    _onSaveUserBargainCallBack(data, error) {
+        if (DEBUG) console.log(data);
+        if (data) {
+            if (DEBUG) console.log("SaveUserBargain");
+
             //redirect to ARIADNA
             window.location.replace(ARIADNA_REDIRECT_ACCEPTED);
 
         } else {
-            if (DEBUG) console.log("Error saving user psform")
+            if (DEBUG) console.log("Error saving UserBargain")
             this.setState({ loading: false });
         }
     }
@@ -618,11 +637,11 @@ class Index extends Component {
         })
     }
 
-    bargainTaskDemoTaskHandler = (isTaskCompleted) => {
-        if (DEBUG) console.log(isTaskCompleted)
+    bargainTaskDemoTaskHandler = (results) => {
+        if (DEBUG) console.log(results)
         const { outputBargainTask } = this.state;
 
-        outputBargainTask.demo = isTaskCompleted
+        outputBargainTask.demo = results
 
         //save results
         this.setState({
@@ -633,15 +652,32 @@ class Index extends Component {
         })
     }
 
-    bargainTaskHandler = (isTaskCompleted) => {
-        if (DEBUG) console.log(isTaskCompleted)
-        const { outputBargainTask } = this.state;
+    bargainTaskHandler = (results) => {
+        if (DEBUG) console.log("Bargain RESULTS")
+        if (DEBUG) console.log(results)
+        const { generalOutput, outputBargainTask, userID } = this.state;
 
-        outputBargainTask.task = isTaskCompleted
+        // const totalNumberOfBargainsTaken = results.reduce((accumulator, currentValue) => accumulator + currentValue.bargainTakenNumber)
+        // const totalNumberOfBargainsShown = results.reduce((accumulator, currentValue) => accumulator + currentValue.bargainShownNumber)
+        // const totalNumberOfProductsSeen = results.reduce((accumulator, currentValue) => accumulator + currentValue.productsSeen)
+        // const totalNumberOfStoresVisited = results.length
+        // const totalTimeLookingAProductInStore = results.reduce((accumulator, currentValue) => accumulator + ((currentValue.leaveStoreTimestamp - currentValue.enterStoreTimestamp)/currentValue.productsSeen))
+        // const averageTimeLookingAProductInStore = Math.floor(timeLookingAProductInStore / numberOfStoresVisited / 1000) //to seconds
+        // const averageNumberOfProductsSeenInAStore = numberOfProductsSeen / numberOfStoresVisited
+
+        outputBargainTask.task = results
+
+        generalOutput.push({
+            userID: userID,
+            task: constant.BARGAIN_SCREEN,
+            data: results.results,
+            sync: constant.STATE_NOT_SYNC
+        })
 
         //save results
         this.setState({
-            outputBargainTask: outputBargainTask
+            outputBargainTask: outputBargainTask,
+            generalOutput: generalOutput
         }, () => {
             //we simulate a space btn pressed because VisualPattern already finishes with a space btn pressed
             this._validateToNextPage()
@@ -745,13 +781,13 @@ class Index extends Component {
     validateBargainDemo() {
         const { outputBargainTask } = this.state;
 
-        return { isValid: (outputBargainTask.demo) }
+        return { isValid: (outputBargainTask.demo.isTaskCompleted) }
     }
 
     validateBargainTask() {
         const { outputBargainTask } = this.state;
 
-        return { isValid: (outputBargainTask.task) }
+        return { isValid: (outputBargainTask.task.isTaskCompleted) }
     }
 
     /**

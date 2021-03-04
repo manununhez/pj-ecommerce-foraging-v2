@@ -127,7 +127,7 @@ export default function BargainDemoTask(props) {
     const onLoadingFinished = () => {
         setSelectedProducts([])
 
-        props.action(true)
+        props.action({ isTaskCompleted: true, results: [] })
     }
 
     const tourConfig = [

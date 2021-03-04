@@ -12,6 +12,7 @@ const save_visualpattern_url = 'visualpattern'
 const save_userinfo_url = 'userinfo'
 const save_userlogtime_url = 'userlogtime'
 const save_usegeneraldata_url = 'usergeneraldata'
+const save_bargain_url = 'userbargain'
 
 async function request(url, params, method = 'GET') {
 
@@ -250,11 +251,38 @@ export function saveUserVisualPattern(data, callback) {
     save(save_visualpattern_url, uservisualpattern(data), callback)
 }
 
+/**
+ * 
+ * @param {*} data 
+ * @param {*} callback 
+ */
+export function saveBargains(data, callback) {
+    save(save_bargain_url, userbargain(data), callback)
+}
 
 /**
  * Helpers to format the data in the correct outputvalue
  * for a specific sheet
  */
+const userbargain = (data) => {
+    const { userID, outputBargainTask } = data;
+
+    let result = outputBargainTask.task.results.map((item) => {
+        return [
+            userID,
+            item.storeNumber,
+            item.enterStoreTimestamp,
+            item.leaveStoreTimestamp,
+            item.productsSeen,
+            item.lastProductDisplayed,
+            item.bargainTakenNumber,
+            item.bargainShownNumber
+        ]
+    })
+
+    return result;
+}
+
 const usergeneraldata = (data, ariadnaUserID) => {
 
     let result = []; //should have exactly 14 columns (Column A to N), thats why we fill empty indexes with ""
@@ -327,6 +355,26 @@ const usergeneraldata = (data, ariadnaUserID) => {
                 ]
             });
             result = result.concat(vp1);
+        } else if (output.task === constant.BARGAIN_SCREEN) {
+            let bargains = output.data.map((item) => {
+                return [
+                    output.userID,
+                    ariadnaUserID,
+                    output.task,
+                    item.storeNumber,
+                    item.enterStoreTimestamp,
+                    item.leaveStoreTimestamp,
+                    item.productsSeen,
+                    item.lastProductDisplayed,
+                    item.bargainTakenNumber,
+                    item.bargainShownNumber,
+                    constant.TEXT_EMPTY,
+                    constant.TEXT_EMPTY,
+                    constant.TEXT_EMPTY
+                ]
+            });
+
+            result = result.concat(bargains);
         }
     }
 
@@ -427,16 +475,15 @@ function uservisualpattern(data) {
 }
 
 function userpsform(data) {
-    let result = [];
     const { outputPSForm, userID } = data;
 
-    for (let i = 0; i < outputPSForm.length; i++) {
-        result.push([
+    let result = outputPSForm.map((item) => {
+        return [
             userID,
-            outputPSForm[i].questionCode,
-            outputPSForm[i].answer,
-        ]);
-    }
+            item.questionCode,
+            item.answer,
+        ]
+    })
 
     return result;
 }
