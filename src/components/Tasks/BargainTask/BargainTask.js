@@ -301,11 +301,11 @@ export default function BargainTask(props) {
     }
 
     const onModalOpened = () => {
-        console.log("Model onOpened")
+        if (DEBUG) console.log("Model onOpened")
     }
 
     const onModalClosed = () => {
-        console.log("Model onClosed")
+        if (DEBUG) console.log("Model onClosed")
         modalAlert("", "", false)
     }
 
@@ -316,12 +316,12 @@ export default function BargainTask(props) {
     }
 
     const saveResultsBeforeLeavingStore = (storeList) => {
-        console.log("saveResultsBeforeLeavingStore===")
+        if (DEBUG) console.log("saveResultsBeforeLeavingStore===")
         const from = currentBeltIteration * PRODUCTS_PER_ROW
         const lastProductNumber = storeList.products[from - 1].productNumber
 
-        console.log("BEFORE===")
-        console.log(results)
+        if (DEBUG) console.log("BEFORE===")
+        if (DEBUG) console.log(results)
 
         results[results.length - 1] = {
             ...results[results.length - 1],
@@ -329,15 +329,15 @@ export default function BargainTask(props) {
             leaveStoreTimestamp: Date.now()
         }
 
-        console.log("AFTER===")
-        console.log(results)
+        if (DEBUG) console.log("AFTER===")
+        if (DEBUG) console.log(results)
 
         // setResults(results)
     }
 
     const saveResultsBeforeChangingBelt = () => {
 
-        console.log("saveResultsBeforeChangingBelt===")
+        if (DEBUG) console.log("saveResultsBeforeChangingBelt===")
         const store = storeLists[currentStoreIndex]
 
         const newCurrentBeltIteration = currentBeltIteration + 1
@@ -348,8 +348,8 @@ export default function BargainTask(props) {
         const bargainNumberInThisIteration = productListInThisIteration.filter(product => product.isBargain === true).length
         const lastProductNumber = store.products[from - 1].productNumber
 
-        console.log("BEFORE===")
-        console.log(results)
+        if (DEBUG) console.log("BEFORE===")
+        if (DEBUG) console.log(results)
 
         results[results.length - 1] = {
             ...results[results.length - 1],
@@ -358,24 +358,24 @@ export default function BargainTask(props) {
             bargainShownNumber: results[results.length - 1].bargainShownNumber + bargainNumberInThisIteration
         }
 
-        console.log("AFTER===")
-        console.log(results)
+        if (DEBUG) console.log("AFTER===")
+        if (DEBUG) console.log(results)
 
         // setResults(results)
     }
 
     const saveResultsNewBargainTaken = (newBargainCounter) => {
-        console.log("saveResultsNewBargainTaken===")
-        console.log("BEFORE===")
-        console.log(results)
+        if (DEBUG) console.log("saveResultsNewBargainTaken===")
+        if (DEBUG) console.log("BEFORE===")
+        if (DEBUG) console.log(results)
 
         results[results.length - 1] = {
             ...results[results.length - 1],
             bargainTakenNumber: newBargainCounter
         }
 
-        console.log("AFTER===")
-        console.log(results)
+        if (DEBUG) console.log("AFTER===")
+        if (DEBUG) console.log(results)
 
         // setResults(results)
     }
@@ -409,7 +409,7 @@ export default function BargainTask(props) {
     useEffect(() => {//component didmount
         let id = null
         function tick() {
-            console.log(timer.counter)
+            if (DEBUG) console.log(timer.counter)
             if (timer.counter === 0) {
                 modalAlert("Ups!", "Timeout")
 
