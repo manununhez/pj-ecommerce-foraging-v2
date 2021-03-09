@@ -363,13 +363,13 @@ const usergeneraldata = (data, ariadnaUserID) => {
                     ariadnaUserID,
                     output.task,
                     item.storeNumber,
+                    item.typeTask,
                     item.enterStoreTimestamp,
                     item.leaveStoreTimestamp,
                     item.productsSeen,
                     item.lastProductDisplayed,
                     item.bargainTakenNumber,
                     item.bargainShownNumber,
-                    constant.TEXT_EMPTY,
                     constant.TEXT_EMPTY,
                     constant.TEXT_EMPTY
                 ]
