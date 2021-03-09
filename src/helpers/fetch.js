@@ -271,6 +271,7 @@ const userbargain = (data) => {
         return [
             userID,
             item.storeNumber,
+            item.typeTask,
             item.enterStoreTimestamp,
             item.leaveStoreTimestamp,
             item.productsSeen,

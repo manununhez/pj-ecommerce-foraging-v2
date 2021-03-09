@@ -21,6 +21,8 @@ export default function BargainTask(props) {
     // const showFeedback = true
     const PRODUCTS_PER_ROW = 5
     const EXPERIMENT_DURATION_SECS = 1 * 60
+    const EXPERIMENT_TYPE_LONG = "LONG-SHORT"
+    const EXPERIMENT_TYPE_SHORT = "SHORT-LONG"
 
     const testList = [{
         storeNumber: 1, bargainsNumber: 4, delay: 15, showFeedback: true, products: [
@@ -53,9 +55,9 @@ export default function BargainTask(props) {
     const setConditionalList = () => {
         if (props.typeTask.includes("TEST")) {
             return testList
-        } else if (props.typeTask === "LONG-SHORT") {
+        } else if (props.typeTask === EXPERIMENT_TYPE_LONG) {
             return props.data.storesLong
-        } else if (props.typeTask === "SHORT-LONG") {
+        } else if (props.typeTask === EXPERIMENT_TYPE_SHORT) {
             return props.data.storesShort
         }
     }
@@ -64,13 +66,14 @@ export default function BargainTask(props) {
         return store.products.slice(0, PRODUCTS_PER_ROW * 2)
     }
 
-    const initNewStoreResult = (store) => {
+    const initNewStoreResult = (store, typeTask) => {
         const from = 0
         const to = from + PRODUCTS_PER_ROW
         const productListInThisIteration = store.products.slice(from, to)
         const bargainNumberInThisIteration = productListInThisIteration.filter(product => product.isBargain === true).length
         const lastProductNumber = store.products[PRODUCTS_PER_ROW - 1].productNumber
         const initializedResultValue = {
+            typeTask: typeTask,
             storeNumber: store.storeNumber,
             enterStoreTimestamp: Date.now(),
             leaveStoreTimestamp: Date.now(),
@@ -90,7 +93,7 @@ export default function BargainTask(props) {
     const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState([])
     const [delay, setDelay] = useState(ONE_SECOND_MS)
     const [modalAlertConfig, setModalAlertConfig] = useState({ isVisible: false, text: "", title: "" })
-    const [results, setResults] = useState([initNewStoreResult(storeLists[currentStoreIndex])])
+    const [results, setResults] = useState([initNewStoreResult(storeLists[currentStoreIndex], props.typeTask)])
     const [showFeedback, setShowFeedback] = useState(storeLists[currentStoreIndex].showFeedback)
     const [showInstruction, setShowInstruction] = useState(false)
     const [showProducts, setShowProducts] = useState(true)
@@ -181,7 +184,7 @@ export default function BargainTask(props) {
 
         //update results
         saveResultsBeforeLeavingStore()
-        results.push(initNewStoreResult(newStore))
+        results.push(initNewStoreResult(newStore, props.typeTask))
 
         //Clear state for a new store to show
         setShowProducts(false)
@@ -309,7 +312,6 @@ export default function BargainTask(props) {
     }
 
     const saveResultsBeforeChangingBelt = () => {
-
         if (DEBUG) console.log("saveResultsBeforeChangingBelt===")
         const store = storeLists[currentStoreIndex]
 
@@ -321,9 +323,6 @@ export default function BargainTask(props) {
         const bargainNumberInThisIteration = productListInThisIteration.filter(product => product.isBargain === true).length
         const lastProductNumber = store.products[from - 1].productNumber
 
-        if (DEBUG) console.log("BEFORE===")
-        if (DEBUG) console.log(results)
-
         results[results.length - 1] = {
             ...results[results.length - 1],
             productsSeen: from,
@@ -331,30 +330,27 @@ export default function BargainTask(props) {
             bargainShownNumber: results[results.length - 1].bargainShownNumber + bargainNumberInThisIteration
         }
 
-        if (DEBUG) console.log("AFTER===")
         if (DEBUG) console.log(results)
     }
 
     const saveResultsNewBargainTaken = (newBargainCounter) => {
         if (DEBUG) console.log("saveResultsNewBargainTaken===")
-        if (DEBUG) console.log("BEFORE===")
-        if (DEBUG) console.log(results)
 
         results[results.length - 1] = {
             ...results[results.length - 1],
             bargainTakenNumber: newBargainCounter
         }
 
-        if (DEBUG) console.log("AFTER===")
         if (DEBUG) console.log(results)
     }
 
     const setNewStoreList = () => {
         const newListToDisplay = JSON.stringify(storeLists) === JSON.stringify(props.data.storesLong) ? props.data.storesShort : props.data.storesLong
         const newStoresVisitedCounter = results.length + 1
+        const newTypeTask = props.typeTask === EXPERIMENT_TYPE_LONG ? EXPERIMENT_TYPE_SHORT : EXPERIMENT_TYPE_LONG
 
         saveResultsBeforeLeavingStore()
-        results.push(initNewStoreResult(newListToDisplay[0]))
+        results.push(initNewStoreResult(newListToDisplay[0], newTypeTask))
 
         setStoreLists(newListToDisplay) //we change the stores lists by Conditions (Long/short)
         setDelay(null)
