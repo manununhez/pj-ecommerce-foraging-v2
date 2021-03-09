@@ -93,7 +93,8 @@ export default function BargainTask(props) {
     const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState([])
     const [delay, setDelay] = useState(ONE_SECOND_MS)
     const [modalAlertConfig, setModalAlertConfig] = useState({ isVisible: false, text: "", title: "" })
-    const [results, setResults] = useState([initNewStoreResult(storeLists[currentStoreIndex], props.typeTask)])
+    const [typeTask, setTypeTask] = useState(props.typeTask)
+    const [results, setResults] = useState([initNewStoreResult(storeLists[currentStoreIndex], typeTask)])
     const [showFeedback, setShowFeedback] = useState(storeLists[currentStoreIndex].showFeedback)
     const [showInstruction, setShowInstruction] = useState(false)
     const [showProducts, setShowProducts] = useState(true)
@@ -184,7 +185,7 @@ export default function BargainTask(props) {
 
         //update results
         saveResultsBeforeLeavingStore()
-        results.push(initNewStoreResult(newStore, props.typeTask))
+        results.push(initNewStoreResult(newStore, typeTask))
 
         //Clear state for a new store to show
         setShowProducts(false)
@@ -352,6 +353,7 @@ export default function BargainTask(props) {
         saveResultsBeforeLeavingStore()
         results.push(initNewStoreResult(newListToDisplay[0], newTypeTask))
 
+        setTypeTask(newTypeTask)
         setStoreLists(newListToDisplay) //we change the stores lists by Conditions (Long/short)
         setDelay(null)
         setShowInstruction(true)
