@@ -20,7 +20,7 @@ const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 export default function BargainTask(props) {
     // const showFeedback = true
     const PRODUCTS_PER_ROW = 5
-    const EXPERIMENT_DURATION_SECS = 1 * 60
+    const EXPERIMENT_DURATION_SECS = 1.5 * 60
     const EXPERIMENT_TYPE_LONG = "LONG-SHORT"
     const EXPERIMENT_TYPE_SHORT = "SHORT-LONG"
 
@@ -149,7 +149,7 @@ export default function BargainTask(props) {
         const productIndex = parseInt(key)
 
         if (!selectedProducts.includes(productIndex)) {
-            const isBargain = storeLists[currentStoreIndex].products[productIndex].isBargain
+            const productSelected = storeLists[currentStoreIndex].products[productIndex]
             let selected = [...selectedProducts]
 
             selected.push(productIndex)
@@ -157,17 +157,17 @@ export default function BargainTask(props) {
             setSelectedProducts(selected)
 
             //Check BARGAIN selection
-            if (isBargain) {
+            if (productSelected.isBargain) {
                 const newBargainCounter = results[results.length - 1].bargainTakenNumber + 1
 
                 if (showFeedback) {
-                    modalAlert("Great!", BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE(newBargainCounter))
+                    modalAlert("Great! >> ProductNumber:" + productSelected.productNumber, BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE(newBargainCounter))
                 }
 
                 saveResultsNewBargainTaken(newBargainCounter)
             } else {
                 if (showFeedback) {
-                    modalAlert("Ups!", BARGAIN_ERROR_SELECTED_ALERT_MESSAGE)
+                    modalAlert("Ups! >> ProductNumber:" + productSelected.productNumber, BARGAIN_ERROR_SELECTED_ALERT_MESSAGE)
                 }
             }
         }

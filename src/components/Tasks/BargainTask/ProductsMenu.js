@@ -82,7 +82,7 @@ function ProductItem(props) {
 
     return (
         <div className="card product-card"
-            style={{ backgroundColor: isSelected ? "grey" : "white" }}>
+            style={{ backgroundColor: isSelected ? "grey" : (item.isBargain ? "#e6ffcc" : "white") }}>
             {DEBUG ? <div>product#:{item.productNumber} bargain:{item.isBargain ? "T" : "F"}</div> : <></>}
             <div data-tut={"reactour__bargain_details_" + productIndex}>
                 <h5 style={{ float: "left" }}>{discountPercentage}% OFF!!</h5>
