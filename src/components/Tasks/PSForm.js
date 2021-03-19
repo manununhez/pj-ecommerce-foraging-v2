@@ -48,7 +48,7 @@ export default function PSForm(props) {
 
     const validateResults = () => {
         if (result === undefined || result === constant.TEXT_EMPTY) {
-            const error = { showError: true, textError: constant.ERROR_9 }
+            const error = { showError: true, textError: constant.PSFORM_SELECT_ALERT_ERROR }
             setError(error);
         } else {
             const currentQuestion = props.data[currentQuestionNumber]

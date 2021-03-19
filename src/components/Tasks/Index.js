@@ -829,7 +829,7 @@ class Index extends Component {
                 } else {
                     if (data.redirect) {
                         //we redirect to Ariadna
-                        alert(constant.ERROR_12);
+                        alert(constant.PARTICIPANTS_QUOTA_FULL_ALERT_ERROR);
                         this.setState({ showAlertWindowsClosing: false }, () => {
                             window.location.replace(ARIADNA_REDIRECT_REJECT);
                         })

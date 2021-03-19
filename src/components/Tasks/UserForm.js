@@ -38,19 +38,19 @@ export default function UserForm(props) {
         }
         // CONTROL OF EMPTY_TEXT
         if (formData.age === 0) {
-          error.textError = constant.ERROR_5;
+          error.textError = constant.FORM_AGE_ALERT_ERROR;
           error.showError = true;
         } else if (formData.profession === constant.TEXT_EMPTY) {
-          error.textError = constant.ERROR_7;
+          error.textError = constant.FORM_PROFESSION_ALERT_ERROR;
           error.showError = true;
         } else if (formData.levelEduc === constant.FORM_LEVEL_EDUC_DEFAULT) {
-          error.textError = constant.ERROR_11;
+          error.textError = constant.FORM_EDUC_LEVEL_ALERT_ERROR;
           error.showError = true;
         } else if (formData.yearsEduc === 0) {
-          error.textError = constant.ERROR_6;
+          error.textError = constant.FORM_YEARS_EDUC_ALERT_ERROR;
           error.showError = true;
         } else if (formData.sex === constant.TEXT_EMPTY) {
-          error.textError = constant.ERROR_14;
+          error.textError = constant.FORM_SEX_ALERT_ERROR;
           error.showError = true;
         }
 
@@ -77,27 +77,27 @@ export default function UserForm(props) {
     if (DEBUG) console.log(formInputValue)
 
     //We save all fields from form data 
-    if (formId === constant.FORM_SEX) {
+    if (formId === constant.FORM_SEX_ID) {
       if (formInputValue === constant.MALE_VALUE || formInputValue === constant.FEMALE_VALUE) {
         formDataResult.sex = formInputValue
       } else {
         formDataResult.sex = constant.TEXT_EMPTY
       }
-    } else if (formId === constant.FORM_AGE) {
+    } else if (formId === constant.FORM_AGE_ID) {
       if (isNaN(formInputValue) || formInputValue === constant.TEXT_EMPTY || formInputValue < 0) {
         formDataResult.age = 0
       } else {
         formDataResult.age = parseInt(formInputValue)
       }
-    } else if (formId === constant.FORM_PROFESSION) {
+    } else if (formId === constant.FORM_PROFESSION_ID) {
       formDataResult.profession = formInputValue
-    } else if (formId === constant.FORM_YEARS_EDUC) {
+    } else if (formId === constant.FORM_YEARS_EDUC_ID) {
       if (isNaN(formInputValue) || formInputValue === constant.TEXT_EMPTY || formInputValue < 0) {
         formDataResult.yearsEduc = 0
       } else {
         formDataResult.yearsEduc = parseInt(formInputValue)
       }
-    } else if (formId === constant.FORM_LEVEL_EDUC) {
+    } else if (formId === constant.FORM_LEVEL_EDUC_ID) {
       if (formInputValue === constant.FORM_LEVEL_EDUC_DEFAULT || formInputValue === constant.FORM_LEVEL_EDUC_INITIAL
         || formInputValue === constant.FORM_LEVEL_EDUC_MIDDLE || formInputValue === constant.FORM_LEVEL_EDUC_SUPERIOR) {
         formDataResult.levelEduc = formInputValue
@@ -126,20 +126,20 @@ export default function UserForm(props) {
       <Form role="form" style={{ marginTop: '40px' }}>
         <FormGroup className="mb-3">
           <div className="d-flex align-items-left">
-            <h5>Wiek</h5>
+            <h5>{constant.FORM_AGE_TITLE}</h5>
           </div>
           <NumberFormat className="form-control"
-            id={constant.FORM_AGE}
+            id={constant.FORM_AGE_ID}
             placeholder={constant.TEXT_EMPTY}
             autoFocus={true}
-            onValueChange={validateNumberFormat.bind(this, constant.FORM_AGE)}
+            onValueChange={validateNumberFormat.bind(this, constant.FORM_AGE_ID)}
             decimalScale={0} />
         </FormGroup>
         <FormGroup className="mb-3">
           <div className="d-flex align-items-left">
-            <h5>Zawód</h5>
+            <h5>{constant.FORM_PROFESSION_TITLE}</h5>
           </div>
-          <Input id={constant.FORM_PROFESSION}
+          <Input id={constant.FORM_PROFESSION_ID}
             placeholder={constant.TEXT_EMPTY}
             onChange={evt => validateInputForm(evt)}
             type="text"
@@ -147,40 +147,40 @@ export default function UserForm(props) {
         </FormGroup>
         <FormGroup>
           <div className="d-flex align-items-left">
-            <h5>Poziom wykształcenia</h5>
+            <h5>{constant.FORM_LEVEL_EDUC_TITLE}</h5>
           </div>
-          <Input type="select" name="select" id={constant.FORM_LEVEL_EDUC} onChange={evt => validateInputForm(evt)}>
-            <option value={constant.FORM_LEVEL_EDUC_DEFAULT}>Wybierz...</option>
-            <option value={constant.FORM_LEVEL_EDUC_INITIAL}>podstawowe</option>
-            <option value={constant.FORM_LEVEL_EDUC_MIDDLE}>średnie</option>
-            <option value={constant.FORM_LEVEL_EDUC_SUPERIOR}>wyższe</option>
+          <Input type="select" name="select" id={constant.FORM_LEVEL_EDUC_ID} onChange={evt => validateInputForm(evt)}>
+            <option value={constant.FORM_LEVEL_EDUC_DEFAULT}>Select...</option>
+            <option value={constant.FORM_LEVEL_EDUC_INITIAL}>primary</option>
+            <option value={constant.FORM_LEVEL_EDUC_MIDDLE}>secondary</option>
+            <option value={constant.FORM_LEVEL_EDUC_SUPERIOR}>higher</option>
           </Input>
         </FormGroup>
         <FormGroup className="mb-3">
           <div className="d-flex align-items-left">
-            <h5>Lata formalnej edukacji <small><i>(tylko etapy kończące się formalnym świadectwem: podstawowe, średnie, wyższe: np 8 lat szkoły podstawowej + 4 lata liceum = 12 lat)</i></small></h5>
+            <h5>{constant.FORM_YEARS_EDUC_TITLE} <small><i>{constant.FORM_YEARS_EDUC_TITLE_DESC}</i></small></h5>
           </div>
           <NumberFormat className="form-control"
-            id={constant.FORM_YEARS_EDUC}
+            id={constant.FORM_YEARS_EDUC_ID}
             placeholder={constant.TEXT_EMPTY}
-            onValueChange={validateNumberFormat.bind(this, constant.FORM_YEARS_EDUC)}
+            onValueChange={validateNumberFormat.bind(this, constant.FORM_YEARS_EDUC_ID)}
             decimalScale={0} />
         </FormGroup>
         <FormGroup tag="fieldset" className="mb-3">
           <div className="d-flex align-items-left">
-            <h5>Płeć</h5>
+            <h5>{constant.FORM_SEX_TITLE}</h5>
           </div>
           <div style={{ display: "inline-flex" }} >
             <Col lg="auto">
               <FormGroup>
                 <Label check>
                   <Input type="radio"
-                    id={constant.FORM_SEX}
-                    name={constant.FORM_SEX + "_F"}
+                    id={constant.FORM_SEX_ID}
+                    name={constant.FORM_SEX_ID + "_F"}
                     value={constant.FEMALE_VALUE}
                     onChange={validateInputForm}
                     checked={formData.sex === constant.FEMALE_VALUE} />{' '}
-                    Kobieta
+                    Female
                   </Label>
               </FormGroup>
             </Col>
@@ -188,12 +188,12 @@ export default function UserForm(props) {
               <FormGroup>
                 <Label check>
                   <Input type="radio"
-                    id={constant.FORM_SEX}
-                    name={constant.FORM_SEX + "_M"}
+                    id={constant.FORM_SEX_ID}
+                    name={constant.FORM_SEX_ID + "_M"}
                     value={constant.MALE_VALUE}
                     onChange={validateInputForm}
                     checked={formData.sex === constant.MALE_VALUE} />{' '}
-                    Mężczyzna
+                    Male
                     </Label>
               </FormGroup>
             </Col>

@@ -46,21 +46,27 @@ export const SYNC_AMOUN_ITEMS = 5;
 export const ONE_SECOND_MS = 1000;
 
 // Form IDs
-export const FORM_SEX = "radioSex";
-export const FORM_AGE = "age";
-export const FORM_PROFESSION = "profession";
-export const FORM_YEARS_EDUC = "yearsEduc";
-export const FORM_LEVEL_EDUC = "levelEducationSelect";
-export const FORM_LEVEL_EDUC_DEFAULT = "Wybierz...";
-export const FORM_LEVEL_EDUC_INITIAL = "Podstawowe";
-export const FORM_LEVEL_EDUC_MIDDLE = "Średnie";
-export const FORM_LEVEL_EDUC_SUPERIOR = "Wyższe";
+export const FORM_SEX_ID = "radioSex";
+export const FORM_AGE_ID = "age";
+export const FORM_PROFESSION_ID = "profession";
+export const FORM_YEARS_EDUC_ID = "yearsEduc";
+export const FORM_LEVEL_EDUC_ID = "levelEducationSelect";
+export const FORM_AGE_TITLE = "Age";
+export const FORM_PROFESSION_TITLE = "Profession";
+export const FORM_YEARS_EDUC_TITLE = "Number of years of formal education";
+export const FORM_YEARS_EDUC_TITLE_DESC = "(ended with a certificate or a diploma only: e.g., 8 years of primary school + 4 years of high school = 12 years)"
+export const FORM_LEVEL_EDUC_TITLE = "Level of education";
+export const FORM_SEX_TITLE = "Sex (M/F)";
+export const FORM_LEVEL_EDUC_DEFAULT = "Select...";
+export const FORM_LEVEL_EDUC_INITIAL = "Primary";
+export const FORM_LEVEL_EDUC_MIDDLE = "Secondary";
+export const FORM_LEVEL_EDUC_SUPERIOR = "Higher";
 export const FEMALE_VALUE = "F";
 export const MALE_VALUE = "M";
 
 //Footer
-export const TEXT_FOOTER = "Naciśnij spację, aby przejść dalej";
-export const TEXT_FOOTER_ENTER = "Naciśnij enter, aby przejść dalej";
+export const TEXT_FOOTER = "Press SPACEBAR to continue";
+export const TEXT_FOOTER_ENTER = "Press ENTER to continue";
 
 //RATING bar
 export const INACTIVE_STAR = '#d1d1cf';
@@ -105,23 +111,19 @@ export const STORES_LONG_TYPE = "Stores-long";
 
 
 //General App messages KEYS
-export const ERROR_1 = "Prosimy o dokonanie wyboru.";//"You have to select a choice first!"
-export const ERROR_5 = "Pole Wiek nie może pozostać puste.";//Age field cannot be empty
-export const ERROR_6 = "Pole Lata formalnej edukacji nie może pozostać puste.";//Years Education field cannot be empty!
-export const ERROR_7 = "Pole Zawód nie może pozostać puste.";//Profession field cannot be empty!
-export const ERROR_8 = "Proszę najpierw ocenić wszystkie opcje.";//Please rate all the options first!
-export const ERROR_9 = "Najpierw należy odpowiedzieć na wszystkie pytania.";//You need to complete the questions first!
-export const ERROR_10 = "Proszę upewnić się, że odpowiedź na pytanie została zaznaczona.";//Please verify all the questions were checked
-export const ERROR_11 = "Proszę wybrać poziom wykształcenia.";//You need to select an education level
-export const ERROR_12 = "Przepraszamy, ale niestety nie spełniasz wszystkich warunków uczestnictwa w badaniu lub przekroczona jest liczbę osób, która może wziąć w nim udział."; //We are sorry, but unfortunately you do not meet all the conditions for participating in the study or the number of eligible participants is already exceeded
-export const ERROR_13 = "Proszę najpierw wybrać conajmniej jedną opcję.";//Please rate all the options first!
-export const ERROR_14 = "Pole Płeć nie może pozostać puste.";//Age field cannot be empty
-export const SESSION_TIMEOUT_MESSAGE = "Z powodu upływu czasu sesja została zamknięta";
-export const VISUAL_PATTERN_RESULTS_PRESS_SPACE = "Naciśnij spację, aby przejść do kolejnej planszy.";
-export const VISUAL_PATTERN_RESULTS_FAILED = "Niestety nie udało Ci się poprawnie zaznaczyć wszystkich pól.";
-export const VISUAL_PATTERN_RESULTS_CORRECT = "Brawo! Udało Ci się poprawnie zaznaczyć wszystkie pola.";
-export const VISUAL_PATTERN_TEXT_START_PRESS_SPACE = "Naciśnij spację, aby przesłać swoje rozwiązanie.";
-export const VISUAL_PATTERN_INSTRUCTION = "Spróbuj odtworzyć wzór wyświetlony na poprzednim ekranie. Zaznaczasz i odznaczasz pola klikając na nie lewym przyciskiem myszy.";
+export const FORM_AGE_ALERT_ERROR = "The Age field cannot be left blank.";//Age field cannot be empty
+export const FORM_YEARS_EDUC_ALERT_ERROR = "The Years of Formal Education field cannot be left blank.";//Years Education field cannot be empty!
+export const FORM_PROFESSION_ALERT_ERROR = "The Profession field cannot be left blank.";//Profession field cannot be empty!
+export const FORM_SEX_ALERT_ERROR = "The Sex field cannot be left blank.";//Age field cannot be empty
+export const FORM_EDUC_LEVEL_ALERT_ERROR = "Please select your Level of education.";//You need to select an education level
+export const PSFORM_SELECT_ALERT_ERROR = "First you need to answer all the questions.";//You need to complete the questions first!
+export const PARTICIPANTS_QUOTA_FULL_ALERT_ERROR = "We are sorry, but unfortunately you do not meet all the conditions for participating in the study or the number of eligible participants is exceeded."; //We are sorry, but unfortunately you do not meet all the conditions for participating in the study or the number of eligible participants is already exceeded
+export const SESSION_TIMEOUT_MESSAGE = "The session has been closed due to the passage of time;";
+export const VISUAL_PATTERN_RESULTS_PRESS_SPACE = "Press SPACEBAR to go to the next board.";
+export const VISUAL_PATTERN_RESULTS_FAILED = "Unfortunately, you did not manage to select all the boxes correctly.";
+export const VISUAL_PATTERN_RESULTS_CORRECT = "Bravo! You have successfully checked all the boxes.";
+export const VISUAL_PATTERN_TEXT_START_PRESS_SPACE = "Press the spacebar to submit your solution.";
+export const VISUAL_PATTERN_INSTRUCTION = "Try to recreate the pattern displayed on the previous screen. You select and deselect the boxes by clicking on them with the left mouse button.";
 
 export const BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE = (bargainCounter) => { return `${bargainCounter} bargains in basket.` }
 export const BARGAIN_ERROR_SELECTED_ALERT_MESSAGE = "This is not a bargain."
