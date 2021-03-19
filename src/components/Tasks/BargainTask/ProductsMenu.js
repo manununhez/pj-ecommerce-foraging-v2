@@ -46,7 +46,7 @@ export default function ProductsMenu(props) {
 const RatingBar = (value) => {
     return (<ReactStars
         edit={false}
-        size={10}
+        size={13}
         count={6}
         value={value}
         half={false} />);
@@ -82,17 +82,21 @@ function ProductItem(props) {
 
     return (
         <div className="card product-card"
-            style={{ backgroundColor: isSelected ? "grey" : (item.isBargain ? "#e6ffcc" : "white") }}>
+            style={{ backgroundColor: isSelected ? "grey" : ((item.isBargain && DEBUG) ? "#e6ffcc" : "white") }}>
             {DEBUG ? <div>product#:{item.productNumber} bargain:{item.isBargain ? "T" : "F"}</div> : <></>}
             <div data-tut={"reactour__bargain_details_" + productIndex}>
-                <h5 style={{ float: "left" }}>{discountPercentage}% OFF!!</h5>
-                <div style={{ float: "right" }}>{RatingBar(item.numOfStars)}</div>
+                <h5>{discountPercentage}% OFF!!</h5>
             </div>
             <img className="responsive-images product-image"
                 src={item.img}
                 alt={item.productNumber} />
-            <h5 className="strikethrough">{item.oldPrice}</h5>
-            <h5>{item.newPrice}</h5>
+            <div style={{ position: "relative" }}>
+                <div>
+                    <h5 className="strikethrough">{item.oldPrice}</h5>
+                    <h5>{item.newPrice}</h5>
+                </div>
+                <div style={{ bottom: 0, right: 0, position: "absolute", marginBottom: "10px" }}>{RatingBar(item.numOfStars)}</div>
+            </div>
         </div>
     )
 }
