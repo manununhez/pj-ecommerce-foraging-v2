@@ -131,7 +131,7 @@ export default function BargainDemoTask(props) {
         {DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}` : ""}
 
         {showProducts ?
-            <div className="top-quarter">
+            <div /*className="top-quarter"*/>
                 <ProductsMenu
                     products={storeLists[currentStoreIndex].products}
                     selected={selectedProducts}

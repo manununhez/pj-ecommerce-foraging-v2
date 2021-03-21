@@ -400,7 +400,7 @@ export default function BargainTask(props) {
 
     const displayBodyConfig = (showProducts, showInstruction) => {
         if (showProducts) {
-            return (<div className="top-quarter"><ProductsMenu
+            return (<div /*className="top-quarter"*/><ProductsMenu
                 products={currentProducts}
                 selected={selectedProducts}
                 onFirstItemVisible={onFirstItemVisible}

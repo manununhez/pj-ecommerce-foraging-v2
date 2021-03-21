@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button } from 'reactstrap';
+import { Container, Row, Col, Input, Button } from "reactstrap";
+
 import PropTypes from "prop-types";
 import ScrollMenu from "react-horizontal-scrolling-menu";
 import ReactStars from "react-rating-stars-component";
@@ -13,27 +14,46 @@ export default function ProductsMenu(props) {
 
     return (<div>
         <div className="scroll-menu">
-            <ScrollMenu
-                alignCenter={false}
-                arrowRight={ArrowRight}
-                clickWhenDrag={false}
-                data={menu}
-                scrollBy={5}
-                dragging={false}
-                leftArrowVisible={false}
-                hideArrows={true}
-                hideSingleArrow={true}
-                onFirstItemVisible={props.onFirstItemVisible}
-                onLastItemVisible={props.onLastItemVisible}
-                onSelect={props.onSelect}
-                onUpdate={props.onUpdate}
-                // ref={el => (this.menu = el)}
-                scrollToSelected={false}
-                // selected={selected}
-                transition={0.3}
-                translate={0}
-                wheel={false}
-            />
+            <Row style={{ backgroundColor: "white", height: "60px", padding: "15px", marginBottom: "20px", marginRight: "auto", marginLeft: "auto" }}>
+                <Col xs="2"><img style={{ maxHeight: "35px" }} src="https://assets.allegrostatic.com/metrum/brand/allegro-347440b030.svg" /></Col>
+                <Col xs="8">
+                    <Row>
+                        <Col xs="10"><Input placeholder="czego szukasz?" style={{ backgroundColor: "white" }} type="search" disabled /></Col>
+                        <Col xs="2"><button style={{ backgroundColor: "#ff5a00", paddingTop: "5px", paddingBottom: "5px", paddingLeft: "10px", paddingRight: "10px", color: "white" }} disabled> SZUKAJ</button></Col>
+                    </Row>
+                </Col>
+                <Col xs="2">
+                    <img src="https://assets.allegrostatic.com/metrum/icon/bag-c9f42da6df.svg" />
+                    <img src="https://assets.allegrostatic.com/metrum/icon/user-0135502fa4.svg" />
+                </Col>
+            </Row>
+            <h4 style={{ paddingTop: "15px", paddingBottom: "5px", paddingLeft: "10px" }}>Local offers!</h4>
+            <div style={{ backgroundColor: "white", paddingTop: "40px", paddingBottom: "40px", paddingLeft: "5px" }}>
+                <ScrollMenu
+                    alignCenter={false}
+                    arrowRight={ArrowRight}
+                    clickWhenDrag={false}
+                    data={menu}
+                    scrollBy={5}
+                    dragging={false}
+                    leftArrowVisible={false}
+                    hideArrows={true}
+                    hideSingleArrow={true}
+                    onFirstItemVisible={props.onFirstItemVisible}
+                    onLastItemVisible={props.onLastItemVisible}
+                    onSelect={props.onSelect}
+                    onUpdate={props.onUpdate}
+                    // ref={el => (this.menu = el)}
+                    scrollToSelected={false}
+                    // selected={selected}
+                    transition={0.3}
+                    translate={0}
+                    wheel={false}
+                />
+            </div>
+            <div style={{ backgroundColor: "#3a4e58", height: "70px", lineHeight: "70px", textAlign: "center", color: "white", fontSize: "small" }}>
+                <p>Korzystanie z serwisu oznacza akceptację regulaminu</p>
+            </div>
         </div>
 
         <div className="text-center store-btn">
