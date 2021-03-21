@@ -23,6 +23,8 @@ export default function BargainTask(props) {
     const EXPERIMENT_DURATION_SECS = 1.5 * 60
     const EXPERIMENT_TYPE_LONG = "LONG-SHORT"
     const EXPERIMENT_TYPE_SHORT = "SHORT-LONG"
+    const EXPERIMENT_TYPE_LONG_NT = "LONG-SHORT-NT"
+    const EXPERIMENT_TYPE_SHORT_NT = "SHORT-LONG-NT"
 
     const testList = [{
         storeNumber: 1, bargainsNumber: 4, delay: 15, showFeedback: true, products: [
@@ -55,9 +57,9 @@ export default function BargainTask(props) {
     const setConditionalList = () => {
         if (props.typeTask.includes("TEST")) {
             return testList
-        } else if (props.typeTask === EXPERIMENT_TYPE_LONG) {
+        } else if (props.typeTask === EXPERIMENT_TYPE_LONG || props.typeTask === EXPERIMENT_TYPE_LONG_NT) {
             return props.data.storesLong
-        } else if (props.typeTask === EXPERIMENT_TYPE_SHORT) {
+        } else if (props.typeTask === EXPERIMENT_TYPE_SHORT || props.typeTask === EXPERIMENT_TYPE_SHORT_NT) {
             return props.data.storesShort
         }
     }
@@ -86,12 +88,20 @@ export default function BargainTask(props) {
         return initializedResultValue
     }
 
+    const setInitialDelayDuringTestingOnly = () => {
+        if (props.typeTask.includes("-NT")) {
+            return null;
+        } else {
+            return ONE_SECOND_MS;
+        }
+    }
+
     const [storeLists, setStoreLists] = useState(setConditionalList())
     const [currentBeltIteration, setCurrentBeltIteration] = useState(1) //Initially, the user already see 5 products = currentBeltIteration * 5 = 1 * 5 = 5 
     const [currentStoreIndex, setCurrentStoreIndex] = useState(0)
     const [currentProducts, setCurrentProducts] = useState(initializeProducts(storeLists[currentStoreIndex]))
     const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState([])
-    const [delay, setDelay] = useState(ONE_SECOND_MS)
+    const [delay, setDelay] = useState(setInitialDelayDuringTestingOnly())
     const [modalAlertConfig, setModalAlertConfig] = useState({ isVisible: false, text: "", title: "" })
     const [typeTask, setTypeTask] = useState(props.typeTask)
     const [results, setResults] = useState([initNewStoreResult(storeLists[currentStoreIndex], typeTask)])
@@ -348,7 +358,7 @@ export default function BargainTask(props) {
     const setNewStoreList = () => {
         const newListToDisplay = JSON.stringify(storeLists) === JSON.stringify(props.data.storesLong) ? props.data.storesShort : props.data.storesLong
         const newStoresVisitedCounter = results.length + 1
-        const newTypeTask = props.typeTask === EXPERIMENT_TYPE_LONG ? EXPERIMENT_TYPE_SHORT : EXPERIMENT_TYPE_LONG
+        const newTypeTask = (props.typeTask === EXPERIMENT_TYPE_LONG || props.typeTask === EXPERIMENT_TYPE_LONG_NT) ? EXPERIMENT_TYPE_SHORT : EXPERIMENT_TYPE_LONG
 
         saveResultsBeforeLeavingStore()
         results.push(initNewStoreResult(newListToDisplay[0], newTypeTask))
