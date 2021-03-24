@@ -82,9 +82,9 @@ export default class BargainResult extends React.Component {
   }
 }
 
-function generateTableResults(bargainsResult){
+function generateTableResults(bargainsResult) {
 
-  return(
+  return (
     <Table responsive>
       <thead>
         <tr>
@@ -95,25 +95,25 @@ function generateTableResults(bargainsResult){
           <th>#products seen</th>
           <th>#stores visited</th>
           <th>time looking a product in store (secs)</th>
-          <th>average time looking a product in store</th>
-          <th>average number of products seen in a store</th>
+          <th>mean time looking a product in store (secs)</th>
+          <th>mean number of products seen in a store</th>
           <th>created_at</th>
         </tr>
       </thead>
       <tbody>
-      {bargainsResult.map((item, i) =>
-      <tr>
-      <th scope="row">{i}</th>
-      <td>{item.userId}</td>
-      <td>{item.totalnumberofbargainstaken}</td>
-      <td>{item.totalnumberofbargainsshown}</td>
-      <td>{item.totalnumberofproductsseen}</td>
-      <td>{item.totalnumberofstoresvisited}</td>
-      <td>{item.totaltimelookingaproductinstoresecs}</td>
-      <td>{item.averagetimelookingaproductinstore}</td>
-      <td>{item.averagenumberofproductsseeninastore}</td>
-      <td>{item.createdat}</td>
-      </tr>)}
+        {bargainsResult.map((item, i) =>
+          <tr>
+            <th scope="row">{i}</th>
+            <td>{item.userId}</td>
+            <td>{item.totalnumberofbargainstaken}</td>
+            <td>{item.totalnumberofbargainsshown}</td>
+            <td>{item.totalnumberofproductsseen}</td>
+            <td>{item.totalnumberofstoresvisited}</td>
+            <td>{parseFloat(item.totaltimelookingaproductinstoresecs).toFixed(1)}</td>
+            <td>{parseFloat(item.averagetimelookingaproductinstore).toFixed(1)}</td>
+            <td>{item.averagenumberofproductsseeninastore}</td>
+            <td>{item.createdat}</td>
+          </tr>)}
       </tbody>
     </Table>
   )
