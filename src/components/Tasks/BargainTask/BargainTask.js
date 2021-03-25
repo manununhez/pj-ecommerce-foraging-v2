@@ -284,7 +284,8 @@ export default function BargainTask(props) {
         }
 
         if (selectedBargainsCounter !== bargainNumberInThisIteration) {
-            modalAlert("Ups!", BARGAIN_MISSED_SELECTED_ALERT_MESSAGE)
+            let missedBargains = bargainNumberInThisIteration - selectedBargainsCounter
+            modalAlert("Ups!", BARGAIN_MISSED_SELECTED_ALERT_MESSAGE(missedBargains))
         }
     }
 

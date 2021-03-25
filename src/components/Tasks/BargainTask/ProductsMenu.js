@@ -18,8 +18,8 @@ export default function ProductsMenu(props) {
                 <Col xs="2"><img style={{ maxHeight: "35px" }} src="https://assets.allegrostatic.com/metrum/brand/allegro-347440b030.svg" /></Col>
                 <Col xs="8">
                     <Row>
-                        <Col xs="10"><Input placeholder="czego szukasz?" style={{ backgroundColor: "white" }} type="search" disabled /></Col>
-                        <Col xs="2"><button style={{ backgroundColor: "#ff5a00", paddingTop: "5px", paddingBottom: "5px", paddingLeft: "10px", paddingRight: "10px", color: "white" }} disabled> SZUKAJ</button></Col>
+                        <Col xs="10"><Input placeholder="what are you looking for?" style={{ backgroundColor: "white" }} type="search" disabled /></Col>
+                        <Col xs="2"><button style={{ backgroundColor: "#ff5a00", paddingTop: "5px", paddingBottom: "5px", paddingLeft: "10px", paddingRight: "10px", color: "white" }} disabled> SEARCH</button></Col>
                     </Row>
                 </Col>
                 <Col xs="2">
@@ -52,12 +52,12 @@ export default function ProductsMenu(props) {
                 />
             </div>
             <div style={{ backgroundColor: "#3a4e58", height: "70px", lineHeight: "70px", textAlign: "center", color: "white", fontSize: "small" }}>
-                <p>Korzystanie z serwisu oznacza akceptację regulaminu</p>
+                <p>By using the website, you accept the regulations</p>
             </div>
         </div>
 
         <div className="text-center store-btn">
-            <Button data-tut="reactour__button" outline color="secondary" size="lg" onClick={props.onGoStoreBtnClick}> Go to new store</Button > {' '}
+            <Button data-tut="reactour__button" color="primary" size="lg" style={{ fontSize: "x-large" }} onClick={props.onGoStoreBtnClick}> Go to new store</Button > {' '}
         </div>
     </div>
     )
@@ -66,10 +66,11 @@ export default function ProductsMenu(props) {
 const RatingBar = (value) => {
     return (<ReactStars
         edit={false}
-        size={13}
-        count={6}
+        size={16}
+        count={value}
         value={value}
-        half={false} />);
+        half={false}
+        activeColor="#f7cb4d" />);
 }
 
 const Menu = (list, selected) =>
@@ -104,9 +105,7 @@ function ProductItem(props) {
         <div className="card product-card"
             style={{ backgroundColor: isSelected ? "grey" : ((item.isBargain && DEBUG) ? "#e6ffcc" : "white") }}>
             {DEBUG ? <div>product#:{item.productNumber} bargain:{item.isBargain ? "T" : "F"}</div> : <></>}
-            <div data-tut={"reactour__bargain_details_" + productIndex}>
-                <h5>{discountPercentage}% OFF!!</h5>
-            </div>
+            <h5>{discountPercentage}% OFF!!</h5>
             <img className="responsive-images product-image"
                 src={item.img}
                 alt={item.productNumber} />

@@ -114,11 +114,6 @@ export default function BargainDemoTask(props) {
             stepInteraction: false
         },
         {
-            selector: `[data-tut="reactour__bargain_details_${tourConfigProduct.productBargainIndex}"]`,
-            content: TOUR_TEXT_BARGAIN_DEF,
-            stepInteraction: false
-        },
-        {
             selector: '[data-tut="reactour__more_products"]',
             content: TOUR_TEXT_MORE_PRODUCTS
         },

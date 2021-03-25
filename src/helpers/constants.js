@@ -127,7 +127,7 @@ export const VISUAL_PATTERN_INSTRUCTION = "Try to recreate the pattern displayed
 
 export const BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE = (bargainCounter) => { return `${bargainCounter} bargains in basket.` }
 export const BARGAIN_ERROR_SELECTED_ALERT_MESSAGE = "This is not a bargain."
-export const BARGAIN_MISSED_SELECTED_ALERT_MESSAGE = "Missed bargain."
+export const BARGAIN_MISSED_SELECTED_ALERT_MESSAGE = (numberOfBargain) => { return `${numberOfBargain} missed bargains.` }
 
 export const STORES_NOT_AVAILABLE = "No more stores available. Please wait."
 export const MIDDLE_EXPERIMENT_ALERT = "We reached the middle of the experiment. Now the list will change. Click to continue to the next part of the experiment."
