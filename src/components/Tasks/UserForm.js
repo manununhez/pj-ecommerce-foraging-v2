@@ -117,7 +117,7 @@ export default function UserForm(props) {
 
   return (
     <Container className="justify-content-center">
-      <div className="text-center mt-2"><h3>Twoje dane</h3></div>
+      <div className="text-center mt-2"><h3>Your data</h3></div>
       <Alert style={{ fontSize: "1.0rem" }} color="warning" isOpen={error.showError}>
         <span className="alert-inner--text ml-1">
           {error.textError}
