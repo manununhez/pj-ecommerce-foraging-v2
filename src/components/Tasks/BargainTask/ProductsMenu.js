@@ -16,16 +16,17 @@ export default function ProductsMenu(props) {
         <div className="scroll-menu">
             <Row style={{ backgroundColor: "white", height: "60px", padding: "15px", marginBottom: "20px", marginRight: "auto", marginLeft: "auto" }}>
                 <Col xs="2"><img style={{ maxHeight: "35px" }} src="https://assets.allegrostatic.com/metrum/brand/allegro-347440b030.svg" /></Col>
-                <Col xs="8">
+                <Col xs="6">
                     <Row>
                         <Col xs="10"><Input placeholder="what are you looking for?" style={{ backgroundColor: "white" }} type="search" disabled /></Col>
                         <Col xs="2"><button style={{ backgroundColor: "#ff5a00", paddingTop: "5px", paddingBottom: "5px", paddingLeft: "10px", paddingRight: "10px", color: "white" }} disabled> SEARCH</button></Col>
                     </Row>
                 </Col>
-                <Col xs="2">
+                <Col xs="2" style={{ textAlign: "center" }}>
                     <img src="https://assets.allegrostatic.com/metrum/icon/bag-c9f42da6df.svg" />
                     <img src="https://assets.allegrostatic.com/metrum/icon/user-0135502fa4.svg" />
                 </Col>
+                <Col xs="2" style={{ alignSelf: "center" }}>Bargains: {props.bargainsTaken}</Col>
             </Row>
             <h4 style={{ paddingTop: "15px", paddingBottom: "5px", paddingLeft: "10px" }}>Local offers!</h4>
             <div style={{ backgroundColor: "white", paddingTop: "40px", paddingBottom: "40px", paddingLeft: "5px" }}>

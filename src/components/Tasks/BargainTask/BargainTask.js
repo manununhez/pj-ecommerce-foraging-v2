@@ -170,9 +170,9 @@ export default function BargainTask(props) {
             if (productSelected.isBargain) {
                 const newBargainCounter = results[results.length - 1].bargainTakenNumber + 1
 
-                if (showFeedback) {
-                    modalAlert("Great! >> ProductNumber:" + productSelected.productNumber, BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE(newBargainCounter))
-                }
+                // if (showFeedback) {
+                //     modalAlert("Great! >> ProductNumber:" + productSelected.productNumber, BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE(newBargainCounter))
+                // }
 
                 saveResultsNewBargainTaken(newBargainCounter)
             } else {
@@ -418,7 +418,8 @@ export default function BargainTask(props) {
                 onLastItemVisible={onLastItemVisible}
                 onSelect={onSelect}
                 onUpdate={onUpdate}
-                onGoStoreBtnClick={onShowNextStore} /></div>)
+                onGoStoreBtnClick={onShowNextStore}
+                bargainsTaken={results[results.length - 1].bargainTakenNumber} /></div>)
         } else if (showInstruction) {
             return (<div className="centered" style={{ textAlign: "center" }}>
                 <h3>{MIDDLE_EXPERIMENT_ALERT}</h3>

@@ -134,6 +134,7 @@ export default function BargainDemoTask(props) {
                     onSelect={onProductSelected}
                     onUpdate={onShowNextProducts}
                     onGoStoreBtnClick={onShowNextStore}
+                    bargainsTaken={0}
                 /></div> :
             <div className="centered">
                 <StickmanLoading
