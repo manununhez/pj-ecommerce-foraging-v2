@@ -51,14 +51,17 @@ export default function ProductsMenu(props) {
                     wheel={false}
                 />
             </div>
+
+            <div className="text-center store-btn">
+                <Button data-tut="reactour__button" color="primary" size="lg" style={{ fontSize: "x-large" }} onClick={props.onGoStoreBtnClick}> Go to new store</Button > {' '}
+            </div>
+
             <div style={{ backgroundColor: "#3a4e58", height: "70px", lineHeight: "70px", textAlign: "center", color: "white", fontSize: "small" }}>
                 <p>By using the website, you accept the regulations</p>
             </div>
         </div>
 
-        <div className="text-center store-btn">
-            <Button data-tut="reactour__button" color="primary" size="lg" style={{ fontSize: "x-large" }} onClick={props.onGoStoreBtnClick}> Go to new store</Button > {' '}
-        </div>
+
     </div>
     )
 };

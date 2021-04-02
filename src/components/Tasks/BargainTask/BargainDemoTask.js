@@ -10,7 +10,6 @@ import {
     TOUR_BARGAIN_SELECTION,
     TOUR_INIT,
     TOUR_TEXT_ANOTHER_STORE,
-    TOUR_TEXT_BARGAIN_DEF,
     TOUR_TEXT_MORE_PRODUCTS,
     accentColor
 } from '../../../helpers/constants';
