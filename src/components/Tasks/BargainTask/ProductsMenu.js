@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Input, Button } from "reactstrap";
+import { Row, Col, Input, Button } from "reactstrap";
 
 import PropTypes from "prop-types";
 import ScrollMenu from "react-horizontal-scrolling-menu";
@@ -15,7 +15,7 @@ export default function ProductsMenu(props) {
     return (<div>
         <div className="scroll-menu">
             <Row style={{ backgroundColor: "white", height: "60px", padding: "15px", marginBottom: "20px", marginRight: "auto", marginLeft: "auto" }}>
-                <Col xs="2"><img style={{ maxHeight: "35px" }} src="https://assets.allegrostatic.com/metrum/brand/allegro-347440b030.svg" /></Col>
+                <Col xs="2"><img style={{ maxHeight: "35px" }} src="https://assets.allegrostatic.com/metrum/brand/allegro-347440b030.svg" alt="" /></Col>
                 <Col xs="6">
                     <Row>
                         <Col xs="10"><Input placeholder="what are you looking for?" style={{ backgroundColor: "white" }} type="search" disabled /></Col>
@@ -23,8 +23,8 @@ export default function ProductsMenu(props) {
                     </Row>
                 </Col>
                 <Col xs="2" style={{ textAlign: "center" }}>
-                    <img src="https://assets.allegrostatic.com/metrum/icon/bag-c9f42da6df.svg" />
-                    <img src="https://assets.allegrostatic.com/metrum/icon/user-0135502fa4.svg" />
+                    <img src="https://assets.allegrostatic.com/metrum/icon/bag-c9f42da6df.svg" alt="" />
+                    <img src="https://assets.allegrostatic.com/metrum/icon/user-0135502fa4.svg" alt="" />
                 </Col>
                 <Col xs="2" style={{ alignSelf: "center" }}>Bargains: {props.bargainsTaken}</Col>
             </Row>

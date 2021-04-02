@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 
 import {
-    BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE,
     BARGAIN_ERROR_SELECTED_ALERT_MESSAGE,
     BARGAIN_MISSED_SELECTED_ALERT_MESSAGE,
     STORES_NOT_AVAILABLE,
