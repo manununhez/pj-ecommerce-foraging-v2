@@ -465,7 +465,7 @@ function ModalAlert(props) {
                 onClosed={props.onClosed}>
                 <ModalHeader>{title}</ModalHeader>
                 <ModalBody>{text}</ModalBody>
-                <ModalFooter><Button color="secondary" size='sm' onClick={toggle}>Close</Button></ModalFooter>
+                {/* <ModalFooter><Button color="secondary" size='sm' onClick={toggle}>Close</Button></ModalFooter> */}
             </Modal>
         </div>
     )

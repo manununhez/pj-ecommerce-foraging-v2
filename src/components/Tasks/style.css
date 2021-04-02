@@ -280,3 +280,7 @@ form {
   left: 41%;
   min-width: 300px;
 }
+
+/* .modal-header .close {
+  display:none;
+} */
