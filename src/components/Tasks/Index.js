@@ -948,7 +948,7 @@ class Index extends Component {
         // Scroll back at the top of the page
         document.documentElement.scrollTop = 0;
         document.scrollingElement.scrollTop = 0;
-        this.refs.main.scrollTop = 0;
+        // this.refs.main.scrollTop = 0;
 
         // HTML prevent space bar from scrolling page
         window.addEventListener(constant.EVENT_KEY_DOWN, function (e) {
@@ -974,11 +974,16 @@ class Index extends Component {
     render() {
         const { loading, loadingSyncData } = this.state;
         const timeout = 1000 * 60 * (60 * 3); //3horas
-
+        console.log(USER_INFO.screen)
         return (
-            <main ref="main">
-                <section className="section-sm">
-                    {changePages(this.state, this)}
+            <>
+                <section style={{ overflow: "hidden", paddingBottom: "2rem", height: "100vh" }}>
+                    <div style={{ marginTop: "20px", marginBottom: "20px", height: "calc(100vh - 150px)", overflowY: "scroll" }}>
+                        {changePages(this.state, this)}
+                    </div>
+                    <div style={{ overflow: "hidden" }}>
+                        {isFooterShownInCurrentScreen(this.state)}
+                    </div>
                 </section>
                 <div>
                     <IdleTimer
@@ -1005,8 +1010,8 @@ class Index extends Component {
                         loading={loadingSyncData}
                     />
                 </div>
-                { isFooterShownInCurrentScreen(this.state)}
-            </main>
+
+            </>
         )
     }
 }
