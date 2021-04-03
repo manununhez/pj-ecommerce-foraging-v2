@@ -115,8 +115,8 @@ function ProductItem(props) {
                 alt={item.productNumber} />
             <div style={{ position: "relative" }}>
                 <div>
-                    <h5 className="strikethrough">{item.oldPrice}</h5>
-                    <h5>{item.newPrice}</h5>
+                    <h5 className="strikethrough">${item.oldPrice}</h5>
+                    <h5>${item.newPrice}</h5>
                 </div>
                 <div style={{ bottom: 0, right: 0, position: "absolute", marginBottom: "10px" }}>{RatingBar(item.numOfStars)}</div>
             </div>
