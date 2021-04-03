@@ -5,21 +5,23 @@ import PropTypes from "prop-types";
 import ScrollMenu from "react-horizontal-scrolling-menu";
 import ReactStars from "react-rating-stars-component";
 
+import { PRODUCT_MENU_BG_COLORS, ALLEGRO_ORANGE } from "../../../helpers/constants";
+
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 
 export default function ProductsMenu(props) {
-
+    const backgroundColorItem = PRODUCT_MENU_BG_COLORS[props.store % PRODUCT_MENU_BG_COLORS.length]
     const menu = Menu(props.products, props.selected)
     const ArrowRight = Arrow({ text: "", className: "arrow-next" });
 
     return (<div>
-        <div className="scroll-menu">
+        <div className="scroll-menu" style={{ backgroundColor: backgroundColorItem }}>
             <Row style={{ backgroundColor: "white", height: "60px", padding: "15px", marginBottom: "20px", marginRight: "auto", marginLeft: "auto" }}>
                 <Col xs="2"><img style={{ maxHeight: "35px" }} src="https://assets.allegrostatic.com/metrum/brand/allegro-347440b030.svg" alt="" /></Col>
                 <Col xs="6">
                     <Row>
                         <Col xs="10"><Input placeholder="what are you looking for?" style={{ backgroundColor: "white" }} type="search" disabled /></Col>
-                        <Col xs="2"><button style={{ backgroundColor: "#ff5a00", paddingTop: "5px", paddingBottom: "5px", paddingLeft: "10px", paddingRight: "10px", color: "white" }} disabled> SEARCH</button></Col>
+                        <Col xs="2"><button style={{ backgroundColor: ALLEGRO_ORANGE, paddingTop: "5px", paddingBottom: "5px", paddingLeft: "10px", paddingRight: "10px", color: "white" }} disabled> SEARCH</button></Col>
                     </Row>
                 </Col>
                 <Col xs="2" style={{ textAlign: "center" }}>

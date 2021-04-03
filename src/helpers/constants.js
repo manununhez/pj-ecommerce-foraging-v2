@@ -3,7 +3,9 @@ export const WHITE = "white";
 export const BLUE = "#123abc";
 export const GREEN = "green";
 export const RED = "red";
+export const ALLEGRO_ORANGE = "#ff5a00";
 export const accentColor = "#5cb7b7";
+export const PRODUCT_MENU_BG_COLORS = [LIGHT_GRAY, "lightsteelblue", "antiquewhite", "beige", "lightblue", "cornsilk", "aliceblue", "thistle"]
 
 export const TEXT_EMPTY = "";
 
