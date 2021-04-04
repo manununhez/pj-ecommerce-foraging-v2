@@ -85,8 +85,8 @@ export default function BargainDemoTask(props) {
 
     const onCurrentStepUpdated = (currentStep) => {
         setCurrentStep(currentStep)
-        console.log(`Current step: ${currentStep}`)
-        console.log(`Pressed belt: ${pressedBelt}`)
+        if (DEBUG) console.log(`Current step: ${currentStep}`)
+        if (DEBUG) console.log(`Pressed belt: ${pressedBelt}`)
     }
 
     const gotToNextStep = () => {

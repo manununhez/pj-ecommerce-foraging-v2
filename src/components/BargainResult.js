@@ -48,7 +48,6 @@ export default class BargainResult extends React.Component {
    */
   _onLoadCallBack(data, error) {
     if (data) {
-      console.log(data.results)
       this.setState({
         results: data.results,
         loading: false //Hide loading,

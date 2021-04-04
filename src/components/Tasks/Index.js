@@ -974,7 +974,7 @@ class Index extends Component {
     render() {
         const { loading, loadingSyncData } = this.state;
         const timeout = 1000 * 60 * (60 * 3); //3horas
-        console.log(USER_INFO.screen)
+        if (DEBUG) console.log(USER_INFO.screen)
         return (
             <>
                 <section style={{ overflow: "hidden", paddingBottom: "2rem", height: "100vh" }}>
