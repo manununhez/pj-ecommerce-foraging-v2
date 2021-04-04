@@ -134,12 +134,8 @@ export const BARGAIN_MISSED_SELECTED_ALERT_MESSAGE = (numberOfBargain) => { retu
 export const STORES_NOT_AVAILABLE = "No more stores available. Please wait."
 export const MIDDLE_EXPERIMENT_ALERT = "We reached the middle of the experiment. Now the list will change. Click to continue to the next part of the experiment."
 
-export const TOUR_BARGAIN = "This is a bargain..."
-export const TOUR_BARGAIN2 = "This is another bargain..."
-export const TOUR_BARGAIN_SELECTION = "To select a bargain item, left-click on it."
-export const TOUR_INIT = "Training stage"
-export const TOUR_TEXT_BARGAIN_DEF = "...a bargain: discount >= 50% AND number of stars >= 4"
-export const TOUR_TEXT_MORE_PRODUCTS = "Click here if you want to move the belt and see more products."
-export const TOUR_TEXT_ANOTHER_STORE = "Click here if you want to go to another store."
-
-
+export const TOUR_PRODUCT_BELT = "This is the product belt."
+export const TOUR_BARGAIN = "This is a bargain."
+export const TOUR_NOT_BARGAIN = "This is not a bargain."
+export const TOUR_BARGAIN_CRITERIA = "A bargain is a product with a discount >= 50% and rating >= 4 stars."
+export const TOUR_BARGAIN_SELECTION = "Select the bargain using your mouse."

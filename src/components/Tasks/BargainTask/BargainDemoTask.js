@@ -6,11 +6,10 @@ import ProductsMenu from './ProductsMenu';
 
 import {
     TOUR_BARGAIN,
-    TOUR_BARGAIN2,
+    TOUR_BARGAIN_CRITERIA,
     TOUR_BARGAIN_SELECTION,
-    TOUR_INIT,
-    TOUR_TEXT_ANOTHER_STORE,
-    TOUR_TEXT_MORE_PRODUCTS,
+    TOUR_NOT_BARGAIN,
+    TOUR_PRODUCT_BELT,
     accentColor
 } from '../../../helpers/constants';
 
@@ -19,7 +18,6 @@ import "../style.css";
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 
 export default function BargainDemoTask(props) {
-
     const currentStoreIndex = 0
 
     const storeLists = [{
@@ -29,7 +27,7 @@ export default function BargainDemoTask(props) {
             { productNumber: 3, isBargain: false, oldPrice: 125, newPrice: 63.75, discount: 0.49, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/31jewelry_picture.jpg" },
             { productNumber: 4, isBargain: false, oldPrice: 113, newPrice: 82.49, discount: 0.27, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/39jewelry_picture.jpg" },
             { productNumber: 5, isBargain: false, oldPrice: 257, newPrice: 131.07, discount: 0.49, numOfStars: 3, img: "https://api.swps-pjatk-experiment.pl/v3/img/3electron_picture.jpg" },
-            { productNumber: 6, isBargain: true, oldPrice: 142, newPrice: 36.92, discount: 0.74, numOfStars: 4, img: "https://api.swps-pjatk-experiment.pl/v3/img/50jewelry_picture.jpg" },
+            { productNumber: 6, isBargain: false, oldPrice: 142, newPrice: 21.3, discount: 0.85, numOfStars: 1, img: "https://api.swps-pjatk-experiment.pl/v3/img/50jewelry_picture.jpg" },
             { productNumber: 7, isBargain: false, oldPrice: 266, newPrice: 135.66, discount: 0.49, numOfStars: 2, img: "https://api.swps-pjatk-experiment.pl/v3/img/28jewelry_picture.jpg" },
             { productNumber: 8, isBargain: false, oldPrice: 188, newPrice: 142.88, discount: 0.24, numOfStars: 3, img: "https://api.swps-pjatk-experiment.pl/v3/img/46jewelry_picture.jpg" },
             { productNumber: 9, isBargain: false, oldPrice: 275, newPrice: 206.25, discount: 0.25, numOfStars: 6, img: "https://api.swps-pjatk-experiment.pl/v3/img/20electron_picture.jpg" },
@@ -41,12 +39,8 @@ export default function BargainDemoTask(props) {
     const [selectedProducts, setSelectedProducts] = useState([])
     const [showProducts, setShowProducts] = useState(true)
     const [storesVisitedCounter, setStoresVisitedCounter] = useState(0)
-    const [tourConfigProduct, setTourConfigProduct] = useState({
-        productBargainIndex: 1,
-        productIndex: 0,
-        productBargainText: TOUR_BARGAIN,
-        productText: TOUR_BARGAIN_SELECTION
-    })
+    const [pressedBelt, setPressedBelt] = useState(false)
+    const [currentStep, setCurrentStep] = useState(0)
 
     const onFirstItemVisible = () => {
         if (DEBUG) console.log("first item is visible");
@@ -58,15 +52,7 @@ export default function BargainDemoTask(props) {
 
     const onShowNextProducts = ({ translate }) => {
         if (DEBUG) console.log(`onShowNextProducts`);
-        setTourConfigProduct(
-            {
-                productBargainIndex: 5,
-                productIndex: 7,
-                productBargainText: TOUR_BARGAIN2,
-                productText: TOUR_BARGAIN_SELECTION
-            })
-
-        if (DEBUG) console.log(tourConfig)
+        setPressedBelt(true)
     };
 
     const onProductSelected = key => {
@@ -97,28 +83,66 @@ export default function BargainDemoTask(props) {
         props.action({ isTaskCompleted: true, results: [] })
     }
 
+    const onCurrentStepUpdated = (currentStep) => {
+        setCurrentStep(currentStep)
+        console.log(`Current step: ${currentStep}`)
+        console.log(`Pressed belt: ${pressedBelt}`)
+    }
+
+    const gotToNextStep = () => {
+        if (pressedBelt && currentStep === 5) {
+            return 5
+        }
+    }
     const tourConfig = [
         {
-            selector: `[data-tut="reactour__"]`,
-            content: TOUR_INIT,
+            selector: `[data-tut="reactour__product_belt"]`,
+            content: TOUR_PRODUCT_BELT,
+            stepInteraction: false,
+        },
+        {
+            selector: `[data-tut="reactour__product_1"]`,
+            content: TOUR_BARGAIN,
             stepInteraction: false
         },
         {
-            selector: `[data-tut="reactour__product_${tourConfigProduct.productIndex}"]`,
-            content: tourConfigProduct.productText
+            selector: `[data-tut="reactour__product_1"]`,
+            content: TOUR_BARGAIN_CRITERIA,
+            stepInteraction: false
         },
         {
-            selector: `[data-tut="reactour__product_${tourConfigProduct.productBargainIndex}"]`,
-            content: tourConfigProduct.productBargainText,
-            stepInteraction: false
+            selector: `[data-tut="reactour__product_1"]`,
+            content: TOUR_BARGAIN_SELECTION,
         },
         {
             selector: '[data-tut="reactour__more_products"]',
-            content: TOUR_TEXT_MORE_PRODUCTS
+            content: () => {
+                return (<div>
+                    When there are no more bargains, you can move the belt.
+                    <br /><br />
+                    Press this button.
+                </div>)
+            },
+        },
+        {
+            selector: `[data-tut="reactour__product_0"]`,
+            content: TOUR_NOT_BARGAIN,
+            stepInteraction: false
+        },
+        {
+            selector: `[data-tut="reactour__product_5"]`,
+            content: TOUR_BARGAIN_CRITERIA,
+            stepInteraction: false
         },
         {
             selector: '[data-tut="reactour__button"]',
-            content: TOUR_TEXT_ANOTHER_STORE
+            content: () => {
+                return (<div>
+                    If you feel that there are no more bargains in this store, you can change the store.
+                    <br /><br />
+                    Press this button.
+                </div>)
+            },
         }]
 
     return (<>
@@ -154,6 +178,10 @@ export default function BargainDemoTask(props) {
             showCloseButton={false}
             showNumber={false}
             showNavigation={false}
+            prevButton={<></>}
+            getCurrentStep={curr => onCurrentStepUpdated(curr + 1)}
+            showButtons={currentStep !== 5}
+            goToStep={gotToNextStep()}
             onRequestClose={() => setIsTourOpen(false)}
         />
     </>);

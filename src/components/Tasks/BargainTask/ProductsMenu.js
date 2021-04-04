@@ -14,59 +14,54 @@ export default function ProductsMenu(props) {
     const menu = Menu(props.products, props.selected)
     const ArrowRight = Arrow({ text: "", className: "arrow-next" });
 
-    return (<div>
-        <div className="scroll-menu" style={{ backgroundColor: backgroundColorItem }}>
-            <Row style={{ backgroundColor: "white", height: "60px", padding: "15px", marginBottom: "20px", marginRight: "auto", marginLeft: "auto" }}>
-                <Col xs="2"><img style={{ maxHeight: "35px" }} src="https://assets.allegrostatic.com/metrum/brand/allegro-347440b030.svg" alt="" /></Col>
-                <Col xs="6">
-                    <Row>
-                        <Col xs="10"><Input placeholder="what are you looking for?" style={{ backgroundColor: "white" }} type="search" disabled /></Col>
-                        <Col xs="2"><button style={{ backgroundColor: ALLEGRO_ORANGE, paddingTop: "5px", paddingBottom: "5px", paddingLeft: "10px", paddingRight: "10px", color: "white" }} disabled> SEARCH</button></Col>
-                    </Row>
-                </Col>
-                <Col xs="2" style={{ textAlign: "center" }}>
-                    <img src="https://assets.allegrostatic.com/metrum/icon/bag-c9f42da6df.svg" alt="" />
-                    <img src="https://assets.allegrostatic.com/metrum/icon/user-0135502fa4.svg" alt="" />
-                </Col>
-                <Col xs="2" style={{ alignSelf: "center" }}>Bargains: {props.bargainsTaken}</Col>
-            </Row>
-            <h4 style={{ paddingTop: "15px", paddingBottom: "5px", paddingLeft: "10px" }}>Local offers!</h4>
-            <div style={{ backgroundColor: "white", paddingTop: "40px", paddingBottom: "40px", paddingLeft: "5px" }}>
-                <ScrollMenu
-                    alignCenter={false}
-                    arrowRight={ArrowRight}
-                    clickWhenDrag={false}
-                    data={menu}
-                    scrollBy={5}
-                    dragging={false}
-                    leftArrowVisible={false}
-                    hideArrows={true}
-                    hideSingleArrow={true}
-                    onFirstItemVisible={props.onFirstItemVisible}
-                    onLastItemVisible={props.onLastItemVisible}
-                    onSelect={props.onSelect}
-                    onUpdate={props.onUpdate}
-                    // ref={el => (this.menu = el)}
-                    scrollToSelected={false}
-                    // selected={selected}
-                    transition={0.3}
-                    translate={0}
-                    wheel={false}
-                />
-            </div>
-
-            <div className="text-center store-btn">
-                <Button data-tut="reactour__button" color="primary" size="lg" style={{ fontSize: "x-large" }} onClick={props.onGoStoreBtnClick}> Go to new store</Button > {' '}
-            </div>
-
-            <div style={{ backgroundColor: "#3a4e58", height: "70px", lineHeight: "70px", textAlign: "center", color: "white", fontSize: "small" }}>
-                <p>By using the website, you accept the regulations</p>
-            </div>
+    return (<div className="scroll-menu" style={{ backgroundColor: backgroundColorItem }}>
+        <Row style={{ backgroundColor: "white", height: "60px", padding: "15px", marginBottom: "20px", marginRight: "auto", marginLeft: "auto" }}>
+            <Col xs="2"><img style={{ maxHeight: "35px" }} src="https://assets.allegrostatic.com/metrum/brand/allegro-347440b030.svg" alt="" /></Col>
+            <Col xs="6">
+                <Row>
+                    <Col xs="10"><Input placeholder="what are you looking for?" style={{ backgroundColor: "white" }} type="search" disabled /></Col>
+                    <Col xs="2"><button style={{ backgroundColor: ALLEGRO_ORANGE, paddingTop: "5px", paddingBottom: "5px", paddingLeft: "10px", paddingRight: "10px", color: "white" }} disabled> SEARCH</button></Col>
+                </Row>
+            </Col>
+            <Col xs="2" style={{ textAlign: "center" }}>
+                <img src="https://assets.allegrostatic.com/metrum/icon/bag-c9f42da6df.svg" alt="" />
+                <img src="https://assets.allegrostatic.com/metrum/icon/user-0135502fa4.svg" alt="" />
+            </Col>
+            <Col xs="2" style={{ alignSelf: "center" }}>Bargains: {props.bargainsTaken}</Col>
+        </Row>
+        <h4 style={{ paddingTop: "15px", paddingBottom: "5px", paddingLeft: "10px" }}>Local offers!</h4>
+        <div data-tut="reactour__product_belt" style={{ backgroundColor: "white", paddingTop: "40px", paddingBottom: "40px", paddingLeft: "5px" }}>
+            <ScrollMenu
+                alignCenter={false}
+                arrowRight={ArrowRight}
+                clickWhenDrag={false}
+                data={menu}
+                scrollBy={5}
+                dragging={false}
+                leftArrowVisible={false}
+                hideArrows={true}
+                hideSingleArrow={true}
+                onFirstItemVisible={props.onFirstItemVisible}
+                onLastItemVisible={props.onLastItemVisible}
+                onSelect={props.onSelect}
+                onUpdate={props.onUpdate}
+                // ref={el => (this.menu = el)}
+                scrollToSelected={false}
+                // selected={selected}
+                transition={0.3}
+                translate={0}
+                wheel={false}
+            />
         </div>
 
+        <div className="text-center store-btn">
+            <Button data-tut="reactour__button" color="primary" size="lg" style={{ fontSize: "x-large" }} onClick={props.onGoStoreBtnClick}> Go to new store</Button > {' '}
+        </div>
 
-    </div>
-    )
+        <div style={{ backgroundColor: "#3a4e58", height: "70px", lineHeight: "70px", textAlign: "center", color: "white", fontSize: "small" }}>
+            <p>By using the website, you accept the regulations</p>
+        </div>
+    </div>)
 };
 
 const RatingBar = (value) => {
