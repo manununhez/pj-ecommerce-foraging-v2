@@ -110,7 +110,11 @@ export const BARGAIN_SCREEN = "BargainTask";
 export const STORES_SHORT_TYPE = "Stores-short";
 export const STORES_LONG_TYPE = "Stores-long";
 
-
+//App versions
+export const EXPERIMENT_TYPE_LONG = "LONG-SHORT"
+export const EXPERIMENT_TYPE_SHORT = "SHORT-LONG"
+export const EXPERIMENT_TYPE_LONG_NT = "LONG-SHORT-NT"
+export const EXPERIMENT_TYPE_SHORT_NT = "SHORT-LONG-NT"
 
 //General App messages KEYS
 export const FORM_AGE_ALERT_ERROR = "The Age field cannot be left blank.";//Age field cannot be empty

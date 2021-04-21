@@ -1074,7 +1074,7 @@ function changePages(state, context) {
     } else if (screen === constant.PSFORM_SCREEN) {
         return <PSForm action={context.psFormHandler} data={inputPSForm} />;
     } else if (screen === constant.BARGAIN_DEMO_SCREEN) {
-        return <BargainDemoTask action={context.bargainTaskDemoTaskHandler} />;
+        return <BargainDemoTask action={context.bargainTaskDemoTaskHandler} typeTask={typeTask} />;
     } else if (screen === constant.BARGAIN_SCREEN) {
         return <BargainTask action={context.bargainTaskHandler} data={inputStores} typeTask={typeTask} />;
     }

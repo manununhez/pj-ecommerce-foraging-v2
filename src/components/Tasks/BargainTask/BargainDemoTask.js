@@ -10,7 +10,8 @@ import {
     TOUR_BARGAIN_SELECTION,
     TOUR_NOT_BARGAIN,
     TOUR_PRODUCT_BELT,
-    accentColor
+    accentColor,
+    EXPERIMENT_TYPE_SHORT_NT
 } from '../../../helpers/constants';
 
 import "../style.css";
@@ -194,6 +195,13 @@ export default function BargainDemoTask(props) {
             position: 'right'
         }]
 
+    const maskClassName = () => {
+        console.log(props.typeTask)
+        if (props.typeTask === EXPERIMENT_TYPE_SHORT_NT)
+            return "mask-hidden"
+        else return "mask"
+    }
+
     return (<>
         {DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}` : ""}
 
@@ -218,7 +226,7 @@ export default function BargainDemoTask(props) {
         <Tour
             steps={tourConfig}
             isOpen={isTourOpen}
-            maskClassName="mask"
+            maskClassName={maskClassName()}
             className="helper"
             rounded={5}
             disableKeyboardNavigation={true}

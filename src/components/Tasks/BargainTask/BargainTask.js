@@ -7,7 +7,11 @@ import {
     BARGAIN_MISSED_SELECTED_ALERT_MESSAGE,
     STORES_NOT_AVAILABLE,
     MIDDLE_EXPERIMENT_ALERT,
-    ONE_SECOND_MS
+    ONE_SECOND_MS,
+    EXPERIMENT_TYPE_LONG,
+    EXPERIMENT_TYPE_SHORT,
+    EXPERIMENT_TYPE_LONG_NT,
+    EXPERIMENT_TYPE_SHORT_NT
 } from '../../../helpers/constants';
 import { randomNumber } from '../../../helpers/utils';
 import StickmanLoading from './StickmanLoading';
@@ -20,10 +24,6 @@ export default function BargainTask(props) {
     // const showFeedback = true
     const PRODUCTS_PER_ROW = 5
     const EXPERIMENT_DURATION_SECS = 1.5 * 60
-    const EXPERIMENT_TYPE_LONG = "LONG-SHORT"
-    const EXPERIMENT_TYPE_SHORT = "SHORT-LONG"
-    const EXPERIMENT_TYPE_LONG_NT = "LONG-SHORT-NT"
-    const EXPERIMENT_TYPE_SHORT_NT = "SHORT-LONG-NT"
 
     const testList = [{
         storeNumber: 1, bargainsNumber: 4, delay: 15, showFeedback: true, products: [
