@@ -92,57 +92,106 @@ export default function BargainDemoTask(props) {
     const gotToNextStep = () => {
         if (pressedBelt && currentStep === 5) {
             return 5
+        } else if (currentStep === 8) {
+            //when the footer overlap the body, whe make a scroll top to see the hidden "Go to store" button
+            //Scroll the content section defined in Index.js
+            var nyedva = document.getElementById('content');
+            nyedva.scrollTop = 400;
         }
     }
     const tourConfig = [
         {
             selector: `[data-tut="reactour__product_belt"]`,
-            content: TOUR_PRODUCT_BELT,
+            content: () => {
+                return (<div>
+                    <h5>{TOUR_PRODUCT_BELT}</h5>
+                    <br /><br />
+                    Press the arrow to continue.
+                </div>)
+            },
+            position: 'left',
             stepInteraction: false,
         },
         {
             selector: `[data-tut="reactour__product_1"]`,
-            content: TOUR_BARGAIN,
+            content: () => {
+                return (<div>
+                    <h5>{TOUR_BARGAIN}</h5>
+                    <br /><br />
+                    Press the arrow to continue.
+                </div>)
+            },
+            position: 'right',
             stepInteraction: false
         },
         {
             selector: `[data-tut="reactour__product_1"]`,
-            content: TOUR_BARGAIN_CRITERIA,
+            content: () => {
+                return (<div>
+                    <h5>{TOUR_BARGAIN_CRITERIA}</h5>
+                    <br /><br />
+                    Press the arrow to continue.
+                </div>)
+            },
+            position: 'right',
             stepInteraction: false
         },
         {
             selector: `[data-tut="reactour__product_1"]`,
-            content: TOUR_BARGAIN_SELECTION,
+            content: () => {
+                return (<div>
+                    <h5>{TOUR_BARGAIN_SELECTION}</h5>
+                    <br /><br />
+                    Press the arrow to continue.
+                </div>)
+            },
+            position: 'right'
         },
         {
             selector: '[data-tut="reactour__more_products"]',
             content: () => {
                 return (<div>
-                    When there are no more bargains, you can move the belt.
+                    <h5>When there are no more bargains, you can move the belt.</h5>
                     <br /><br />
                     Press this button.
                 </div>)
             },
+            position: 'left'
         },
         {
             selector: `[data-tut="reactour__product_0"]`,
-            content: TOUR_NOT_BARGAIN,
-            stepInteraction: false
+            content: () => {
+                return (<div>
+                    <h5>{TOUR_NOT_BARGAIN}</h5>
+                    <br /><br />
+                    Press the arrow to continue.
+                </div>)
+            },
+            stepInteraction: false,
+            position: 'right'
         },
         {
             selector: `[data-tut="reactour__product_5"]`,
-            content: TOUR_BARGAIN_CRITERIA,
-            stepInteraction: false
+            content: () => {
+                return (<div>
+                    <h5>{TOUR_BARGAIN_CRITERIA}</h5>
+                    <br /><br />
+                    Press the arrow to continue.
+                </div>)
+            },
+            stepInteraction: false,
+            position: 'right'
         },
         {
             selector: '[data-tut="reactour__button"]',
             content: () => {
                 return (<div>
-                    If you feel that there are no more bargains in this store, you can change the store.
+                    <h5>If you feel that there are no more bargains in this store, you can change the store.</h5>
                     <br /><br />
                     Press this button.
                 </div>)
             },
+            position: 'right'
         }]
 
     return (<>
@@ -180,7 +229,7 @@ export default function BargainDemoTask(props) {
             showNavigation={false}
             prevButton={<></>}
             getCurrentStep={curr => onCurrentStepUpdated(curr + 1)}
-            showButtons={currentStep !== 5}
+            showButtons={currentStep !== 5 && currentStep !== 8}
             goToStep={gotToNextStep()}
             onRequestClose={() => setIsTourOpen(false)}
         />

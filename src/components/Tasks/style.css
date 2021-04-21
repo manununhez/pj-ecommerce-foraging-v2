@@ -258,9 +258,9 @@ form {
 }
 
 .mask {
-  /* color: #021d1d;
-  opacity: 0.1; */
-  display: none
+  color: #021d1d;
+  opacity: 0.1;
+  /* display: none */
 }
 
 .centered {

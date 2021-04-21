@@ -978,7 +978,7 @@ class Index extends Component {
         return (
             <>
                 <section style={{ overflow: "hidden", paddingBottom: "2rem", height: "100vh" }}>
-                    <div style={{ marginTop: "20px", marginBottom: "20px", height: "calc(100vh - 150px)", overflowY: "scroll" }}>
+                    <div id="content" style={{ marginTop: "20px", marginBottom: "20px", height: "calc(100vh - 150px)", overflowY: "scroll" }}>
                         {changePages(this.state, this)}
                     </div>
                     <div style={{ overflow: "hidden" }}>
