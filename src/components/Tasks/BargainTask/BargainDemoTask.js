@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import Tour from "reactour";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faHandPointLeft, faHandPointRight
+} from '@fortawesome/free-regular-svg-icons';
 
 import StickmanLoading from './StickmanLoading';
 import ProductsMenu from './ProductsMenu';
@@ -110,7 +114,7 @@ export default function BargainDemoTask(props) {
                     Press the arrow to continue.
                 </div>)
             },
-            position: 'left',
+            position: 'center',
             stepInteraction: false,
         },
         {
@@ -118,12 +122,18 @@ export default function BargainDemoTask(props) {
             content: () => {
                 return (<div>
                     <h5>{TOUR_BARGAIN}</h5>
+                    <h3><FontAwesomeIcon icon={faHandPointLeft} size="xl" /></h3>
                     <br /><br />
                     Press the arrow to continue.
                 </div>)
             },
             position: 'right',
-            stepInteraction: false
+            stepInteraction: false,
+            action: node => {
+                // by using this, focus trap is temporary disabled
+                node.style.border = "2px solid rgb(0 0 0)"
+                console.log(node)
+            }
         },
         {
             selector: `[data-tut="reactour__product_1"]`,
@@ -135,7 +145,7 @@ export default function BargainDemoTask(props) {
                 </div>)
             },
             position: 'right',
-            stepInteraction: false
+            stepInteraction: false,
         },
         {
             selector: `[data-tut="reactour__product_1"]`,
@@ -153,6 +163,7 @@ export default function BargainDemoTask(props) {
             content: () => {
                 return (<div>
                     <h5>When there are no more bargains, you can move the belt.</h5>
+                    <h3><FontAwesomeIcon icon={faHandPointRight} size="xl" /></h3>
                     <br /><br />
                     Press this button.
                 </div>)
@@ -164,6 +175,7 @@ export default function BargainDemoTask(props) {
             content: () => {
                 return (<div>
                     <h5>{TOUR_NOT_BARGAIN}</h5>
+                    <h3><FontAwesomeIcon icon={faHandPointLeft} size="xl" /></h3>
                     <br /><br />
                     Press the arrow to continue.
                 </div>)
@@ -188,11 +200,17 @@ export default function BargainDemoTask(props) {
             content: () => {
                 return (<div>
                     <h5>If you feel that there are no more bargains in this store, you can change the store.</h5>
+                    <h3><FontAwesomeIcon icon={faHandPointLeft} size="xl" /></h3>
                     <br /><br />
                     Press this button.
                 </div>)
             },
-            position: 'right'
+            position: 'right',
+            action: node => {
+                // by using this, focus trap is temporary disabled
+                node.style.border = "4px solid rgb(0 0 0)"
+                console.log(node)
+            }
         }]
 
     const maskClassName = () => {
