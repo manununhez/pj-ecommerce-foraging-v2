@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Tour from "reactour";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faHandPointLeft, faHandPointRight
-} from '@fortawesome/free-regular-svg-icons';
+import { Button } from "reactstrap";
 
 import StickmanLoading from './StickmanLoading';
 import ProductsMenu from './ProductsMenu';
@@ -23,6 +20,14 @@ import "../style.css";
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 
 export default function BargainDemoTask(props) {
+
+    useEffect(() => {
+        //initially, the go to store btn is disabled.
+        document.getElementById('reactour__button').disabled = true
+        //initially, the go to moreProductsbtn is disabled.
+        document.getElementsByClassName('scroll-menu-arrow')[0].style.pointerEvents = "none"
+    }, []);
+
     const currentStoreIndex = 0
 
     const storeLists = [{
@@ -44,7 +49,6 @@ export default function BargainDemoTask(props) {
     const [selectedProducts, setSelectedProducts] = useState([])
     const [showProducts, setShowProducts] = useState(true)
     const [storesVisitedCounter, setStoresVisitedCounter] = useState(0)
-    const [pressedBelt, setPressedBelt] = useState(false)
     const [currentStep, setCurrentStep] = useState(0)
 
     const onFirstItemVisible = () => {
@@ -57,16 +61,19 @@ export default function BargainDemoTask(props) {
 
     const onShowNextProducts = ({ translate }) => {
         if (DEBUG) console.log(`onShowNextProducts`);
-        setPressedBelt(true)
+        setCurrentStep(currentStep + 1)
     };
 
     const onProductSelected = key => {
-        if (DEBUG) console.log(`onProductSelected: ${key}`);
+        console.log(`onProductSelected: ${key}`);
+        const keySelected = parseInt(key)
 
-        if (!selectedProducts.includes(parseInt(key))) {
+        if (keySelected !== 1) return; //we enabled clicking only one bargain product in the training state
+
+        if (!selectedProducts.includes(keySelected)) {
             let selected = [...selectedProducts]
 
-            selected.push(parseInt(key))
+            selected.push(keySelected)
 
             setSelectedProducts(selected)
         }
@@ -88,30 +95,57 @@ export default function BargainDemoTask(props) {
         props.action({ isTaskCompleted: true, results: [] })
     }
 
-    const onCurrentStepUpdated = (currentStep) => {
-        setCurrentStep(currentStep)
-        if (DEBUG) console.log(`Current step: ${currentStep}`)
-        if (DEBUG) console.log(`Pressed belt: ${pressedBelt}`)
-    }
-
     const gotToNextStep = () => {
-        if (pressedBelt && currentStep === 5) {
-            return 5
-        } else if (currentStep === 8) {
+        console.log("currentStep:")
+        console.log(currentStep)
+
+        if (currentStep === 1) {
+            //border color to bargain product
+            document.getElementById('reactour__product_1').style.border = "2px solid rgb(0 0 0)"
+        } else if (currentStep === 4) {
+            //enable click
+            document.getElementsByClassName('scroll-menu-arrow')[0].style.pointerEvents = "auto"
+
+            //border color to bargain product
+            document.getElementsByClassName('scroll-menu-arrow')[0].style.border = "2px solid rgb(0 0 0)"
+
+            //disable previous highlight
+            document.getElementById('reactour__product_1').style.border = "2px solid rgb(255 255 255)"
+        } else if (currentStep === 5) {
+            //disable moreProductsBtn click
+            document.getElementsByClassName('scroll-menu-arrow')[0].style.pointerEvents = "none"
+
+            //border color to not bargain product
+            document.getElementById('reactour__product_5').style.border = "2px solid rgb(0 0 0)"
+
+            //disable previous highlight
+            document.getElementsByClassName('scroll-menu-arrow')[0].style.border = "2px solid rgb(255 255 255)"
+        } else if (currentStep === 7) {
             //when the footer overlap the body, whe make a scroll top to see the hidden "Go to store" button
             //Scroll the content section defined in Index.js
-            var nyedva = document.getElementById('content');
-            nyedva.scrollTop = 400;
+            document.getElementById('content').scrollTop = 400
+
+            //In this step, Re-enabled go to store button
+            document.getElementById('reactour__button').disabled = false
+            //highlitght with border color
+            document.getElementById('reactour__button').style.border = "2px solid rgb(0 0 0)"
+            //disable previous highlight
+            document.getElementById('reactour__product_5').style.border = "2px solid rgb(255 255 255)"
         }
+
+        return currentStep
     }
     const tourConfig = [
         {
             selector: `[data-tut="reactour__product_belt"]`,
             content: () => {
                 return (<div>
+                    <h6> {"(" + (currentStep + 1) + "/" + 8 + ")"}</h6>
                     <h5>{TOUR_PRODUCT_BELT}</h5>
                     <br /><br />
-                    Press the arrow to continue.
+                    <div style={{ textAlign: "end" }}>
+                        <Button onClick={() => setCurrentStep(currentStep + 1)}>Next</Button>
+                    </div>
                 </div>)
             },
             position: 'center',
@@ -121,27 +155,27 @@ export default function BargainDemoTask(props) {
             selector: `[data-tut="reactour__product_1"]`,
             content: () => {
                 return (<div>
-                    <h5>{TOUR_BARGAIN}</h5>
-                    <h3><FontAwesomeIcon icon={faHandPointLeft} size="xl" /></h3>
+                    <h6> {"(" + (currentStep + 1) + "/" + 8 + ")"}</h6>
+                    <h5> {TOUR_BARGAIN}</h5>
                     <br /><br />
-                    Press the arrow to continue.
+                    <div style={{ textAlign: "end" }}>
+                        <Button onClick={() => setCurrentStep(currentStep + 1)}>Next</Button>
+                    </div>
                 </div>)
             },
             position: 'right',
-            stepInteraction: false,
-            action: node => {
-                // by using this, focus trap is temporary disabled
-                node.style.border = "2px solid rgb(0 0 0)"
-                console.log(node)
-            }
+            stepInteraction: false
         },
         {
             selector: `[data-tut="reactour__product_1"]`,
             content: () => {
                 return (<div>
+                    <h6> {"(" + (currentStep + 1) + "/" + 8 + ")"}</h6>
                     <h5>{TOUR_BARGAIN_CRITERIA}</h5>
                     <br /><br />
-                    Press the arrow to continue.
+                    <div style={{ textAlign: "end" }}>
+                        <Button onClick={() => setCurrentStep(currentStep + 1)}>Next</Button>
+                    </div>
                 </div>)
             },
             position: 'right',
@@ -151,9 +185,12 @@ export default function BargainDemoTask(props) {
             selector: `[data-tut="reactour__product_1"]`,
             content: () => {
                 return (<div>
+                    <h6> {"(" + (currentStep + 1) + "/" + 8 + ")"}</h6>
                     <h5>{TOUR_BARGAIN_SELECTION}</h5>
                     <br /><br />
-                    Press the arrow to continue.
+                    <div style={{ textAlign: "end" }}>
+                        <Button onClick={() => setCurrentStep(currentStep + 1)}>Next</Button>
+                    </div>
                 </div>)
             },
             position: 'right'
@@ -162,8 +199,8 @@ export default function BargainDemoTask(props) {
             selector: '[data-tut="reactour__more_products"]',
             content: () => {
                 return (<div>
+                    <h6> {"(" + (currentStep + 1) + "/" + 8 + ")"}</h6>
                     <h5>When there are no more bargains, you can move the belt.</h5>
-                    <h3><FontAwesomeIcon icon={faHandPointRight} size="xl" /></h3>
                     <br /><br />
                     Press this button.
                 </div>)
@@ -174,10 +211,12 @@ export default function BargainDemoTask(props) {
             selector: `[data-tut="reactour__product_0"]`,
             content: () => {
                 return (<div>
+                    <h6> {"(" + (currentStep + 1) + "/" + 8 + ")"}</h6>
                     <h5>{TOUR_NOT_BARGAIN}</h5>
-                    <h3><FontAwesomeIcon icon={faHandPointLeft} size="xl" /></h3>
                     <br /><br />
-                    Press the arrow to continue.
+                    <div style={{ textAlign: "end" }}>
+                        <Button onClick={() => setCurrentStep(currentStep + 1)}>Next</Button>
+                    </div>
                 </div>)
             },
             stepInteraction: false,
@@ -187,9 +226,12 @@ export default function BargainDemoTask(props) {
             selector: `[data-tut="reactour__product_5"]`,
             content: () => {
                 return (<div>
+                    <h6> {"(" + (currentStep + 1) + "/" + 8 + ")"}</h6>
                     <h5>{TOUR_BARGAIN_CRITERIA}</h5>
                     <br /><br />
-                    Press the arrow to continue.
+                    <div style={{ textAlign: "end" }}>
+                        <Button onClick={() => setCurrentStep(currentStep + 1)}>Next</Button>
+                    </div>
                 </div>)
             },
             stepInteraction: false,
@@ -199,18 +241,13 @@ export default function BargainDemoTask(props) {
             selector: '[data-tut="reactour__button"]',
             content: () => {
                 return (<div>
+                    <h6> {"(" + (currentStep + 1) + "/" + 8 + ")"}</h6>
                     <h5>If you feel that there are no more bargains in this store, you can change the store.</h5>
-                    <h3><FontAwesomeIcon icon={faHandPointLeft} size="xl" /></h3>
-                    <br /><br />
-                    Press this button.
+                    <br />
+                    <h5>Press this button.</h5>
                 </div>)
             },
-            position: 'right',
-            action: node => {
-                // by using this, focus trap is temporary disabled
-                node.style.border = "4px solid rgb(0 0 0)"
-                console.log(node)
-            }
+            position: 'right'
         }]
 
     const maskClassName = () => {
@@ -254,8 +291,7 @@ export default function BargainDemoTask(props) {
             showNumber={false}
             showNavigation={false}
             prevButton={<></>}
-            getCurrentStep={curr => onCurrentStepUpdated(curr + 1)}
-            showButtons={currentStep !== 5 && currentStep !== 8}
+            showButtons={false}
             goToStep={gotToNextStep()}
             onRequestClose={() => setIsTourOpen(false)}
         />

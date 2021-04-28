@@ -55,7 +55,7 @@ export default function ProductsMenu(props) {
         </div>
 
         <div className="text-center store-btn">
-            <Button data-tut="reactour__button" color="primary" size="lg" style={{ fontSize: "x-large" }} onClick={props.onGoStoreBtnClick}> Go to new store</Button > {' '}
+            <Button id="reactour__button" data-tut="reactour__button" color="primary" size="lg" style={{ fontSize: "x-large" }} onClick={props.onGoStoreBtnClick}> Go to new store</Button > {' '}
         </div>
 
         <div style={{ backgroundColor: "#3a4e58", height: "70px", lineHeight: "70px", textAlign: "center", color: "white", fontSize: "small" }}>
@@ -86,7 +86,7 @@ const MenuItem = (item, productIndex, isSelected) => {
     const discountPercentage = (item.discount * 100).toFixed()
     if (DEBUG) console.log(`${item.productNumber}: ${isSelected}`)
     return (
-        <div key={productIndex} data-tut={"reactour__product_" + productIndex}>
+        <div key={productIndex} id={"reactour__product_" + productIndex} data-tut={"reactour__product_" + productIndex}>
             <ProductItem
                 productIndex={productIndex}
                 item={item}
