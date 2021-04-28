@@ -68,7 +68,9 @@ export default function BargainDemoTask(props) {
         console.log(`onProductSelected: ${key}`);
         const keySelected = parseInt(key)
 
-        if (keySelected !== 1) return; //we enabled clicking only one bargain product in the training state
+        if (keySelected !== 1 || currentStep !== 3) return; //we enabled clicking only one bargain product in the training state
+
+        setCurrentStep(currentStep + 1) //go to next step
 
         if (!selectedProducts.includes(keySelected)) {
             let selected = [...selectedProducts]
@@ -188,12 +190,10 @@ export default function BargainDemoTask(props) {
                     <h6> {"(" + (currentStep + 1) + "/" + 8 + ")"}</h6>
                     <h5>{TOUR_BARGAIN_SELECTION}</h5>
                     <br /><br />
-                    <div style={{ textAlign: "end" }}>
-                        <Button onClick={() => setCurrentStep(currentStep + 1)}>Next</Button>
-                    </div>
                 </div>)
             },
-            position: 'right'
+            position: 'right',
+            stepInteraction: false
         },
         {
             selector: '[data-tut="reactour__more_products"]',
