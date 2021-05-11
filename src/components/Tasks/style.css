@@ -290,3 +290,8 @@ form {
 /* .modal-header .close {
   display:none;
 } */
+
+/* this remove the blue border in product select */
+.menu-item-wrapper.active {
+  border: 0px blue solid;
+}
