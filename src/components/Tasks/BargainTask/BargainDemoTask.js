@@ -86,6 +86,7 @@ export default function BargainDemoTask(props) {
 
         const newStoresVisitedCounter = storesVisitedCounter + 1
 
+        setCurrentStep(currentStep + 1)
         setIsTourOpen(false)
         setShowProducts(false)
         setStoresVisitedCounter(newStoresVisitedCounter)
