@@ -104,6 +104,7 @@ export const VISUAL_PATTERN_DEMO_SCREEN = "VisualPatternTaskDemo";
 export const BARGAIN_DEMO_INSTRUCTION_COND1 = "BargainDemoTaskInstructionCond1";
 export const BARGAIN_DEMO_INSTRUCTION_COND2 = "BargainDemoTaskInstructionCond2";
 export const BARGAIN_DEMO_SCREEN = "BargainDemoTask";
+export const BARGAIN_DEMO_INSTRUCTION_BEFORE_FINISH = "BargainDemoTaskInstructionBeforeFinish";
 export const BARGAIN_DEMO_FINISH_INSTRUCTION = "BargainDemoTaskInstructionFinish";
 export const BARGAIN_SCREEN = "BargainTask";
 

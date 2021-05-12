@@ -690,6 +690,21 @@ class Index extends Component {
         }
     }
 
+    instructionHandlerBack = (isValidToAdvance, numberStepsBack) => {
+        console.log("Valid to advance")
+        console.log(this.state.currentScreenNumber)
+        console.log(numberStepsBack)
+        if (isValidToAdvance) {
+            this.setState({
+                currentScreenNumber: this.state.currentScreenNumber - numberStepsBack
+            }, () => {
+                console.log(this.state.currentScreenNumber)
+                //we simulate a space btn pressed because VisualPattern already finishes with a space btn pressed
+                this._goToNextTaskInInputNavigation()
+            })
+        }
+    }
+
     /*********************************************************
      * VALIDATE DATA OF EACH COMPONENT BEFORE GOING TO NEXT PAGE
      **********************************************************/
@@ -1029,7 +1044,10 @@ function isFooterShownInCurrentScreen(state) {
         if (screen.includes(constant.VISUAL_PATTERN)) {
             isFooterShown = true;
         } else if (screen.includes("Bargain")) {
-            isFooterShown = true;
+            if (!screen.includes("BeforeFinish")) {
+                isFooterShown = true;
+            }
+
             if (!screen.includes("Finish")) {
                 footerText = constant.TEXT_FOOTER_ENTER
             }
@@ -1064,7 +1082,7 @@ function changePages(state, context) {
     document.body.style.backgroundColor = (type === constant.INSTRUCTION_SCREEN) ? constant.WHITE : constant.LIGHT_GRAY;
 
     if (type === constant.INSTRUCTION_SCREEN) {
-        return <Instruction action={context.instructionHandler} text={inputTextInstructions} name={screen} />;
+        return <Instruction action={context.instructionHandler} actionBack={context.instructionHandlerBack} text={inputTextInstructions} name={screen} />;
     } else if (screen === constant.USER_FORM_SCREEN) {
         return <UserForm action={context.formHandler} />;
     } else if (screen === constant.VISUAL_PATTERN_SCREEN) {

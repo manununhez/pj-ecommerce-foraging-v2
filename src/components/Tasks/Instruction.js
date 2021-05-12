@@ -4,6 +4,7 @@ import { Container, Row } from "reactstrap";
 
 import "./style.css";
 import * as constant from '../../helpers/constants';
+import FooterBack from "../Footers/FooterBack";
 
 class Instruction extends React.Component {
     handleKeyDownEvent = (event) => {
@@ -14,8 +15,15 @@ class Instruction extends React.Component {
                 this.props.action(true)
             }
         } else if (event.keyCode === constant.ENTER_KEY_CODE) { //Transition between screens
-            if (this.props.name.includes("Bargain") && !this.props.name.includes("Finish")) {
-                this.props.action(true)
+            console.log("PRessed ENter")
+            console.log(this.props.name)
+            if (this.props.name.includes("Bargain")) {
+                if (!this.props.name.includes("Finish")) {
+                    this.props.action(true)
+                } else if (this.props.name.includes("Before")) {
+                    console.log("Action back")
+                    this.props.actionBack(true, 3)
+                }
             }
         }
     }
@@ -44,6 +52,11 @@ class Instruction extends React.Component {
                 <Row className="justify-content-md-center">
                     <HtmlFormattedText text={this.props.text} screen={this.props.name} />
                 </Row>
+                <br />
+                <br />
+                {this.props.name.includes("BeforeFinish") ?
+                    <FooterBack textBack={"Press enter to restart training"} text={"Press spacebar to continue"} />
+                    : <></>}
             </Container>
         )
     };
