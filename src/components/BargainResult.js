@@ -2,7 +2,7 @@ import React from "react";
 
 // reactstrap components
 import {
-  Table
+  Nav, NavLink, NavItem
 } from 'reactstrap';
 
 // core components
@@ -14,9 +14,6 @@ import MainMenu from "./Menu/Menu.js";
 import { css } from "@emotion/core";
 import FadeLoader from "react-spinners/FadeLoader";
 
-import { fetchBargainsResult } from '../helpers/fetch.js';
-
-
 // CSS - Can be a string as well. Need to ensure each key-value pair ends with ;
 const override = css`
   display: block;
@@ -25,95 +22,19 @@ const override = css`
 `;
 
 export default class BargainResult extends React.Component {
-  state = {
-    results: [],
-    loading: false
-  }
-
-
-  componentDidMount() {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-    this.refs.main.scrollTop = 0;
-
-    this.setState({ loading: true }); //Show Loading
-
-    // this.verifyToken(this.props.location.search);
-
-    fetchBargainsResult(this._onLoadCallBack.bind(this))
-  }
-
-  /**
-   * Once versions have been loaded from the spreadsheet
-   */
-  _onLoadCallBack(data, error) {
-    if (data) {
-      this.setState({
-        results: data.results,
-        loading: false //Hide loading,
-      })
-    } else {
-      this.setState({
-        error: error
-      })
-    }
-  }
-
   render() {
-    const bargainsResult = this.state.results
     return (
       <>
         <Navbar />
         <main ref="main">
           <MainMenu />
         </main>
-        <div style={{ position: "fixed", top: "35%", left: "48%" }}>
-          <FadeLoader
-            css={override}
-            size={50}
-            color={"#123abc"}
-            loading={this.state.loading}
-          />
-        </div>
-        {generateTableResults(bargainsResult)}
+        <Nav vertical>
+          <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3/bargains-result">Bargain results</NavLink></NavItem>
+          <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3/survey-result">Survey results</NavLink></NavItem>
+          <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3/demographic-result">Demographic results</NavLink></NavItem>
+        </Nav>
       </>
     );
   }
-}
-
-function generateTableResults(bargainsResult) {
-
-  return (
-    <Table responsive>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>userId</th>
-          <th>#bargains taken</th>
-          <th>#bargains shown</th>
-          <th>#products seen</th>
-          <th>#stores visited</th>
-          <th>time looking a product in store (secs)</th>
-          <th>mean time looking a product in store (secs)</th>
-          <th>mean number of products seen in a store</th>
-          <th>created_at</th>
-        </tr>
-      </thead>
-      <tbody>
-        {bargainsResult.map((item, i) =>
-          <tr>
-            <th scope="row">{i}</th>
-            <td>{item.userId}</td>
-            <td>{item.totalnumberofbargainstaken}</td>
-            <td>{item.totalnumberofbargainsshown}</td>
-            <td>{item.totalnumberofproductsseen}</td>
-            <td>{item.totalnumberofstoresvisited}</td>
-            <td>{parseFloat(item.totaltimelookingaproductinstoresecs).toFixed(1)}</td>
-            <td>{parseFloat(item.averagetimelookingaproductinstore).toFixed(1)}</td>
-            <td>{item.averagenumberofproductsseeninastore}</td>
-            <td>{item.createdat}</td>
-          </tr>)}
-      </tbody>
-    </Table>
-  )
 }

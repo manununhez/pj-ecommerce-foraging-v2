@@ -8,7 +8,6 @@ const fetch_apptext_url = 'apptext'
 const fetch_inituserdata_url = 'inituserdata'
 const fetch_stores_short_url = 'stores-short'
 const fetch_stores_long_url = 'stores-long'
-const fetch_bargains_result_url = 'bargains-result'
 const save_visualpattern_url = 'visualpattern'
 const save_userinfo_url = 'userinfo'
 const save_userlogtime_url = 'userlogtime'
@@ -138,37 +137,6 @@ export function fetchStores(type, callback) {
     get(url, {})
         .then((response) => {
             callback({ response });
-        }, (response) => {
-            callback(false, response);
-        });
-}
-
-/**
- * 
- * @param {*} callback 
- */
-export function fetchBargainsResult(callback) {
-    let url = fetch_bargains_result_url
-
-    get(url, {})
-        .then((response) => {
-            let results = [];
-
-            for (let value of Object.values(response)) {
-                results.push({
-                    userId: value.user_id,
-                    totalnumberofbargainstaken: value.totalnumberofbargainstaken,
-                    totalnumberofbargainsshown: value.totalnumberofbargainsshown,
-                    totalnumberofproductsseen: value.totalnumberofproductsseen,
-                    totalnumberofstoresvisited: value.totalnumberofstoresvisited,
-                    totaltimelookingaproductinstoresecs: value.totaltimelookingaproductinstoresecs,
-                    averagetimelookingaproductinstore: value.averagetimelookingaproductinstore,
-                    averagenumberofproductsseeninastore: value.averagenumberofproductsseeninastore,
-                    createdat: value.createdat
-                });
-            }
-
-            callback({ results });
         }, (response) => {
             callback(false, response);
         });
