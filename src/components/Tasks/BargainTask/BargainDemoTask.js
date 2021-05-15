@@ -253,9 +253,11 @@ export default function BargainDemoTask(props) {
 
     const maskClassName = () => {
         console.log(props.typeTask)
-        if (props.typeTask === EXPERIMENT_TYPE_SHORT_NT)
-            return "mask-hidden"
-        else return "mask"
+        // if (props.typeTask === EXPERIMENT_TYPE_SHORT_NT)
+        //     return "mask-hidden"
+        // else return "mask"
+
+        return "mask-hidden"
     }
 
     return (<>
