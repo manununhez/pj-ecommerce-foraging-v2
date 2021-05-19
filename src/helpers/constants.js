@@ -132,9 +132,21 @@ export const VISUAL_PATTERN_RESULTS_CORRECT = "Bravo! You have successfully chec
 export const VISUAL_PATTERN_TEXT_START_PRESS_SPACE = "Press the spacebar to submit your solution.";
 export const VISUAL_PATTERN_INSTRUCTION = "Try to recreate the pattern displayed on the previous screen. You select and deselect the boxes by clicking on them with the left mouse button.";
 
-export const BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE = (bargainCounter) => { return `${bargainCounter} bargains in basket.` }
+export const BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE = (bargainCounter) => {
+    if (bargainCounter === 1) {
+        return `${bargainCounter} bargain in basket.`
+    } else {
+        return `${bargainCounter} bargains in basket.`
+    }
+}
 export const BARGAIN_ERROR_SELECTED_ALERT_MESSAGE = "This is not a bargain."
-export const BARGAIN_MISSED_SELECTED_ALERT_MESSAGE = (numberOfBargain) => { return `${numberOfBargain} missed bargains.` }
+export const BARGAIN_MISSED_SELECTED_ALERT_MESSAGE = (numberOfBargain) => {
+    if (numberOfBargain === 1) {
+        return `${numberOfBargain} missed bargain.`
+    } else {
+        return `${numberOfBargain} missed bargains.`
+    }
+}
 
 export const STORES_NOT_AVAILABLE = "No more stores available. Please wait."
 export const MIDDLE_EXPERIMENT_ALERT = "We reached the middle of the experiment. Now the list will change. Click to continue to the next part of the experiment."
@@ -143,4 +155,4 @@ export const TOUR_PRODUCT_BELT = "This is the product belt."
 export const TOUR_BARGAIN = "This is a bargain."
 export const TOUR_NOT_BARGAIN = "This is not a bargain."
 export const TOUR_BARGAIN_CRITERIA = "A bargain is a product with a discount >= 50% and rating >= 4 stars."
-export const TOUR_BARGAIN_SELECTION = "Select the bargain clicking your left mouse button."
+export const TOUR_BARGAIN_SELECTION = "Select the bargain by clicking the left mouse button."

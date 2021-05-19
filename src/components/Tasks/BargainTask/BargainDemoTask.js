@@ -203,7 +203,7 @@ export default function BargainDemoTask(props) {
                     <h6> {"(" + (currentStep + 1) + "/" + 8 + ")"}</h6>
                     <h5>When there are no more bargains, you can move the belt.</h5>
                     <br /><br />
-                    Press this button.
+                    Press the arrow on the right.
                 </div>)
             },
             position: 'left'
