@@ -375,29 +375,28 @@ class Index extends Component {
         if (DEBUG) console.log(data);
         if (data) {
             if (DEBUG) console.log("SaveUserLogTime");
-            // request.saveUserVisualPattern(this.state, this._onSaveUserVisualPatternCallBack.bind(this))
-            request.saveUserPSForm(this.state, this._onSaveUserPSFormCallBack.bind(this))
+            request.saveUserVisualPattern(this.state, this._onSaveUserVisualPatternCallBack.bind(this))
         } else {
             if (DEBUG) console.log("Error saving user logtime")
             this.setState({ loading: false });
         }
     }
 
-    // /**
-    //  * Results from saving user visual pattern data
-    //  * @param {*} data 
-    //  * @param {*} error 
-    //  */
-    // _onSaveUserVisualPatternCallBack(data, error) {
-    //     if (DEBUG) console.log(data);
-    //     if (data) {
-    //         if (DEBUG) console.log("SaveUserVisualPattern");
-    //         request.saveUserPSForm(this.state, this._onSaveUserPSFormCallBack.bind(this))
-    //     } else {
-    //         if (DEBUG) console.log("Error saving user visualPattern")
-    //         this.setState({ loading: false });
-    //     }
-    // }
+    /**
+     * Results from saving user visual pattern data
+     * @param {*} data 
+     * @param {*} error 
+     */
+    _onSaveUserVisualPatternCallBack(data, error) {
+        if (DEBUG) console.log(data);
+        if (data) {
+            if (DEBUG) console.log("SaveUserVisualPattern");
+            request.saveUserPSForm(this.state, this._onSaveUserPSFormCallBack.bind(this))
+        } else {
+            if (DEBUG) console.log("Error saving user visualPattern")
+            this.setState({ loading: false });
+        }
+    }
 
     /**
     * Results from saving user ps questionaries data

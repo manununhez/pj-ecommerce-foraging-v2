@@ -30,9 +30,12 @@ export default class BargainResult extends React.Component {
           <MainMenu />
         </main>
         <Nav vertical>
+          <h5>Finished sessions</h5>
           <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3/bargains-result">Bargain results</NavLink></NavItem>
+          <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3//bargains-result-per-store">Bargain results per store</NavLink></NavItem>
           <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3/survey-result">Survey results</NavLink></NavItem>
           <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3/demographic-result">Demographic results</NavLink></NavItem>
+          <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3/memory-result">Memory task results</NavLink></NavItem>
         </Nav>
       </>
     );
