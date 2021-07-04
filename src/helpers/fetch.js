@@ -8,6 +8,7 @@ const fetch_apptext_url = 'apptext'
 const fetch_inituserdata_url = 'inituserdata'
 const fetch_stores_short_url = 'stores-short'
 const fetch_stores_long_url = 'stores-long'
+const fetch_users_url = 'users'
 const save_visualpattern_url = 'visualpattern'
 const save_userinfo_url = 'userinfo'
 const save_userlogtime_url = 'userlogtime'
@@ -158,6 +159,27 @@ export function fetchVersions(callback) {
             }
 
             callback({ versions });
+        }, (response) => {
+            callback(false, response);
+        });
+}
+
+/**
+ * 
+ * @param {*} sex 
+ * @param {*} callback 
+ */
+export function fetchUsers(callback) {
+    let url = fetch_users_url
+
+    get(url, {})
+        .then((response) => {
+            let users = [];
+
+            for (let value of Object.values(response)) {
+                users.push({ user_id: value.user_id, created_at: value.created_at });
+            }
+            callback({ users });
         }, (response) => {
             callback(false, response);
         });
