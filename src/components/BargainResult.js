@@ -50,8 +50,6 @@ export default class BargainResult extends React.Component {
         users: data.users,
         loading: false, //Hide loading
       })
-
-      console.log(this.state)
     } else {
       this.setState({
         error: error
@@ -74,45 +72,48 @@ export default class BargainResult extends React.Component {
             loading={this.state.loading}
           />
         </div>
-        <Nav vertical>
-          {/* <h5>Finished sessions</h5> */}
-          <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3/bargains-result">Bargain results (all users)</NavLink></NavItem>
-          <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3//bargains-result-per-store">Bargain results per store (all users)</NavLink></NavItem>
-          <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3/survey-result">Survey results (all users)</NavLink></NavItem>
-          <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3/demographic-result">Demographic results (all users)</NavLink></NavItem>
-          <NavItem><NavLink href="https://api.swps-pjatk-experiment.pl/v3/memory-result">Memory task results (all users)</NavLink></NavItem>
-        </Nav>
+        <h5>Finished sessions</h5>
+        {getTable(this.state.users, "c")}
         <br /><br />
-        {getTable(this.state.users)}
+        <h5>Partial sessions</h5>
+        {getTable(this.state.users, "p")}
       </>
     );
   }
 }
 
-function getTable(users) {
-  return (<Table responsive bordered size="sm">
-    <thead>
-      <tr>
-        <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Users</th>
-        <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Timestamp</th>
-        <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Bargain results</th>
-        <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Bargain results per store</th>
-        <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Survey results</th>
-        <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Demographic results</th>
-        <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Memory task results</th>
-      </tr>
-    </thead>
-    <tbody>
-      {getTableBody(users)}
-    </tbody>
-  </Table>);
+function getTable(users, resultsType) {
+  return (<>
+    <Nav vertical>
+      <NavItem><NavLink href={"https://api.swps-pjatk-experiment.pl/v3/bargains-result/" + resultsType}>Bargain results (all users)</NavLink></NavItem>
+      <NavItem><NavLink href={"https://api.swps-pjatk-experiment.pl/v3//bargains-result-per-store/" + resultsType}>Bargain results per store (all users)</NavLink></NavItem>
+      <NavItem><NavLink href={"https://api.swps-pjatk-experiment.pl/v3/survey-result/" + resultsType}>Survey results (all users)</NavLink></NavItem>
+      <NavItem><NavLink href={"https://api.swps-pjatk-experiment.pl/v3/demographic-result/" + resultsType}>Demographic results (all users)</NavLink></NavItem>
+      <NavItem><NavLink href={"https://api.swps-pjatk-experiment.pl/v3/memory-result/" + resultsType}>Memory task results (all users)</NavLink></NavItem>
+    </Nav>
+    <br />
+    <Table responsive bordered size="sm">
+      <thead>
+        <tr>
+          <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Users</th>
+          <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Timestamp</th>
+          <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Bargain results</th>
+          <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Bargain results per store</th>
+          <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Survey results</th>
+          <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Demographic results</th>
+          <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Memory task results</th>
+        </tr>
+      </thead>
+      <tbody>
+        {getTableBody(users, resultsType)}
+      </tbody>
+    </Table>
+  </>);
 }
 
-function getTableBody(users) {
+function getTableBody(users, resultsType) {
   let body = []
   for (let i = 0; i < users.length; i++) {
-    console.log(users[i].user_id)
-
     body.push(
       <tr style={{ textAlign: '-webkit-center' }}>
         <td style={{ textAlign: "-moz-center" }}>
@@ -122,19 +123,19 @@ function getTableBody(users) {
           {users[i].created_at}
         </td>
         <td style={{ textAlign: "-moz-center" }}>
-          <NavLink href={"https://api.swps-pjatk-experiment.pl/v3/bargains-result/" + users[i].user_id}>Download</NavLink>
+          <NavLink href={"https://api.swps-pjatk-experiment.pl/v3/bargains-result/" + resultsType + "/" + users[i].user_id}>Download</NavLink>
         </td>
         <td style={{ textAlign: "-moz-center" }}>
-          <NavLink href={"https://api.swps-pjatk-experiment.pl/v3//bargains-result-per-store/" + users[i].user_id}>Download</NavLink>
+          <NavLink href={"https://api.swps-pjatk-experiment.pl/v3//bargains-result-per-store/" + resultsType + "/" + users[i].user_id}>Download</NavLink>
         </td>
         <td style={{ textAlign: "-moz-center" }}>
-          <NavLink href={"https://api.swps-pjatk-experiment.pl/v3/survey-result/" + users[i].user_id}>Download</NavLink>
+          <NavLink href={"https://api.swps-pjatk-experiment.pl/v3/survey-result/" + resultsType + "/" + users[i].user_id}>Download</NavLink>
         </td>
         <td style={{ textAlign: "-moz-center" }}>
-          <NavLink href={"https://api.swps-pjatk-experiment.pl/v3/demographic-result/" + users[i].user_id}>Download</NavLink>
+          <NavLink href={"https://api.swps-pjatk-experiment.pl/v3/demographic-result/" + resultsType + "/" + users[i].user_id}>Download</NavLink>
         </td>
         <td style={{ textAlign: "-moz-center" }}>
-          <NavLink href={"https://api.swps-pjatk-experiment.pl/v3/memory-result/" + users[i].user_id}>Download</NavLink>
+          <NavLink href={"https://api.swps-pjatk-experiment.pl/v3/memory-result/" + resultsType + "/" + users[i].user_id}>Download</NavLink>
         </td>
       </tr>
     )

@@ -23,7 +23,7 @@ const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 export default function BargainTask(props) {
     // const showFeedback = true
     const PRODUCTS_PER_ROW = 5
-    const EXPERIMENT_DURATION_SECS = 15 * 60
+    const EXPERIMENT_DURATION_SECS = 1 * 60
 
     const testList = [{
         storeNumber: 1, bargainsNumber: 4, delay: 15, showFeedback: true, products: [
