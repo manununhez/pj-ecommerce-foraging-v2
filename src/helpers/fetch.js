@@ -175,11 +175,16 @@ export function fetchUsers(callback) {
     get(url, {})
         .then((response) => {
             let users = [];
+            let usersPartial = [];
 
             for (let value of Object.values(response)) {
-                users.push({ user_id: value.user_id, created_at: value.created_at });
+                if (value.session_completed) {
+                    users.push({ user_id: value.user_id, created_at: value.created_at });
+                } else {
+                    usersPartial.push({ user_id: value.user_id, created_at: value.created_at });
+                }
             }
-            callback({ users });
+            callback({ users, usersPartial });
         }, (response) => {
             callback(false, response);
         });

@@ -26,6 +26,7 @@ const override = css`
 export default class BargainResult extends React.Component {
   state = {
     users: [],
+    usersPartial: [],
     loading: false
   }
 
@@ -48,8 +49,10 @@ export default class BargainResult extends React.Component {
     if (data) {
       this.setState({
         users: data.users,
+        usersPartial: data.usersPartial,
         loading: false, //Hide loading
       })
+      console.log(this.state)
     } else {
       this.setState({
         error: error
@@ -72,11 +75,17 @@ export default class BargainResult extends React.Component {
             loading={this.state.loading}
           />
         </div>
-        <h5>Finished sessions</h5>
-        {getTable(this.state.users, "c")}
-        <br /><br />
-        <h5>Partial sessions</h5>
-        {getTable(this.state.users, "p")}
+        {(this.state.users.length > 0) ?
+          <><h5>Finished sessions</h5>
+            {getTable(this.state.users, "c")}
+            <br /><br />
+          </> : <></>}
+
+        {(this.state.usersPartial.length > 0) ?
+          <><h5>Partial sessions</h5>
+            {getTable(this.state.usersPartial, "p")}
+            <br /><br />
+          </> : <></>}
       </>
     );
   }
@@ -86,7 +95,7 @@ function getTable(users, resultsType) {
   return (<>
     <Nav vertical>
       <NavItem><NavLink href={"https://api.swps-pjatk-experiment.pl/v3/bargains-result/" + resultsType}>Bargain results (all users)</NavLink></NavItem>
-      <NavItem><NavLink href={"https://api.swps-pjatk-experiment.pl/v3//bargains-result-per-store/" + resultsType}>Bargain results per store (all users)</NavLink></NavItem>
+      <NavItem><NavLink href={"https://api.swps-pjatk-experiment.pl/v3/bargains-result-per-store/" + resultsType}>Bargain results per store (all users)</NavLink></NavItem>
       <NavItem><NavLink href={"https://api.swps-pjatk-experiment.pl/v3/survey-result/" + resultsType}>Survey results (all users)</NavLink></NavItem>
       <NavItem><NavLink href={"https://api.swps-pjatk-experiment.pl/v3/demographic-result/" + resultsType}>Demographic results (all users)</NavLink></NavItem>
       <NavItem><NavLink href={"https://api.swps-pjatk-experiment.pl/v3/memory-result/" + resultsType}>Memory task results (all users)</NavLink></NavItem>
@@ -126,7 +135,7 @@ function getTableBody(users, resultsType) {
           <NavLink href={"https://api.swps-pjatk-experiment.pl/v3/bargains-result/" + resultsType + "/" + users[i].user_id}>Download</NavLink>
         </td>
         <td style={{ textAlign: "-moz-center" }}>
-          <NavLink href={"https://api.swps-pjatk-experiment.pl/v3//bargains-result-per-store/" + resultsType + "/" + users[i].user_id}>Download</NavLink>
+          <NavLink href={"https://api.swps-pjatk-experiment.pl/v3/bargains-result-per-store/" + resultsType + "/" + users[i].user_id}>Download</NavLink>
         </td>
         <td style={{ textAlign: "-moz-center" }}>
           <NavLink href={"https://api.swps-pjatk-experiment.pl/v3/survey-result/" + resultsType + "/" + users[i].user_id}>Download</NavLink>
