@@ -690,14 +690,14 @@ class Index extends Component {
     }
 
     instructionHandlerBack = (isValidToAdvance, numberStepsBack) => {
-        console.log("Valid to advance")
-        console.log(this.state.currentScreenNumber)
-        console.log(numberStepsBack)
+        if (DEBUG) console.log("Valid to advance")
+        if (DEBUG) console.log(this.state.currentScreenNumber)
+        if (DEBUG) console.log(numberStepsBack)
         if (isValidToAdvance) {
             this.setState({
                 currentScreenNumber: this.state.currentScreenNumber - numberStepsBack
             }, () => {
-                console.log(this.state.currentScreenNumber)
+                if (DEBUG) console.log(this.state.currentScreenNumber)
                 //we simulate a space btn pressed because VisualPattern already finishes with a space btn pressed
                 this._goToNextTaskInInputNavigation()
             })
@@ -991,11 +991,11 @@ class Index extends Component {
         if (DEBUG) console.log(USER_INFO.screen)
         return (
             <>
-                <section style={{ overflow: "hidden", paddingBottom: "2rem", height: "100vh" }}>
-                    <div id="content" style={{ marginTop: "20px", marginBottom: "20px", height: "calc(100vh - 150px)", overflowY: "scroll" }}>
+                <section style={{ paddingBottom: "2rem" }}>
+                    <div id="content" style={{ marginTop: "20px", marginBottom: "20px" }}>
                         {changePages(this.state, this)}
                     </div>
-                    <div style={{ overflow: "hidden" }}>
+                    <div>
                         {isFooterShownInCurrentScreen(this.state)}
                     </div>
                 </section>
