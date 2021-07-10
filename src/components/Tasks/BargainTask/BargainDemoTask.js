@@ -11,8 +11,7 @@ import {
     TOUR_BARGAIN_SELECTION,
     TOUR_NOT_BARGAIN,
     TOUR_PRODUCT_BELT,
-    accentColor,
-    EXPERIMENT_TYPE_SHORT_NT
+    accentColor
 } from '../../../helpers/constants';
 
 import "../style.css";
@@ -99,8 +98,8 @@ export default function BargainDemoTask(props) {
     }
 
     const gotToNextStep = () => {
-        console.log("currentStep:")
-        console.log(currentStep)
+        if (DEBUG) console.log("currentStep:")
+        if (DEBUG) console.log(currentStep)
 
         if (currentStep === 1) {
             //border color to bargain product
@@ -252,7 +251,7 @@ export default function BargainDemoTask(props) {
         }]
 
     const maskClassName = () => {
-        console.log(props.typeTask)
+        if (DEBUG) console.log(props.typeTask)
         // if (props.typeTask === EXPERIMENT_TYPE_SHORT_NT)
         //     return "mask-hidden"
         // else return "mask"

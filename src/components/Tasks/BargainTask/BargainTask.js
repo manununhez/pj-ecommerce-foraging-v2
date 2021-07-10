@@ -23,7 +23,7 @@ const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 export default function BargainTask(props) {
     // const showFeedback = true
     const PRODUCTS_PER_ROW = 5
-    const EXPERIMENT_DURATION_SECS = 1 * 60
+    const EXPERIMENT_DURATION_SECS = 15 * 60
 
     const testList = [{
         storeNumber: 1, bargainsNumber: 4, delay: 15, showFeedback: true, products: [
@@ -435,7 +435,7 @@ export default function BargainTask(props) {
     }
 
     return (<>
-        { DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}    CurrentBelt:${currentBeltIteration}` : ""}
+        {DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}    CurrentBelt:${currentBeltIteration}` : ""}
 
         {modalAlertConfig.isVisible ?
             <ModalAlert
@@ -444,7 +444,7 @@ export default function BargainTask(props) {
                 onOpened={onModalOpened}
                 onClosed={onModalClosed} /> : <></>}
 
-        { displayBodyConfig(showProducts, showInstruction)}
+        {displayBodyConfig(showProducts, showInstruction)}
     </>)
 }
 

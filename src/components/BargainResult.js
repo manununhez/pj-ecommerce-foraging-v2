@@ -22,6 +22,7 @@ const override = css`
   margin: 0 auto;
   border-color: red;
 `;
+const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 
 export default class BargainResult extends React.Component {
   state = {
@@ -52,7 +53,7 @@ export default class BargainResult extends React.Component {
         usersPartial: data.usersPartial,
         loading: false, //Hide loading
       })
-      console.log(this.state)
+      if (DEBUG) console.log(this.state)
     } else {
       this.setState({
         error: error

@@ -6,6 +6,8 @@ import "./style.css";
 import * as constant from '../../helpers/constants';
 import FooterBack from "../Footers/FooterBack";
 
+const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
+
 class Instruction extends React.Component {
     handleKeyDownEvent = (event) => {
         if (event.keyCode === constant.SPACE_KEY_CODE) { //Transition between screens
@@ -15,13 +17,13 @@ class Instruction extends React.Component {
                 this.props.action(true)
             }
         } else if (event.keyCode === constant.ENTER_KEY_CODE) { //Transition between screens
-            console.log("PRessed ENter")
-            console.log(this.props.name)
+            if (DEBUG) console.log("PRessed ENter")
+            if (DEBUG) console.log(this.props.name)
             if (this.props.name.includes("Bargain")) {
                 if (!this.props.name.includes("Finish")) {
                     this.props.action(true)
                 } else if (this.props.name.includes("Before")) {
-                    console.log("Action back")
+                    if (DEBUG) console.log("Action back")
                     this.props.actionBack(true, 3)
                 }
             }
