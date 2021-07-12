@@ -314,7 +314,8 @@ const userbargain = (data) => {
             item.productsSeen,
             item.lastProductDisplayed,
             item.bargainTakenNumber,
-            item.bargainShownNumber
+            item.bargainShownNumber,
+            item.round
         ]
     })
 
@@ -407,7 +408,7 @@ const usergeneraldata = (data, ariadnaUserID) => {
                     item.lastProductDisplayed,
                     item.bargainTakenNumber,
                     item.bargainShownNumber,
-                    constant.TEXT_EMPTY,
+                    item.round,
                     constant.TEXT_EMPTY
                 ]
             });
