@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 
 import {
     BARGAIN_ERROR_SELECTED_ALERT_MESSAGE,
@@ -11,11 +11,15 @@ import {
     EXPERIMENT_TYPE_LONG,
     EXPERIMENT_TYPE_SHORT,
     EXPERIMENT_TYPE_LONG_NT,
-    EXPERIMENT_TYPE_SHORT_NT
+    EXPERIMENT_TYPE_SHORT_NT,
+    ENTER_KEY_CODE,
+    EVENT_KEY_DOWN,
+    TEXT_FOOTER_ENTER
 } from '../../../helpers/constants';
 import { randomNumber } from '../../../helpers/utils';
 import StickmanLoading from './StickmanLoading';
 import ProductsMenu from './ProductsMenu';
+import Footer from "../../Footers/Footer";
 import "../style.css";
 
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
@@ -412,6 +416,22 @@ export default function BargainTask(props) {
         }
     }, [delay])
 
+    useEffect(() => {
+        const handleKeyDownEvent = event => {
+            const { key, keyCode } = event
+            if (keyCode === ENTER_KEY_CODE) { //Transition between screens
+                if (DEBUG) console.log(`Key: ${key}; keyCode: ${keyCode}`)
+
+                onPauseTest()
+            }
+        }
+
+        document.addEventListener(EVENT_KEY_DOWN, handleKeyDownEvent);
+        return () => {
+            document.removeEventListener(EVENT_KEY_DOWN, handleKeyDownEvent);
+        };
+    });
+
     const displayBodyConfig = (showProducts, showInstruction) => {
         if (showProducts) {
             return (<div><ProductsMenu
@@ -429,7 +449,7 @@ export default function BargainTask(props) {
                 <h3>{MIDDLE_EXPERIMENT_ALERT}</h3>
                 <br />
                 <br />
-                <Button color="secondary" size='sm' onClick={onPauseTest}>Continue</Button></div>)
+                <Footer text={TEXT_FOOTER_ENTER} /></div>)
         } else {
             return (<div className="centered">
                 <StickmanLoading

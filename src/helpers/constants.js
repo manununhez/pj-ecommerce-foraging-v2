@@ -149,7 +149,7 @@ export const BARGAIN_MISSED_SELECTED_ALERT_MESSAGE = (numberOfBargain) => {
 }
 
 export const STORES_NOT_AVAILABLE = "No more stores available. Please wait."
-export const MIDDLE_EXPERIMENT_ALERT = "You reached the middle of the task. The travel time between stores will change now. Press enter to continue."
+export const MIDDLE_EXPERIMENT_ALERT = "You reached the middle of the task. The travel time between stores will change now."
 export const TOUR_PRODUCT_BELT = "This is the product belt."
 export const TOUR_BARGAIN = "This is a bargain."
 export const TOUR_NOT_BARGAIN = "This is not a bargain."
