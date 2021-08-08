@@ -11,9 +11,6 @@ import {
 } from "reactstrap";
 
 import {
-    VISUAL_PATTERN_DIMENTION,
-    VISUAL_PATTERN_TIMESCREEN_SECS,
-    VISUAL_PATTERN_RETRY_ATTEMPTS,
     ONE_SECOND_MS,
     TILE_SUCCESS,
     TILE_EMPTY,
@@ -25,7 +22,12 @@ import {
     VISUAL_PATTERN_TEXT_START_PRESS_SPACE,
     VISUAL_PATTERN_RESULTS_CORRECT,
     VISUAL_PATTERN_RESULTS_FAILED,
-    VISUAL_PATTERN_RESULTS_PRESS_SPACE
+    VISUAL_PATTERN_RESULTS_PRESS_SPACE,
+    VISUAL_PATTERN_CORRECT_RESULTS,
+    VISUAL_PATTERN_USER_RESULTS,
+    VISUAL_PATTERN_DIMENTION,
+    VISUAL_PATTERN_TIMESCREEN_SECS,
+    VISUAL_PATTERN_RETRY_ATTEMPTS
 } from '../../helpers/constants';
 
 import { randomNumber } from '../../helpers/utils';
@@ -351,8 +353,8 @@ function getTableResults(TRow, TColumn, matrix, matrixResult, matrixCheckResult,
                             <Table responsive bordered size="sm" style={{ width: "100%", marginBottom: "0" }}>
                                 <thead>
                                     <tr>
-                                        <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Poprawny wzór</th>
-                                        <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Twoje zaznaczenie</th>
+                                        <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>{VISUAL_PATTERN_CORRECT_RESULTS}</th>
+                                        <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>{VISUAL_PATTERN_USER_RESULTS}</th>
                                     </tr>
                                 </thead>
                                 <tbody>

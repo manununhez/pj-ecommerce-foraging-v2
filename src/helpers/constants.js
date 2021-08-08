@@ -131,6 +131,8 @@ export const VISUAL_PATTERN_RESULTS_FAILED = "Unfortunately, you did not manage 
 export const VISUAL_PATTERN_RESULTS_CORRECT = "Bravo! You have successfully checked all the boxes.";
 export const VISUAL_PATTERN_TEXT_START_PRESS_SPACE = "Press the spacebar to submit your solution.";
 export const VISUAL_PATTERN_INSTRUCTION = "Try to recreate the pattern displayed on the previous screen. You select and deselect the boxes by clicking on them with the left mouse button.";
+export const VISUAL_PATTERN_CORRECT_RESULTS = "Correct pattern"
+export const VISUAL_PATTERN_USER_RESULTS = "Your answer"
 
 export const BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE = (bargainCounter) => {
     if (bargainCounter === 1) {
