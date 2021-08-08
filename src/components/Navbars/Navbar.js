@@ -41,7 +41,7 @@ class NavbarCustom extends React.Component {
               <NavLink href="/bargain-results">Results</NavLink>
             </NavItem>
           </Nav>
-          <NavbarText>v1.5</NavbarText>
+          <NavbarText>v1.6</NavbarText>
         </Collapse>
       </Navbar>
     </div>
@@ -67,7 +67,7 @@ function getDropdownMenuItems(items) {
     <UncontrolledDropdown nav inNavbar>
       <DropdownToggle nav caret>
         Versions
-              </DropdownToggle>
+      </DropdownToggle>
       <DropdownMenu right>
         {children}
       </DropdownMenu>
