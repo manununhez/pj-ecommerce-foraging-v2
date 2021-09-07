@@ -657,27 +657,28 @@ class Index extends Component {
 
     /**
      * 
-     * @param {*} results 
+     * @param {*} bargainResults 
      */
-    bargainTaskHandler = (results) => {
+    bargainTaskHandler = (bargainResults) => {
         if (DEBUG) console.log("Bargain RESULTS")
-        if (DEBUG) console.log(results)
+        if (DEBUG) console.log(bargainResults)
         const { generalOutput, outputBargainTask, userID } = this.state;
 
-        // const totalNumberOfBargainsTaken = results.reduce((accumulator, currentValue) => accumulator + currentValue.bargainTakenNumber)
-        // const totalNumberOfBargainsShown = results.reduce((accumulator, currentValue) => accumulator + currentValue.bargainShownNumber)
-        // const totalNumberOfProductsSeen = results.reduce((accumulator, currentValue) => accumulator + currentValue.productsSeen)
-        // const totalNumberOfStoresVisited = results.length
-        // const totalTimeLookingAProductInStore = results.reduce((accumulator, currentValue) => accumulator + ((currentValue.leaveStoreTimestamp - currentValue.enterStoreTimestamp)/currentValue.productsSeen))
+        // const totalNumberOfBargainsTaken = bargainResults.reduce((accumulator, currentValue) => accumulator + currentValue.bargainTakenNumber)
+        // const totalNumberOfBargainsShown = bargainResults.reduce((accumulator, currentValue) => accumulator + currentValue.bargainShownNumber)
+        // const totalNumberOfProductsSeen = bargainResults.reduce((accumulator, currentValue) => accumulator + currentValue.productsSeen)
+        // const totalNumberOfStoresVisited = bargainResults.length
+        // const totalTimeLookingAProductInStore = bargainResults.reduce((accumulator, currentValue) => accumulator + ((currentValue.leaveStoreTimestamp - currentValue.enterStoreTimestamp)/currentValue.productsSeen))
         // const averageTimeLookingAProductInStore = Math.floor(timeLookingAProductInStore / numberOfStoresVisited / 1000) //to seconds
         // const averageNumberOfProductsSeenInAStore = numberOfProductsSeen / numberOfStoresVisited
 
-        outputBargainTask.task = results
+        let resultsB = (outputBargainTask.task.results === undefined || outputBargainTask.task.results.length === 0) ? bargainResults.results : outputBargainTask.task.results.concat(bargainResults.results)
+        outputBargainTask.task = { isTaskCompleted: bargainResults.isTaskCompleted, results: resultsB }
 
         generalOutput.push({
             userID: userID,
             task: constant.BARGAIN_SCREEN,
-            data: results.results,
+            data: bargainResults.results,
             sync: constant.STATE_NOT_SYNC
         })
 
@@ -686,6 +687,7 @@ class Index extends Component {
             outputBargainTask: outputBargainTask,
             generalOutput: generalOutput
         }, () => {
+            this._checkSyncGeneralData()
             //we simulate a space btn pressed because VisualPattern already finishes with a space btn pressed
             this._validateToNextPage()
         })

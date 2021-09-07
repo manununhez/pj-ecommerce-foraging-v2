@@ -44,7 +44,7 @@ export const VISUAL_PATTERN_DEMO_RETRY_ATTEMPTS = 1;
 export const STATE_SYNCING = 2;
 export const STATE_SYNC = 1;
 export const STATE_NOT_SYNC = 0;
-export const SYNC_AMOUN_ITEMS = 5;
+export const SYNC_AMOUN_ITEMS = 3;
 export const ONE_SECOND_MS = 1000;
 
 // Form IDs

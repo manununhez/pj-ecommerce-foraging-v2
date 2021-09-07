@@ -78,7 +78,6 @@ const RatingBar = (value) => {
 
 const Menu = (list, selected) =>
     list.map((item, index) => {
-        if (DEBUG) console.log(`Index: ${index}`)
         const isSelected = selected.includes(index)
 
         return MenuItem(item, index, isSelected);
@@ -86,7 +85,6 @@ const Menu = (list, selected) =>
 
 const MenuItem = (item, productIndex, isSelected) => {
     const discountPercentage = (item.discount * 100).toFixed()
-    if (DEBUG) console.log(`${item.productNumber}: ${isSelected}`)
     return (
         <div key={productIndex} id={"reactour__product_" + productIndex} data-tut={"reactour__product_" + productIndex}>
             <ProductItem
@@ -107,7 +105,7 @@ function ProductItem(props) {
     return (
         <div className="card product-card"
             style={{ backgroundColor: isSelected ? "grey" : ((item.isBargain && DEBUG) ? "#e6ffcc" : "white") }}>
-            {DEBUG ? <div>product#:{item.productNumber} bargain:{item.isBargain ? "T" : "F"}</div> : <></>}
+            {DEBUG ? <div>product#:{item.productNumber}</div> : <></>}
             <h5>{discountPercentage}% OFF!!</h5>
             <img className="responsive-images product-image"
                 src={item.img}

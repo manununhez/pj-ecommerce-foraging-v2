@@ -25,12 +25,14 @@ import "../style.css";
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 
 export default function BargainTask(props) {
-    // const showFeedback = true
+    const [typeTask, setTypeTask] = useState({ name: props.typeTask })
+    const DEBUG_TEST = typeTask.name.includes("TEST")
     const PRODUCTS_PER_ROW = 5
-    const EXPERIMENT_DURATION_SECS = 30 * 60
+    const DURATION_IN_MINS = (DEBUG_TEST) ? 1 : 1//30
+    const EXPERIMENT_DURATION_SECS = DURATION_IN_MINS * 60
 
     const testList = [{
-        storeNumber: 1, bargainsNumber: 4, delay: 15, showFeedback: true, products: [
+        storeNumber: 1, bargainsNumber: 2, delay: 15, showFeedback: true, products: [
             { productNumber: 1, isBargain: false, oldPrice: 258, newPrice: 167.7, discount: 0.35, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/2picture.jpg" },
             { productNumber: 2, isBargain: true, oldPrice: 282, newPrice: 126.9, discount: 0.55, numOfStars: 3, img: "https://api.swps-pjatk-experiment.pl/v3/img/17picture.jpg" },
             { productNumber: 3, isBargain: false, oldPrice: 165, newPrice: 84.15, discount: 0.49, numOfStars: 1, img: "https://api.swps-pjatk-experiment.pl/v3/img/11picture.jpg" },
@@ -43,7 +45,7 @@ export default function BargainTask(props) {
             { productNumber: 10, isBargain: false, oldPrice: 206, newPrice: 131.84, discount: 0.36, numOfStars: 1, img: "https://api.swps-pjatk-experiment.pl/v3/img/23electron_picture.jpg" }
         ]
     }, {
-        storeNumber: 2, bargainsNumber: 15, delay: 15, showFeedback: false, products: [
+        storeNumber: 2, bargainsNumber: 4, delay: 15, showFeedback: false, products: [
             { productNumber: 1, isBargain: false, oldPrice: 269, newPrice: 201.75, discount: 0.25, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/62jewelry_picture.jpg" },
             { productNumber: 2, isBargain: false, oldPrice: 109, newPrice: 85.02, discount: 0.22, numOfStars: 4, img: "https://api.swps-pjatk-experiment.pl/v3/img/68jewelry_picture.jpg" },
             { productNumber: 3, isBargain: false, oldPrice: 127, newPrice: 85.09, discount: 0.33, numOfStars: 4, img: "https://api.swps-pjatk-experiment.pl/v3/img/8picture.jpg" },
@@ -53,16 +55,16 @@ export default function BargainTask(props) {
             { productNumber: 7, isBargain: true, oldPrice: 166, newPrice: 59.76, discount: 0.64, numOfStars: 6, img: "https://api.swps-pjatk-experiment.pl/v3/img/17electron_picture.jpg" },
             { productNumber: 8, isBargain: false, oldPrice: 169, newPrice: 87.88, discount: 0.48, numOfStars: 3, img: "https://api.swps-pjatk-experiment.pl/v3/img/39jewelry_picture.jpg" },
             { productNumber: 9, isBargain: false, oldPrice: 127, newPrice: 71.12, discount: 0.44, numOfStars: 4, img: "https://api.swps-pjatk-experiment.pl/v3/img/67jewelry_picture.jpg" },
-            { productNumber: 10, isBargain: false, oldPrice: 226, newPrice: 122.04, discount: 0.46, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/70jewelry_picture.jpg" }
+            { productNumber: 10, isBargain: true, oldPrice: 226, newPrice: 122.04, discount: 0.70, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/70jewelry_picture.jpg" }
         ]
     }]
 
     const setConditionalList = () => {
-        if (props.typeTask.includes("TEST")) {
+        if (DEBUG_TEST) {
             return testList
-        } else if (props.typeTask === EXPERIMENT_TYPE_LONG || props.typeTask === EXPERIMENT_TYPE_LONG_NT) {
+        } else if (typeTask.name === EXPERIMENT_TYPE_LONG || typeTask.name === EXPERIMENT_TYPE_LONG_NT) {
             return props.data.storesLong
-        } else if (props.typeTask === EXPERIMENT_TYPE_SHORT || props.typeTask === EXPERIMENT_TYPE_SHORT_NT) {
+        } else if (typeTask.name === EXPERIMENT_TYPE_SHORT || typeTask.name === EXPERIMENT_TYPE_SHORT_NT) {
             return props.data.storesShort
         }
     }
@@ -93,7 +95,7 @@ export default function BargainTask(props) {
     }
 
     const setInitialDelayDuringTestingOnly = () => {
-        if (props.typeTask.includes("-NT")) {
+        if (typeTask.name.includes("-NT")) {
             return null;
         } else {
             return ONE_SECOND_MS;
@@ -108,9 +110,9 @@ export default function BargainTask(props) {
     const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState([])
     const [delay, setDelay] = useState(setInitialDelayDuringTestingOnly())
     const [modalAlertConfig, setModalAlertConfig] = useState({ isVisible: false, text: "", title: "" })
-    const [typeTask, setTypeTask] = useState(props.typeTask)
-    const [results, setResults] = useState([initNewStoreResult(storeLists[currentStoreIndex], typeTask, round)])
+    const [results, setResults] = useState([initNewStoreResult(storeLists[currentStoreIndex], typeTask.name, round)])
     const [showFeedback, setShowFeedback] = useState(storeLists[currentStoreIndex].showFeedback)
+    const [bargainsTotalNumber, setBargainsTotalNumber] = useState(storeLists[currentStoreIndex].bargainsNumber)
     const [showInstruction, setShowInstruction] = useState(false)
     const [showProducts, setShowProducts] = useState(true)
     const [selectedProducts, setSelectedProducts] = useState([])
@@ -153,6 +155,8 @@ export default function BargainTask(props) {
 
         if (showFeedback) { checkMissedBargainsAlert() }
 
+        saveResultsBeforeLeavingStore()
+
         displayNewStore()
     }
 
@@ -175,14 +179,10 @@ export default function BargainTask(props) {
             if (productSelected.isBargain) {
                 const newBargainCounter = results[results.length - 1].bargainTakenNumber + 1
 
-                // if (showFeedback) {
-                //     modalAlert("Great! >> ProductNumber:" + productSelected.productNumber, BARGAIN_CORRECT_SELECTED_ALERT_MESSAGE(newBargainCounter))
-                // }
-
                 saveResultsNewBargainTaken(newBargainCounter)
             } else {
                 if (showFeedback) {
-                    modalAlert("Ups! >> ProductNumber:" + productSelected.productNumber, BARGAIN_ERROR_SELECTED_ALERT_MESSAGE)
+                    modalAlert("Ups!"/*>> ProductNumber:" + productSelected.productNumber*/, BARGAIN_ERROR_SELECTED_ALERT_MESSAGE)
                 }
             }
         }
@@ -190,7 +190,7 @@ export default function BargainTask(props) {
 
     const displayNewStore = () => {
         //check is there are stores available
-        if (results.length + 1 >= storeLists.length) {
+        if (results.length >= storeLists.length) {
             modalAlert("Ups!", STORES_NOT_AVAILABLE)
             return
         }
@@ -199,23 +199,21 @@ export default function BargainTask(props) {
         const newStore = storeLists[newCurrentStoreIndex]
 
         //update results
-        saveResultsBeforeLeavingStore()
-        results.push(initNewStoreResult(newStore, typeTask, round))
+        results.push(initNewStoreResult(newStore, typeTask.name, round))
 
         //Clear state for a new store to show
         setShowProducts(false)
         setCurrentBeltIteration(1)
-        setCurrentProducts(newStore.products.slice(0, PRODUCTS_PER_ROW * 2))
+        initializeProducts(newStore)
         setShowFeedback(newStore.showFeedback)
+        setBargainsTotalNumber(newStore.bargainsNumber)
         setCurrentStoreIndex(newCurrentStoreIndex)
         setSelectedProducts([])
         setCurrentProductListWithoutBargains([])
     }
 
     const showNextProducts = () => {
-        const newCurrentBeltIteration = currentBeltIteration + 1
-
-        setCurrentBeltIteration(newCurrentBeltIteration)
+        console.log("showNextProducts")
 
         saveResultsBeforeChangingBelt()
     }
@@ -311,29 +309,33 @@ export default function BargainTask(props) {
         modalAlert("", "", false)
     }
 
-    const onPauseTest = () => {
+    const onMiddleExperimentResume = () => {
         setDelay(ONE_SECOND_MS)
         setShowProducts(true)
         setShowInstruction(false)
+
+        setNewExperimentType()//change store list (short - long)
+    }
+
+    const onMiddleExperimentPause = () => {
+        setDelay(null)
+        setShowProducts(false)
+        setShowInstruction(true)
     }
 
     const saveResultsBeforeLeavingStore = () => {
-        if (DEBUG) console.log("saveResultsBeforeLeavingStore===")
-
+        if (DEBUG_TEST) console.log("saveResultsBeforeLeavingStore")
         results[results.length - 1] = {
             ...results[results.length - 1],
             leaveStoreTimestamp: Date.now()
         }
 
-        if (DEBUG) console.log(results)
+        if (DEBUG_TEST) console.log(results)
     }
 
     const saveResultsBeforeChangingBelt = () => {
-        if (DEBUG) console.log("saveResultsBeforeChangingBelt===")
         const store = storeLists[currentStoreIndex]
-
         const newCurrentBeltIteration = currentBeltIteration + 1
-
         const from = newCurrentBeltIteration * PRODUCTS_PER_ROW
         const to = from + PRODUCTS_PER_ROW
         const productListInThisIteration = store.products.slice(from, to)
@@ -346,6 +348,8 @@ export default function BargainTask(props) {
             lastProductDisplayed: lastProductNumber,
             bargainShownNumber: results[results.length - 1].bargainShownNumber + bargainNumberInThisIteration
         }
+
+        setCurrentBeltIteration(newCurrentBeltIteration)
 
         if (DEBUG) console.log(results)
     }
@@ -361,52 +365,72 @@ export default function BargainTask(props) {
         if (DEBUG) console.log(results)
     }
 
-    const setNewStoreList = () => {
-        const newListToDisplay = JSON.stringify(storeLists) === JSON.stringify(props.data.storesLong) ? props.data.storesShort : props.data.storesLong
-        const newStoresVisitedCounter = results.length + 1
-        const newTypeTask = (props.typeTask === EXPERIMENT_TYPE_LONG || props.typeTask === EXPERIMENT_TYPE_LONG_NT) ? EXPERIMENT_TYPE_SHORT : EXPERIMENT_TYPE_LONG
+    const setNewExperimentType = () => {
+        console.log("setNewExperimentType")
+        const newTypeTask = (typeTask.name === EXPERIMENT_TYPE_LONG || typeTask.name === EXPERIMENT_TYPE_LONG_NT || DEBUG_TEST) ? EXPERIMENT_TYPE_SHORT : EXPERIMENT_TYPE_LONG
+        const newListToDisplay = newTypeTask === EXPERIMENT_TYPE_LONG ? props.data.storesLong : props.data.storesShort
+        const newStoresVisited = newListToDisplay[0]
         const newRound = round + 1
-        saveResultsBeforeLeavingStore()
 
-        results.push(initNewStoreResult(newListToDisplay[0], newTypeTask, newRound))
+        results.push(initNewStoreResult(newStoresVisited, newTypeTask, newRound))
+        typeTask.name = newTypeTask
+        console.log(results)
+        console.log(typeTask.name)
 
         setRound(newRound)
-        setTypeTask(newTypeTask)
-        setStoreLists(newListToDisplay) //we change the stores lists by Conditions (Long/short)
-        setDelay(null)
-        setShowInstruction(true)
-        setShowProducts(false)
         setCurrentStoreIndex(0)
         setSelectedProducts([])
         setCurrentProductListWithoutBargains([])
         setCurrentBeltIteration(1)
-        setCurrentProducts(newListToDisplay[newStoresVisitedCounter].products.slice(0, PRODUCTS_PER_ROW * 2))
-        setShowFeedback(newListToDisplay[newStoresVisitedCounter].showFeedback)
+        setStoreLists(newListToDisplay)//we change the stores lists by Conditions (Long/short)
+        setCurrentProducts(initializeProducts(newStoresVisited))
+        setShowFeedback(newStoresVisited.showFeedback)
+        setBargainsTotalNumber(newStoresVisited.bargainsNumber)
+    }
+
+    const updateTime = () => {
+        timer.counter -= 1
+        console.log(timer.counter)
+    }
+
+    const syncResults = (_results, _isTaskCompleted) => {
+        props.action({
+            isTaskCompleted: _isTaskCompleted,
+            results: _results
+        })
     }
 
     useEffect(() => {//component didmount
         let id = null
         function tick() {
-            if (DEBUG) console.log(timer.counter)
-            if (timer.counter === 0) {//When timer 0, the experiment finishes
-                modalAlert("Ups!", "Timeout")
 
-                timer.counter = -1 //to avoid call this conditional again
+            updateTime()
+
+            if (timer.counter === 0) {//When timer 0, the experiment finishes
+                // modalAlert("Ups!", "Timeout")
+
+                let resultsForCurrentExperimentType = results.filter((item) => item.typeTask === typeTask.name)
+                console.log(resultsForCurrentExperimentType)
+                console.log(typeTask.name)
 
                 clearInterval(id)
 
                 saveResultsBeforeLeavingStore()
 
-                props.action({
-                    isTaskCompleted: true,
-                    results: results
-                })
-            } else if (timer.counter === (EXPERIMENT_DURATION_SECS / 2)) {
-                timer.counter -= 1
+                syncResults(resultsForCurrentExperimentType, true)
 
-                setNewStoreList()//change store list (short - long)
-            } else {
-                timer.counter -= 1//we dont use SetTimer here, to avoid re-render every second. Is it good?
+            } else if (timer.counter === (EXPERIMENT_DURATION_SECS / 2)) {
+                console.log("Middle of the experiments")
+
+                let resultsForCurrentExperimentType = results.filter((item) => item.typeTask === typeTask.name)
+                console.log(resultsForCurrentExperimentType)
+                console.log(typeTask.name)
+
+                saveResultsBeforeLeavingStore()
+
+                syncResults(resultsForCurrentExperimentType, false)
+
+                onMiddleExperimentPause()
             }
         }
 
@@ -419,10 +443,8 @@ export default function BargainTask(props) {
     useEffect(() => {
         const handleKeyDownEvent = event => {
             const { key, keyCode } = event
-            if (keyCode === ENTER_KEY_CODE) { //Transition between screens
-                if (DEBUG) console.log(`Key: ${key}; keyCode: ${keyCode}`)
-
-                onPauseTest()
+            if (keyCode === ENTER_KEY_CODE && delay === null) { //If we are on pause in the middle of the experiment, we press enter to go to next part
+                onMiddleExperimentResume()
             }
         }
 
@@ -443,7 +465,9 @@ export default function BargainTask(props) {
                 onSelect={onSelect}
                 onUpdate={onUpdate}
                 onGoStoreBtnClick={onShowNextStore}
-                bargainsTaken={results[results.length - 1].bargainTakenNumber} /></div>)
+                bargainsTaken={results[results.length - 1].bargainTakenNumber}
+                bargainsTotal={bargainsTotalNumber}
+                debug={DEBUG_TEST} /></div>)
         } else if (showInstruction) {
             return (<div className="centered" style={{ textAlign: "center" }}>
                 <h3>{MIDDLE_EXPERIMENT_ALERT}</h3>
@@ -459,7 +483,7 @@ export default function BargainTask(props) {
     }
 
     return (<>
-        {DEBUG ? `Store#:${storeLists[currentStoreIndex].storeNumber}    CurrentBelt:${currentBeltIteration}` : ""}
+        {DEBUG_TEST ? `Store#:${storeLists[currentStoreIndex].storeNumber} CurrentBelt:${currentBeltIteration}` : ""}
 
         {modalAlertConfig.isVisible ?
             <ModalAlert
@@ -490,7 +514,6 @@ function ModalAlert(props) {
                 onClosed={props.onClosed}>
                 <ModalHeader>{title}</ModalHeader>
                 <ModalBody>{text}</ModalBody>
-                {/* <ModalFooter><Button color="secondary" size='sm' onClick={toggle}>Close</Button></ModalFooter> */}
             </Modal>
         </div>
     )
