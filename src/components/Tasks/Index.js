@@ -636,6 +636,10 @@ class Index extends Component {
         })
     }
 
+    /**
+     * 
+     * @param {*} results 
+     */
     bargainTaskDemoTaskHandler = (results) => {
         if (DEBUG) console.log(results)
         const { outputBargainTask } = this.state;
@@ -651,6 +655,10 @@ class Index extends Component {
         })
     }
 
+    /**
+     * 
+     * @param {*} results 
+     */
     bargainTaskHandler = (results) => {
         if (DEBUG) console.log("Bargain RESULTS")
         if (DEBUG) console.log(results)
@@ -683,12 +691,21 @@ class Index extends Component {
         })
     }
 
+    /**
+     * 
+     * @param {*} isValidToAdvance 
+     */
     instructionHandler = (isValidToAdvance) => {
         if (isValidToAdvance) {
             this._validateToNextPage()
         }
     }
 
+    /**
+     * 
+     * @param {*} isValidToAdvance 
+     * @param {*} numberStepsBack 
+     */
     instructionHandlerBack = (isValidToAdvance, numberStepsBack) => {
         if (DEBUG) console.log("Valid to advance")
         if (DEBUG) console.log(this.state.currentScreenNumber)

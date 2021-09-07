@@ -180,8 +180,8 @@ export default function UserForm(props) {
                     value={constant.FEMALE_VALUE}
                     onChange={validateInputForm}
                     checked={formData.sex === constant.FEMALE_VALUE} />{' '}
-                    Female
-                  </Label>
+                  Female
+                </Label>
               </FormGroup>
             </Col>
             <Col lg="auto">
@@ -193,8 +193,8 @@ export default function UserForm(props) {
                     value={constant.MALE_VALUE}
                     onChange={validateInputForm}
                     checked={formData.sex === constant.MALE_VALUE} />{' '}
-                    Male
-                    </Label>
+                  Male
+                </Label>
               </FormGroup>
             </Col>
           </div>
