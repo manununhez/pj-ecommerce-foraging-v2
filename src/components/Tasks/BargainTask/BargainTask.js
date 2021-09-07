@@ -393,10 +393,12 @@ export default function BargainTask(props) {
         console.log(timer.counter)
     }
 
-    const syncResults = (_results, _isTaskCompleted) => {
+    const syncResults = (_isTaskCompleted) => {
+        saveResultsBeforeLeavingStore()
+
         props.action({
             isTaskCompleted: _isTaskCompleted,
-            results: _results
+            results: (results.filter((item) => item.typeTask === typeTask.name))
         })
     }
 
@@ -409,26 +411,14 @@ export default function BargainTask(props) {
             if (timer.counter === 0) {//When timer 0, the experiment finishes
                 // modalAlert("Ups!", "Timeout")
 
-                let resultsForCurrentExperimentType = results.filter((item) => item.typeTask === typeTask.name)
-                console.log(resultsForCurrentExperimentType)
-                console.log(typeTask.name)
-
                 clearInterval(id)
 
-                saveResultsBeforeLeavingStore()
-
-                syncResults(resultsForCurrentExperimentType, true)
+                syncResults(true)
 
             } else if (timer.counter === (EXPERIMENT_DURATION_SECS / 2)) {
                 console.log("Middle of the experiments")
 
-                let resultsForCurrentExperimentType = results.filter((item) => item.typeTask === typeTask.name)
-                console.log(resultsForCurrentExperimentType)
-                console.log(typeTask.name)
-
-                saveResultsBeforeLeavingStore()
-
-                syncResults(resultsForCurrentExperimentType, false)
+                syncResults(false)
 
                 onMiddleExperimentPause()
             }
