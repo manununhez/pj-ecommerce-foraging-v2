@@ -3,7 +3,7 @@ import { Row, Col, Input, Button } from "reactstrap";
 
 import PropTypes from "prop-types";
 import ScrollMenu from "react-horizontal-scrolling-menu";
-import ReactStars from "react-rating-stars-component";
+import StarRatings from 'react-star-ratings';
 
 import { PRODUCT_MENU_BG_COLORS, ALLEGRO_ORANGE } from "../../../helpers/constants";
 
@@ -65,13 +65,15 @@ export default function ProductsMenu(props) {
 };
 
 const RatingBar = (value) => {
-    return (<ReactStars
-        edit={false}
-        size={16}
-        count={value}
-        value={value}
-        half={false}
-        activeColor="#f7cb4d" />);
+    return (<StarRatings
+        rating={value}
+        starRatedColor="#f7cb4d"
+        starEmptyColor="white"
+        starDimension="16px"
+        isSelectable={false}
+        starSpacing="-1px"
+        numberOfStars={value}
+    />);
 }
 
 const Menu = (list, selected) =>
