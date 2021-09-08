@@ -204,7 +204,7 @@ export default function BargainTask(props) {
         //Clear state for a new store to show
         setShowProducts(false)
         setCurrentBeltIteration(1)
-        initializeProducts(newStore)
+        setCurrentProducts(initializeProducts(newStore))
         setShowFeedback(newStore.showFeedback)
         setBargainsTotalNumber(newStore.bargainsNumber)
         setCurrentStoreIndex(newCurrentStoreIndex)
