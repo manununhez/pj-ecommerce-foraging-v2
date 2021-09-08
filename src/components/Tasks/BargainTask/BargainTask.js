@@ -28,7 +28,7 @@ export default function BargainTask(props) {
     const [typeTask, setTypeTask] = useState({ name: props.typeTask })
     const DEBUG_TEST = typeTask.name.includes("TEST")
     const PRODUCTS_PER_ROW = 5
-    const DURATION_IN_MINS = (DEBUG_TEST) ? 1 : 30
+    const DURATION_IN_MINS = (DEBUG_TEST) ? 2 : 30
     const EXPERIMENT_DURATION_SECS = DURATION_IN_MINS * 60
 
     const testList = [{
@@ -61,7 +61,7 @@ export default function BargainTask(props) {
 
     const setConditionalList = () => {
         if (DEBUG_TEST) {
-            return testList
+            return props.data.storesLong
         } else if (typeTask.name === EXPERIMENT_TYPE_LONG || typeTask.name === EXPERIMENT_TYPE_LONG_NT) {
             return props.data.storesLong
         } else if (typeTask.name === EXPERIMENT_TYPE_SHORT || typeTask.name === EXPERIMENT_TYPE_SHORT_NT) {
@@ -126,23 +126,16 @@ export default function BargainTask(props) {
      * MENU ITEM CALLBACKS
      */
     const onFirstItemVisible = () => {
-        if (DEBUG) console.log("first item is visible")
+        // if (DEBUG) console.log("first item is visible")
     }
 
     const onLastItemVisible = () => {
         if (DEBUG) console.log("last item is visible")
-
         generateNewProductListToDisplay()
     }
 
     const onUpdate = translate => {
-        //TODO verificar la funcion de currentBeltIteration
-        if (DEBUG) console.log(`onShowNextProducts`)
-
-        if (showFeedback) { checkMissedBargainsAlert() }
-
-        showNextProducts()
-
+        showNextBeltIterationProducts()
     }
 
     const onSelect = key => {
@@ -150,6 +143,10 @@ export default function BargainTask(props) {
         productSelected(key)
     }
 
+
+    /**
+     * Helper Functions
+     */
     const onShowNextStore = () => {
         if (DEBUG) console.log("onGoStoreBtnClick")
 
@@ -157,12 +154,8 @@ export default function BargainTask(props) {
 
         saveResultsBeforeLeavingStore()
 
-        displayNewStore()
+        showLoadingAnimation()
     }
-
-    /**
-     * Helper Functions
-     */
 
     const productSelected = key => {
         const productIndex = parseInt(key)
@@ -188,6 +181,10 @@ export default function BargainTask(props) {
         }
     }
 
+    /**
+     * 
+     * @returns 
+     */
     const displayNewStore = () => {
         //check is there are stores available
         if (results.length >= storeLists.length) {
@@ -201,8 +198,6 @@ export default function BargainTask(props) {
         //update results
         results.push(initNewStoreResult(newStore, typeTask.name, round))
 
-        //Clear state for a new store to show
-        setShowProducts(false)
         setCurrentBeltIteration(1)
         setCurrentProducts(initializeProducts(newStore))
         setShowFeedback(newStore.showFeedback)
@@ -212,12 +207,43 @@ export default function BargainTask(props) {
         setCurrentProductListWithoutBargains([])
     }
 
-    const showNextProducts = () => {
-        console.log("showNextProducts")
+    /**
+     * 
+     */
+    const showLoadingAnimation = () => {
+        setShowProducts(false)
+        setShowInstruction(false)
+    }
+
+
+    /**
+     * 
+     */
+    const showProductsPage = () => {
+        setShowProducts(true)
+        setShowInstruction(false)
+    }
+
+    /**
+     * 
+     */
+    const showMiddleInstructionPage = () => {
+        setShowProducts(false)
+        setShowInstruction(true)
+    }
+
+    /**
+     * 
+     */
+    const showNextBeltIterationProducts = () => {
+        if (showFeedback) { checkMissedBargainsAlert() }
 
         saveResultsBeforeChangingBelt()
     }
 
+    /**
+     * 
+     */
     const generateNewProductListToDisplay = () => {
         const from = currentBeltIteration * PRODUCTS_PER_ROW
         const to = from + (PRODUCTS_PER_ROW * 2)
@@ -293,7 +319,8 @@ export default function BargainTask(props) {
     }
 
     const onLoadingFinished = () => {
-        setShowProducts(true)
+        showProductsPage()
+        displayNewStore()
     }
 
     const modalAlert = (title, text, isVisible = true) => {
@@ -311,16 +338,13 @@ export default function BargainTask(props) {
 
     const onMiddleExperimentResume = () => {
         setDelay(ONE_SECOND_MS)
-        setShowProducts(true)
-        setShowInstruction(false)
-
+        showProductsPage()
         setNewExperimentType()//change store list (short - long)
     }
 
     const onMiddleExperimentPause = () => {
         setDelay(null)
-        setShowProducts(false)
-        setShowInstruction(true)
+        showMiddleInstructionPage()
     }
 
     const saveResultsBeforeLeavingStore = () => {
@@ -335,21 +359,26 @@ export default function BargainTask(props) {
 
     const saveResultsBeforeChangingBelt = () => {
         const store = storeLists[currentStoreIndex]
-        const newCurrentBeltIteration = currentBeltIteration + 1
-        const from = newCurrentBeltIteration * PRODUCTS_PER_ROW
+        const from = (currentBeltIteration - 1) * PRODUCTS_PER_ROW
         const to = from + PRODUCTS_PER_ROW
-        const productListInThisIteration = store.products.slice(from, to)
-        const bargainNumberInThisIteration = productListInThisIteration.filter(product => product.isBargain === true).length
-        const lastProductNumber = store.products[from - 1].productNumber
+        const productListInThisIteration = store.products.slice(0, to)
+        const totalShownBargainsSoFar = productListInThisIteration.filter(product => product.isBargain === true).length
+        const lastProductNumberDisplayed = store.products[to - 1].productNumber
+        // const totalShownBargainsSoFar = results[results.length - 1].bargainShownNumber + bargainNumberInThisIteration
+
+        if (DEBUG_TEST) console.log("From: " + from + " to: " + to)
+        if (DEBUG_TEST) console.log(productListInThisIteration)
+        if (DEBUG_TEST) console.log("totalShownBargainsSoFar: " + totalShownBargainsSoFar)
+        if (DEBUG_TEST) console.log("lastProductDisplayed: " + lastProductNumberDisplayed)
 
         results[results.length - 1] = {
             ...results[results.length - 1],
-            productsSeen: from,
-            lastProductDisplayed: lastProductNumber,
-            bargainShownNumber: results[results.length - 1].bargainShownNumber + bargainNumberInThisIteration
+            productsSeen: to,
+            lastProductDisplayed: lastProductNumberDisplayed,
+            bargainShownNumber: totalShownBargainsSoFar
         }
 
-        setCurrentBeltIteration(newCurrentBeltIteration)
+        setCurrentBeltIteration(currentBeltIteration => currentBeltIteration + 1)
 
         if (DEBUG) console.log(results)
     }
