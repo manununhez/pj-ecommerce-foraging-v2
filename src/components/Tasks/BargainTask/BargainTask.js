@@ -28,7 +28,7 @@ export default function BargainTask(props) {
     const [typeTask, setTypeTask] = useState({ name: props.typeTask })
     const DEBUG_TEST = typeTask.name.includes("TEST")
     const PRODUCTS_PER_ROW = 5
-    const DURATION_IN_MINS = (DEBUG_TEST) ? 1 : 1//30
+    const DURATION_IN_MINS = (DEBUG_TEST) ? 1 : 30
     const EXPERIMENT_DURATION_SECS = DURATION_IN_MINS * 60
 
     const testList = [{
@@ -366,7 +366,7 @@ export default function BargainTask(props) {
     }
 
     const setNewExperimentType = () => {
-        console.log("setNewExperimentType")
+        if (DEBUG) console.log("setNewExperimentType")
         const newTypeTask = (typeTask.name === EXPERIMENT_TYPE_LONG || typeTask.name === EXPERIMENT_TYPE_LONG_NT || DEBUG_TEST) ? EXPERIMENT_TYPE_SHORT : EXPERIMENT_TYPE_LONG
         const newListToDisplay = newTypeTask === EXPERIMENT_TYPE_LONG ? props.data.storesLong : props.data.storesShort
         const newStoresVisited = newListToDisplay[0]
@@ -374,8 +374,8 @@ export default function BargainTask(props) {
 
         results.push(initNewStoreResult(newStoresVisited, newTypeTask, newRound))
         typeTask.name = newTypeTask
-        console.log(results)
-        console.log(typeTask.name)
+        if (DEBUG) console.log(results)
+        if (DEBUG) console.log(typeTask.name)
 
         setRound(newRound)
         setCurrentStoreIndex(0)
@@ -390,7 +390,7 @@ export default function BargainTask(props) {
 
     const updateTime = () => {
         timer.counter -= 1
-        console.log(timer.counter)
+        if (DEBUG) console.log(timer.counter)
     }
 
     const syncResults = (_isTaskCompleted) => {
@@ -416,7 +416,7 @@ export default function BargainTask(props) {
                 syncResults(true)
 
             } else if (timer.counter === (EXPERIMENT_DURATION_SECS / 2)) {
-                console.log("Middle of the experiments")
+                if (DEBUG) console.log("Middle of the experiments")
 
                 syncResults(false)
 
