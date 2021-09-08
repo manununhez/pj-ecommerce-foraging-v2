@@ -64,7 +64,7 @@ export default function BargainDemoTask(props) {
     };
 
     const onProductSelected = key => {
-        console.log(`onProductSelected: ${key}`);
+        if (DEBUG) console.log(`onProductSelected: ${key}`);
         const keySelected = parseInt(key)
 
         if (keySelected !== 1 || currentStep !== 3) return; //we enabled clicking only one bargain product in the training state

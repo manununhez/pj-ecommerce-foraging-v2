@@ -102,6 +102,7 @@ function getTable(users, resultsType) {
       <thead>
         <tr>
           <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Sessions</th>
+          <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Timestamp</th>
           <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Bargain results</th>
           <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Bargain results per store</th>
           <th className="align-middle" style={{ textAlign: 'center', padding: '7px' }}>Survey results</th>
@@ -167,6 +168,9 @@ function getTableBody(users, resultsType) {
 
     body.push(
       <tr style={{ textAlign: '-webkit-center' }}>
+        <td style={{ textAlign: "-moz-center" }}>
+          {users[i].user_id}
+        </td>
         <td style={{ textAlign: "-moz-center" }}>
           {timestamp}
         </td>
