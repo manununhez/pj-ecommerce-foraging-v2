@@ -87,6 +87,7 @@ export default function BargainTask(props) {
             productsSeen: PRODUCTS_PER_ROW,
             lastProductDisplayed: lastProductNumber,
             bargainTakenNumber: 0,
+            bargainWronglyTakenNumber: 0,
             bargainShownNumber: bargainNumberInThisIteration,
             round: _round
         }
@@ -174,8 +175,12 @@ export default function BargainTask(props) {
 
                 saveResultsNewBargainTaken(newBargainCounter)
             } else {
+                const wrongBargainCounter = results[results.length - 1].bargainWronglyTakenNumber + 1
+
+                saveResultsWronglyBargainTaken(wrongBargainCounter)
+
                 if (showFeedback) {
-                    modalAlert("Ups!"/*>> ProductNumber:" + productSelected.productNumber*/, BARGAIN_ERROR_SELECTED_ALERT_MESSAGE)
+                    modalAlert("Ups!", BARGAIN_ERROR_SELECTED_ALERT_MESSAGE)
                 }
             }
         }
@@ -361,10 +366,9 @@ export default function BargainTask(props) {
         const store = storeLists[currentStoreIndex]
         const from = (currentBeltIteration - 1) * PRODUCTS_PER_ROW
         const to = from + PRODUCTS_PER_ROW
-        const productListInThisIteration = store.products.slice(0, to)
-        const totalShownBargainsSoFar = productListInThisIteration.filter(product => product.isBargain === true).length
+        const productListInThisIteration = store.products.slice(0, to) //every iteration, we took al the products from start to the current iteration. IMPROVE THIS!
+        const totalShownBargainsSoFar = productListInThisIteration.filter(product => product.isBargain === true).length //we count the bargains numbers
         const lastProductNumberDisplayed = store.products[to - 1].productNumber
-        // const totalShownBargainsSoFar = results[results.length - 1].bargainShownNumber + bargainNumberInThisIteration
 
         if (DEBUG_TEST) console.log("From: " + from + " to: " + to)
         if (DEBUG_TEST) console.log(productListInThisIteration)
@@ -389,6 +393,17 @@ export default function BargainTask(props) {
         results[results.length - 1] = {
             ...results[results.length - 1],
             bargainTakenNumber: newBargainCounter
+        }
+
+        if (DEBUG) console.log(results)
+    }
+
+    const saveResultsWronglyBargainTaken = (wrongBargainCounter) => {
+        if (DEBUG) console.log("saveResultsWronglyBargainTaken===")
+
+        results[results.length - 1] = {
+            ...results[results.length - 1],
+            bargainWronglyTakenNumber: wrongBargainCounter
         }
 
         if (DEBUG) console.log(results)
