@@ -151,8 +151,6 @@ export default function BargainTask(props) {
     const onShowNextStore = () => {
         if (DEBUG) console.log("onGoStoreBtnClick")
 
-        if (showFeedback) { checkMissedBargainsAlert() }
-
         saveResultsBeforeLeavingStore()
 
         showLoadingAnimation()
