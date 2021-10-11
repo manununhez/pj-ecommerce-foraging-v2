@@ -57,7 +57,7 @@ export default class Index extends React.Component {
   render() {
     return (
       <>
-        <Navbar version={this.state.versions} />
+        <Navbar versions={this.state.versions} />
         <main ref="main">
           <MainMenu />
         </main>

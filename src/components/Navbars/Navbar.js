@@ -36,7 +36,7 @@ class NavbarCustom extends React.Component {
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.isOpen} navbar>
           <Nav className="mr-auto" navbar>
-            {getDropdownMenuItems(this.props.version)}
+            {getDropdownMenuItems(this.props.versions)}
             <NavItem>
               <NavLink href="/bargain-results">Results</NavLink>
             </NavItem>
@@ -54,12 +54,12 @@ function getDropdownMenuItems(items) {
 
   var children = items.map(function (item) {
     return <DropdownItem to={{
-      pathname: '/version/' + item.version,
+      pathname: '/version/' + item.name,
       state: {
         url: item.url
       }
-    }} tag={Link} key={item.version}>
-      {item.version}
+    }} tag={Link} key={item.name}>
+      {item.name}
     </DropdownItem>
   });
 
