@@ -32,8 +32,8 @@ import BargainDemoTask from "./BargainTask/BargainDemoTask";
 
 
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
-const ARIADNA_REDIRECT_REJECT = process.env.REACT_APP_ARIADNA_REDIRECT_REJECT;
-const ARIADNA_REDIRECT_ACCEPTED = process.env.REACT_APP_ARIADNA_REDIRECT_ACCEPTED;
+const PROLIFIC_REDIRECT_REJECT = process.env.REACT_APP_PROLIFIC_REDIRECT_REJECT;
+const PROLIFIC_REDIRECT_ACCEPTED = process.env.REACT_APP_PROLIFIC_REDIRECT_ACCEPTED;
 
 class Index extends Component {
     constructor(props) {
@@ -100,8 +100,8 @@ class Index extends Component {
         //session timer
         this.idleTimer = null
 
-        if (DEBUG) console.log(`ARIADNA_REDIRECT_REJECT:${ARIADNA_REDIRECT_REJECT}`);
-        if (DEBUG) console.log(`ARIADNA_REDIRECT_ACCEPTED:${ARIADNA_REDIRECT_ACCEPTED}`);
+        if (DEBUG) console.log(`PROLIFIC_REDIRECT_REJECT:${PROLIFIC_REDIRECT_REJECT}`);
+        if (DEBUG) console.log(`PROLIFIC_REDIRECT_ACCEPTED:${PROLIFIC_REDIRECT_ACCEPTED}`);
         if (DEBUG) console.log(`Debug:${DEBUG}`);
     }
 
@@ -427,8 +427,8 @@ class Index extends Component {
         if (data) {
             if (DEBUG) console.log("SaveUserBargain");
 
-            //redirect to ARIADNA
-            window.location.replace(ARIADNA_REDIRECT_ACCEPTED);
+            //redirect to PROLIFIC
+            window.location.replace(PROLIFIC_REDIRECT_ACCEPTED);
 
         } else {
             if (DEBUG) console.log("Error saving UserBargain")
@@ -865,7 +865,7 @@ class Index extends Component {
                         //we redirect to Ariadna
                         alert(constant.PARTICIPANTS_QUOTA_FULL_ALERT_ERROR);
                         this.setState({ showAlertWindowsClosing: false }, () => {
-                            window.location.replace(ARIADNA_REDIRECT_REJECT);
+                            window.location.replace(PROLIFIC_REDIRECT_REJECT);
                         })
                     }
                 }
