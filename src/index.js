@@ -14,6 +14,7 @@ ReactDOM.render(
       <Route path="/" exact render={props => <Index {...props} />} />
       <Route path="/bargain-results" exact render={props => <BargainResult {...props} />} />
       <Route path="/version/:version" exact render={props => <Experiment {...props} />} />
+      <Route path="/task" exact render={props => <Experiment {...props} />} />
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")

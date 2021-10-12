@@ -155,7 +155,7 @@ export function fetchVersions(callback) {
             let versions = [];
 
             for (let value of Object.values(response)) {
-                versions.push({ version: value.name });
+                versions.push({ name: value.name, id: value.id });
             }
 
             callback({ versions });
@@ -248,8 +248,8 @@ export function fetchAppText(sex, callback) {
  * @param {*} data 
  * @param {*} callback 
  */
-export function saveGeneralData(data, ariadnaUserID, callback) {
-    save(save_usegeneraldata_url, usergeneraldata(data, ariadnaUserID), callback)
+export function saveGeneralData(data, studyParams, callback) {
+    save(save_usegeneraldata_url, usergeneraldata(data, studyParams), callback)
 }
 
 /**
@@ -323,7 +323,7 @@ const userbargain = (data) => {
     return result;
 }
 
-const usergeneraldata = (data, ariadnaUserID) => {
+const usergeneraldata = (data, studyParams) => {
 
     let result = []; //should have exactly 14 columns (Column A to N), thats why we fill empty indexes with ""
     for (let j = 0; j < data.length; j++) {
@@ -331,15 +331,15 @@ const usergeneraldata = (data, ariadnaUserID) => {
         if (output.task === constant.USER_FORM_SCREEN) {
             result.push([
                 output.userID,
-                ariadnaUserID,
                 output.task,
                 output.data.sex,
                 output.data.age,
                 output.data.profession,
                 output.data.yearsEduc,
                 output.data.levelEduc,
-                constant.TEXT_EMPTY,
-                constant.TEXT_EMPTY,
+                studyParams.PROLIFIC_PID,
+                studyParams.STUDY_ID,
+                studyParams.SESSION_ID,
                 constant.TEXT_EMPTY,
                 constant.TEXT_EMPTY,
                 constant.TEXT_EMPTY
@@ -347,7 +347,6 @@ const usergeneraldata = (data, ariadnaUserID) => {
         } else if (output.task === constant.USER_INFO_SCREEN) {
             result.push([
                 output.userID,
-                ariadnaUserID,
                 output.task,
                 output.data[0],
                 output.data[1],
@@ -358,15 +357,16 @@ const usergeneraldata = (data, ariadnaUserID) => {
                 output.data[6],
                 output.data[7],
                 output.data[8],
-                output.data[9]
+                output.data[9],
+                constant.TEXT_EMPTY
             ]);
         } else if (output.task === constant.PSFORM_SCREEN) {
             result.push([
                 output.userID,
-                ariadnaUserID,
                 output.task,
                 output.data.questionCode,
                 output.data.answer,
+                constant.TEXT_EMPTY,
                 constant.TEXT_EMPTY,
                 constant.TEXT_EMPTY,
                 constant.TEXT_EMPTY,
@@ -380,7 +380,6 @@ const usergeneraldata = (data, ariadnaUserID) => {
             let vp1 = output.data.map((item) => {
                 return [
                     output.userID,
-                    ariadnaUserID,
                     output.task,
                     (item.level + 1), //+1 to be more idiomatic: starts from level 1 insteado of level 0
                     item.dimention,
@@ -391,6 +390,7 @@ const usergeneraldata = (data, ariadnaUserID) => {
                     item.matrixCheckResult.filter((element) => element === constant.TILE_LEFT).length, //we get the amount of errors if any
                     item.retry,
                     item.timestamp,
+                    constant.TEXT_EMPTY,
                     constant.TEXT_EMPTY
                 ]
             });
@@ -399,7 +399,6 @@ const usergeneraldata = (data, ariadnaUserID) => {
             let bargains = output.data.map((item) => {
                 return [
                     output.userID,
-                    ariadnaUserID,
                     output.task,
                     item.storeNumber,
                     item.typeTask,
@@ -410,7 +409,8 @@ const usergeneraldata = (data, ariadnaUserID) => {
                     item.bargainTakenNumber,
                     item.bargainShownNumber,
                     item.round,
-                    item.bargainWronglyTakenNumber
+                    item.bargainWronglyTakenNumber,
+                    constant.TEXT_EMPTY
                 ]
             });
 
@@ -423,7 +423,7 @@ const usergeneraldata = (data, ariadnaUserID) => {
 
 function userinfo(data) {
 
-    const { userID, userInfo, outputFormData, typeTask, ariadnaUserID } = data;
+    const { userID, userInfo, outputFormData, typeTask, studyParams } = data;
 
     let result = { info: [], form: [] };
 
@@ -443,13 +443,15 @@ function userinfo(data) {
 
     result.form.push([
         userID,
-        ariadnaUserID,
         outputFormData.sex,
         outputFormData.age,
         outputFormData.profession,
         outputFormData.yearsEduc,
         outputFormData.levelEduc,
-        typeTask
+        typeTask,
+        studyParams.PROLIFIC_PID,
+        studyParams.STUDY_ID,
+        studyParams.SESSION_ID,
     ]);
 
 

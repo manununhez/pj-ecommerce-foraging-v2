@@ -40,7 +40,6 @@ class Index extends Component {
         super(props);
 
         const userID = uuidv4();
-        const ariadnaUserID = queryString.parse(this.props.location.search).respondent_id;
         const userGeneralInfo = { //default value - user info loaded
             userID: userID,
             task: constant.USER_INFO_SCREEN,
@@ -60,7 +59,9 @@ class Index extends Component {
             sync: constant.STATE_NOT_SYNC
         }
         const generalOutputDefault = [userGeneralInfo]
-        const typeTask = this.props.match.params.version
+        const typeTask = this.props.match.params.version //if version null, asign random type -> according to DB participants
+        const studyParams = queryString.parse(this.props.location.search)
+        if (this.props.location.pathname === "/task") console.log("TASK!!")
         const userFormDefault = {
             sex: constant.TEXT_EMPTY,//default selected sex
             age: 0,
@@ -71,7 +72,7 @@ class Index extends Component {
         }
 
         this.state = {
-            ariadnaUserID: ariadnaUserID,
+            studyParams: studyParams,
             userID: userID,
             userInfo: USER_INFO,
             typeTask: typeTask,
@@ -171,7 +172,7 @@ class Index extends Component {
      * 
      */
     _syncGeneralData() {
-        const { generalOutput, generalOutputIndexes, ariadnaUserID } = this.state
+        const { generalOutput, generalOutputIndexes, studyParams } = this.state
         let itemsNotSynced = []
         let itemsNotSyncedIndexes = []
 
@@ -191,7 +192,7 @@ class Index extends Component {
             }
         }
 
-        request.saveGeneralData(itemsNotSynced, ariadnaUserID, this._onSaveGeneralDataCallBack.bind(this))
+        request.saveGeneralData(itemsNotSynced, studyParams, this._onSaveGeneralDataCallBack.bind(this))
 
         this.setState({
             generalOutput: generalOutput,
