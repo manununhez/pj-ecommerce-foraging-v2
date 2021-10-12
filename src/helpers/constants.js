@@ -1,3 +1,5 @@
+export const MODAL_TYPE_STORE = "S"
+export const MODAL_TITLE = "Ups!"
 export const LIGHT_GRAY = "#e9ecef"; //lighter
 export const WHITE = "white";
 export const BLUE = "#123abc";

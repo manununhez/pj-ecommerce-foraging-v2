@@ -14,7 +14,9 @@ import {
     EXPERIMENT_TYPE_SHORT_NT,
     ENTER_KEY_CODE,
     EVENT_KEY_DOWN,
-    TEXT_FOOTER_ENTER
+    TEXT_FOOTER_ENTER,
+    MODAL_TITLE,
+    MODAL_TYPE_STORE
 } from '../../../helpers/constants';
 import { randomNumber } from '../../../helpers/utils';
 import StickmanLoading from './StickmanLoading';
@@ -110,7 +112,7 @@ export default function BargainTask(props) {
     const [currentProducts, setCurrentProducts] = useState(initializeProducts(storeLists[currentStoreIndex]))
     const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState([])
     const [delay, setDelay] = useState(setInitialDelayDuringTestingOnly())
-    const [modalAlertConfig, setModalAlertConfig] = useState({ isVisible: false, text: "", title: "" })
+    const [modalAlertConfig, setModalAlertConfig] = useState({ isVisible: false, text: "", type: "", title: "" })
     const [results, setResults] = useState([initNewStoreResult(storeLists[currentStoreIndex], typeTask.name, round)])
     const [showFeedback, setShowFeedback] = useState(storeLists[currentStoreIndex].showFeedback)
     const [bargainsTotalNumber, setBargainsTotalNumber] = useState(storeLists[currentStoreIndex].bargainsNumber)
@@ -135,9 +137,7 @@ export default function BargainTask(props) {
         generateNewProductListToDisplay()
     }
 
-    const onUpdate = translate => {
-        showNextBeltIterationProducts()
-    }
+    const onUpdate = () => showNextBeltIterationProducts()
 
     const onSelect = key => {
         if (DEBUG) console.log(`onProductSelected: ${key}`)
@@ -150,9 +150,19 @@ export default function BargainTask(props) {
      */
     const onShowNextStore = () => {
         if (DEBUG) console.log("onGoStoreBtnClick")
+        if (showFeedback) {
+            let missedBargains = countMissedBargains()
+            if (missedBargains > 0) {
+                modalAlert(MODAL_TITLE, BARGAIN_MISSED_SELECTED_ALERT_MESSAGE(missedBargains), MODAL_TYPE_STORE)
+                return //we return without calling showNextStoreActions() here. This function is later called in the modale onClosed
+            }
+        }
 
+        showNextStoreActions()
+    }
+
+    const showNextStoreActions = () => {
         saveResultsBeforeLeavingStore()
-
         showLoadingAnimation()
     }
 
@@ -178,7 +188,7 @@ export default function BargainTask(props) {
                 saveResultsWronglyBargainTaken(wrongBargainCounter)
 
                 if (showFeedback) {
-                    modalAlert("Ups!", BARGAIN_ERROR_SELECTED_ALERT_MESSAGE)
+                    modalAlert(MODAL_TITLE, BARGAIN_ERROR_SELECTED_ALERT_MESSAGE)
                 }
             }
         }
@@ -191,7 +201,7 @@ export default function BargainTask(props) {
     const displayNewStore = () => {
         //check is there are stores available
         if (results.length >= storeLists.length) {
-            modalAlert("Ups!", STORES_NOT_AVAILABLE)
+            modalAlert(MODAL_TITLE, STORES_NOT_AVAILABLE)
             return
         }
 
@@ -239,8 +249,13 @@ export default function BargainTask(props) {
      * 
      */
     const showNextBeltIterationProducts = () => {
-        if (showFeedback) { checkMissedBargainsAlert() }
-
+        if (showFeedback) {
+            let missedBargains = countMissedBargains()
+            if (missedBargains > 0) {
+                modalAlert(MODAL_TITLE, BARGAIN_MISSED_SELECTED_ALERT_MESSAGE(missedBargains), "")
+            }
+        }
+        //we called saveResultsBeforeChangingBelt() even if we have shown the alert (it does not affect the animation of the belt transitioning)
         saveResultsBeforeChangingBelt()
     }
 
@@ -297,7 +312,7 @@ export default function BargainTask(props) {
         return newList
     }
 
-    const checkMissedBargainsAlert = () => {
+    const countMissedBargains = () => {
         const from = (currentBeltIteration - 1) * PRODUCTS_PER_ROW
         const to = from + PRODUCTS_PER_ROW
         const productListInThisIteration = storeLists[currentStoreIndex].products.slice(from, to)
@@ -315,28 +330,13 @@ export default function BargainTask(props) {
             }
         }
 
-        if (selectedBargainsCounter !== bargainNumberInThisIteration) {
-            let missedBargains = bargainNumberInThisIteration - selectedBargainsCounter
-            modalAlert("Ups!", BARGAIN_MISSED_SELECTED_ALERT_MESSAGE(missedBargains))
-        }
+        let missedBargains = bargainNumberInThisIteration - selectedBargainsCounter
+        return missedBargains
     }
 
     const onLoadingFinished = () => {
         showProductsPage()
         displayNewStore()
-    }
-
-    const modalAlert = (title, text, isVisible = true) => {
-        setModalAlertConfig({ isVisible: isVisible, text: text, title: title })
-    }
-
-    const onModalOpened = () => {
-        if (DEBUG) console.log("Model onOpened")
-    }
-
-    const onModalClosed = () => {
-        if (DEBUG) console.log("Model onClosed")
-        modalAlert("", "", false)
     }
 
     const onMiddleExperimentResume = () => {
@@ -451,8 +451,6 @@ export default function BargainTask(props) {
             updateTime()
 
             if (timer.counter === 0) {//When timer 0, the experiment finishes
-                // modalAlert("Ups!", "Timeout")
-
                 clearInterval(id)
 
                 syncResults(true)
@@ -514,15 +512,41 @@ export default function BargainTask(props) {
         }
     }
 
+    const showModal = () => {
+        if (modalAlertConfig.isVisible) {
+            if (modalAlertConfig.type === MODAL_TYPE_STORE) {
+                return <ModalAlert
+                    title={modalAlertConfig.title}
+                    text={modalAlertConfig.text}
+                    onOpened={() => { console.log("With STORE callback") }}
+                    onClosed={onModalStoreClosed} />
+            } else {
+                return <ModalAlert
+                    title={modalAlertConfig.title}
+                    text={modalAlertConfig.text}
+                    onOpened={() => { console.log("Without callback") }}
+                    onClosed={() => { closeModal() }} />
+            }
+        } else return <></>
+    }
+
+    const modalAlert = (title, text, type = "", isVisible = true) => setModalAlertConfig({ isVisible: isVisible, text: text, type: type, title: title })
+
+
+    const onModalStoreClosed = () => {
+        if (DEBUG) console.log("onModalStoreClosed")
+        closeModal()
+
+        showNextStoreActions()
+    }
+
+    const closeModal = () => modalAlert("", "", "", false)
+
+
     return (<>
         {DEBUG_TEST ? `Store#:${storeLists[currentStoreIndex].storeNumber} CurrentBelt:${currentBeltIteration}` : ""}
 
-        {modalAlertConfig.isVisible ?
-            <ModalAlert
-                title={modalAlertConfig.title}
-                text={modalAlertConfig.text}
-                onOpened={onModalOpened}
-                onClosed={onModalClosed} /> : <></>}
+        {showModal()}
 
         {displayBodyConfig(showProducts, showInstruction)}
     </>)
