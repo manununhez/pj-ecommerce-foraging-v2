@@ -902,7 +902,7 @@ class Index extends Component {
         const { screen, timestamp } = logTimestamp
 
         let currentScreen = inputNavigation[currentScreenNumber].screen;
-        let loading = (currentScreen === constant.USER_FORM_SCREEN); //show loading if we are leaving user form, because text is being call
+        let loading = false
         let now = Date.now();
         let totalLength = inputNavigation.length;
         let nextScreenNumber = currentScreenNumber + 1;
