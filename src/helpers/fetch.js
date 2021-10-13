@@ -193,8 +193,8 @@ export function fetchUsers(callback) {
  * Load psychology questionaries input data from the spreadsheet
  * @param {*} callback 
  */
-export function fetchPSFormData(sex, callback) {
-    let url = fetch_psform_url + '/' + sex
+export function fetchPSFormData(callback) {
+    let url = fetch_psform_url
 
     get(url, {})
         .then((response) => {
@@ -222,8 +222,8 @@ export function fetchPSFormData(sex, callback) {
  * Load all the necessary Text structure for the app from the spreadsheet
  * @param {*} callback 
  */
-export function fetchAppText(sex, callback) {
-    let url = fetch_apptext_url + '/' + sex
+export function fetchAppText(callback) {
+    let url = fetch_apptext_url
 
     get(url, {})
         .then((response) => {

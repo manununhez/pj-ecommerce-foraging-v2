@@ -275,20 +275,16 @@ class Index extends Component {
     _onLoadStoresShortDataCallBack(data, error) {
         if (data) {
             //Loggin the first screen of the navigation
-            const { inputStores, inputNavigation } = this.state
+            const { inputStores } = this.state
 
             inputStores.storesShort = data.response
 
             this.setState({
-                loading: false, //Hide loading
-                logTimestamp: {
-                    screen: [inputNavigation[0].screen],//we grap the first screen
-                    timestamp: [Date.now()]//we log the first screen we are entering in
-                },
                 inputStores: inputStores
             })
 
             if (DEBUG) console.log(data)
+            request.fetchAppText(this._onLoadAppTextCallBack.bind(this));
         } else {
             this.setState({
                 loading: false,
@@ -307,10 +303,10 @@ class Index extends Component {
     _onLoadAppTextCallBack(data, error) {
         if (data) {
             this.setState({
-                loading: false, //Hide loading
                 inputTextInstructions: data.appText
             })
             if (DEBUG) console.log(data)
+            request.fetchPSFormData(this._onLoadPSFormCallback.bind(this));
 
         } else {
             this.setState({
@@ -330,9 +326,15 @@ class Index extends Component {
     */
     _onLoadPSFormCallback(data, error) {
         if (data) {
+            const { inputNavigation } = this.state
+
             this.setState({
                 loading: false, //Hide loading
-                inputPSForm: data.result
+                inputPSForm: data.result,
+                logTimestamp: {
+                    screen: [inputNavigation[0].screen],//we grap the first screen
+                    timestamp: [Date.now()]//we log the first screen we are entering in
+                }
             }, () => {
                 if (DEBUG) console.log(this.state)
             });
@@ -665,14 +667,6 @@ class Index extends Component {
         if (DEBUG) console.log(bargainResults)
         const { generalOutput, outputBargainTask, userID } = this.state;
 
-        // const totalNumberOfBargainsTaken = bargainResults.reduce((accumulator, currentValue) => accumulator + currentValue.bargainTakenNumber)
-        // const totalNumberOfBargainsShown = bargainResults.reduce((accumulator, currentValue) => accumulator + currentValue.bargainShownNumber)
-        // const totalNumberOfProductsSeen = bargainResults.reduce((accumulator, currentValue) => accumulator + currentValue.productsSeen)
-        // const totalNumberOfStoresVisited = bargainResults.length
-        // const totalTimeLookingAProductInStore = bargainResults.reduce((accumulator, currentValue) => accumulator + ((currentValue.leaveStoreTimestamp - currentValue.enterStoreTimestamp)/currentValue.productsSeen))
-        // const averageTimeLookingAProductInStore = Math.floor(timeLookingAProductInStore / numberOfStoresVisited / 1000) //to seconds
-        // const averageNumberOfProductsSeenInAStore = numberOfProductsSeen / numberOfStoresVisited
-
         let resultsB = (outputBargainTask.task.results === undefined || outputBargainTask.task.results.length === 0) ? bargainResults.results : outputBargainTask.task.results.concat(bargainResults.results)
         outputBargainTask.task = { isTaskCompleted: bargainResults.isTaskCompleted, results: resultsB }
 
@@ -885,9 +879,6 @@ class Index extends Component {
         const thirdGroupAgeLimit = groups[2]
 
         let groupAge = 0
-        //We are leaving user form screen, so we called texts whatever next page is (not only instructions)          
-        request.fetchAppText(sex, this._onLoadAppTextCallBack.bind(this));
-        request.fetchPSFormData(sex, this._onLoadPSFormCallback.bind(this));
 
         if (age >= parseInt(firstGroupAgeLimit.minAge) &&
             age <= parseInt(firstGroupAgeLimit.maxAge)) { //firstGroup
