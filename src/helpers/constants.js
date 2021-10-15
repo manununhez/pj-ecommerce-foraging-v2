@@ -11,10 +11,16 @@ export const PRODUCT_MENU_BG_COLORS = [LIGHT_GRAY, "lightsteelblue", "antiquewhi
 
 export const TEXT_EMPTY = "";
 
+//App versions
+export const EXPERIMENT_TYPE_LONG = "LONG-SHORT"
+export const EXPERIMENT_TYPE_SHORT = "SHORT-LONG"
+export const EXPERIMENT_TYPE_LONG_NT = "LONG-SHORT-NT"
+export const EXPERIMENT_TYPE_SHORT_NT = "SHORT-LONG-NT"
+export const EXPERIMENT_TYPE_BASIC = "BASIC"
+export const EXPERIMENT_TYPE_TASK_PATHNAME = "/task"
 //General config parameters
-export const PARTICIPANTS_PER_SEX_PER_GROUP_LIMIT = 30;
+export const SCENARIOS = [EXPERIMENT_TYPE_LONG, EXPERIMENT_TYPE_SHORT]
 export const YEARS_EDUCATION_LIMIT = 11;
-export const PARTICIPANTS_PER_SCENARIO_PER_GROUP_LIMIT = 30;
 export const PARTICIPANTS_GROUPS = [
     { minAge: 19, maxAge: 30 },
     { minAge: 42, maxAge: 53 },
@@ -103,6 +109,7 @@ export const INSTRUCTION_SCREEN = "Instruction";
 export const PSFORM_SCREEN = "PsychologyForm";
 export const VISUAL_PATTERN_SCREEN = "VisualPatternTask";
 export const VISUAL_PATTERN_DEMO_SCREEN = "VisualPatternTaskDemo";
+export const BARGAIN_DEMO_INSTRUCTION_COND = "BargainDemoTaskInstructionCond"
 export const BARGAIN_DEMO_INSTRUCTION_COND1 = "BargainDemoTaskInstructionCond1";
 export const BARGAIN_DEMO_INSTRUCTION_COND2 = "BargainDemoTaskInstructionCond2";
 export const BARGAIN_DEMO_SCREEN = "BargainDemoTask";
@@ -110,14 +117,9 @@ export const BARGAIN_DEMO_INSTRUCTION_BEFORE_FINISH = "BargainDemoTaskInstructio
 export const BARGAIN_DEMO_FINISH_INSTRUCTION = "BargainDemoTaskInstructionFinish";
 export const BARGAIN_SCREEN = "BargainTask";
 
+//CSV input stores
 export const STORES_SHORT_TYPE = "Stores-short";
 export const STORES_LONG_TYPE = "Stores-long";
-
-//App versions
-export const EXPERIMENT_TYPE_LONG = "LONG-SHORT"
-export const EXPERIMENT_TYPE_SHORT = "SHORT-LONG"
-export const EXPERIMENT_TYPE_LONG_NT = "LONG-SHORT-NT"
-export const EXPERIMENT_TYPE_SHORT_NT = "SHORT-LONG-NT"
 
 //General App messages KEYS
 export const FORM_AGE_ALERT_ERROR = "The Age field cannot be left blank.";//Age field cannot be empty

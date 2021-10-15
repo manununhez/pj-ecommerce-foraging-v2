@@ -18,7 +18,7 @@ import "./style.css"
 // helpers
 import * as request from '../../helpers/fetch';
 import * as constant from '../../helpers/constants';
-import { USER_INFO } from '../../helpers/utils';
+import { USER_INFO, randomNumber } from '../../helpers/utils';
 
 // Views
 import Footer from "../Footers/Footer";
@@ -59,9 +59,8 @@ class Index extends Component {
             sync: constant.STATE_NOT_SYNC
         }
         const generalOutputDefault = [userGeneralInfo]
-        const typeTask = this.props.match.params.version //if version null, asign random type -> according to DB participants
+        const typeTask = this.getTypeTask()
         const studyParams = queryString.parse(this.props.location.search)
-        if (this.props.location.pathname === "/task") console.log("TASK!!")
         const userFormDefault = {
             sex: constant.TEXT_EMPTY,//default selected sex
             age: 0,
@@ -103,6 +102,15 @@ class Index extends Component {
         if (DEBUG) console.log(`PROLIFIC_REDIRECT_REJECT:${PROLIFIC_REDIRECT_REJECT}`);
         if (DEBUG) console.log(`PROLIFIC_REDIRECT_ACCEPTED:${PROLIFIC_REDIRECT_ACCEPTED}`);
         if (DEBUG) console.log(`Debug:${DEBUG}`);
+    }
+
+    getTypeTask = () => {
+        const version = this.props.match.params.version
+        const pathname = this.props.location.pathname
+
+        if (version !== undefined) return version
+
+        if (pathname === constant.EXPERIMENT_TYPE_TASK_PATHNAME) return constant.EXPERIMENT_TYPE_BASIC
     }
 
     onAction = (e) => {
@@ -225,7 +233,7 @@ class Index extends Component {
         if (data) {
             this.setState({
                 inputNavigation: data.screens,
-                inputParticipants: data.participants
+                inputParticipants: { participants: data.participants, total: data.totalParticipants }
             })
 
             if (DEBUG) console.log(data)
@@ -281,6 +289,8 @@ class Index extends Component {
 
             this.setState({
                 inputStores: inputStores
+            }, () => {
+                if (DEBUG) console.log(this.state)
             })
 
             if (DEBUG) console.log(data)
@@ -733,11 +743,11 @@ class Index extends Component {
         const secondGroupAgeLimit = groups[1]
         const thirdGroupAgeLimit = groups[2]
 
-        const participantsLimit = constant.PARTICIPANTS_PER_SEX_PER_GROUP_LIMIT
+        const participantsLimitPerSex = inputParticipants.total / 2
         const yearsEducLimit = constant.YEARS_EDUCATION_LIMIT
 
-        const femaleParticipants = inputParticipants[0];
-        const maleParticipants = inputParticipants[1];
+        const femaleParticipants = inputParticipants.participants[0];
+        const maleParticipants = inputParticipants.participants[1];
 
         const indexFirstGroup = 0
         const indexSecondGroup = 1
@@ -768,12 +778,12 @@ class Index extends Component {
         }
 
 
-        if (ageIncorrectIntervalFlag || parseInt(amountParticipant) >= participantsLimit ||
+        if (ageIncorrectIntervalFlag || parseInt(amountParticipant) >= participantsLimitPerSex ||
             levelEduc === constant.FORM_LEVEL_EDUC_INITIAL || yearsEduc < yearsEducLimit) {
             data.redirect = true;
         }
 
-        if (!data.showError && !data.redirect) data.isValid = true;
+        if (!data.redirect) data.isValid = true;
 
 
         return data;
@@ -851,7 +861,7 @@ class Index extends Component {
                 let data = this.validateForm();
 
                 if (data.isValid) {
-                    this._syncDataAfterUserValidation()
+                    this._randomUserScenarioAssignment()
 
                     this._goToNextTaskInInputNavigation();
                 } else {
@@ -867,17 +877,19 @@ class Index extends Component {
         }
     }
 
-    /**
-     * 
-     */
-    _syncDataAfterUserValidation() {
-        const { outputFormData } = this.state;
+    _randomUserScenarioAssignment() {
+        const { inputParticipants, outputFormData } = this.state;
         const { sex, age } = outputFormData;
         const groups = constant.PARTICIPANTS_GROUPS
         const firstGroupAgeLimit = groups[0]
         const secondGroupAgeLimit = groups[1]
         const thirdGroupAgeLimit = groups[2]
+        const scenarios = constant.SCENARIOS
+        const scenariosLimitPerSexPerGroup = inputParticipants.total / 4
+        const scenariosSex = (sex === constant.FEMALE_VALUE) ? 0 : 2
 
+        let randomNumberGenerated = []
+        let scenarioNumber = 0
         let groupAge = 0
 
         if (age >= parseInt(firstGroupAgeLimit.minAge) &&
@@ -890,6 +902,48 @@ class Index extends Component {
             age <= parseInt(thirdGroupAgeLimit.maxAge)) { //thirdGroup
             groupAge = 2
         }
+
+
+        //Logic to assign and check scenarios availability
+        while (true) {
+            scenarioNumber = randomNumber(0, (scenarios.length - 1))
+
+            if (randomNumberGenerated.includes(scenarioNumber)) { //If we already have generated a certain number, we do not check again scenario availability, we only check if we have seen all number options availables
+                if (randomNumberGenerated.length === scenarios.length) {
+                    alert(constant.PARTICIPANTS_QUOTA_FULL_ALERT_ERROR);
+                    this.setState({ showAlertWindowsClosing: false }, () => {
+                        window.location.replace(PROLIFIC_REDIRECT_REJECT);
+                    })
+                    break;
+                }
+            } else { //if we generated a new number option, we add it to randomNumberGenerated and check that scenario availability 
+                randomNumberGenerated.push(scenarioNumber)
+                //Index in inputParticipant array are:
+                // indexScenario1F = 2
+                // indexScenario2F = 3
+                // indexScenario1M = 4
+                // indexScenario2M = 5
+                //ScenarioNumber should be a random number between 0 and 1 (there are two scenarios),
+                //so if we add 2, plus scenarioSex (0 if Female, 2 is Male), we have the correct table index with values for the scenario 
+
+                let indexScenarioSex = scenarioNumber + 2 + scenariosSex
+
+                if (DEBUG) console.log("scenarioNumber: " + scenarioNumber)
+                if (DEBUG) console.log("indexScenarioSex: " + indexScenarioSex)
+                if (DEBUG) console.log("scenariosLimitPerSexPerGroup: " + scenariosLimitPerSexPerGroup)
+                if (DEBUG) console.log("groupAge: " + groupAge)
+                if (DEBUG) console.log("scenarios: " + scenarios)
+                if (DEBUG) console.log(inputParticipants.participants[indexScenarioSex][groupAge])
+
+                if (inputParticipants.participants[indexScenarioSex][groupAge] < parseInt(scenariosLimitPerSexPerGroup)) {
+                    break;
+                }
+            }
+        }
+
+
+        //we update select hotel value
+        this.setState({ typeTask: (scenarios[scenarioNumber] === constant.EXPERIMENT_TYPE_LONG ? constant.EXPERIMENT_TYPE_LONG : constant.EXPERIMENT_TYPE_SHORT) })
     }
 
     /**
@@ -1092,7 +1146,7 @@ function changePages(state, context) {
     document.body.style.backgroundColor = (type === constant.INSTRUCTION_SCREEN) ? constant.WHITE : constant.LIGHT_GRAY;
 
     if (type === constant.INSTRUCTION_SCREEN) {
-        return <Instruction action={context.instructionHandler} actionBack={context.instructionHandlerBack} text={inputTextInstructions} name={screen} />;
+        return <Instruction action={context.instructionHandler} typeTask={typeTask} actionBack={context.instructionHandlerBack} text={inputTextInstructions} name={screen} />;
     } else if (screen === constant.USER_FORM_SCREEN) {
         return <UserForm action={context.formHandler} />;
     } else if (screen === constant.VISUAL_PATTERN_SCREEN) {

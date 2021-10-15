@@ -62,7 +62,7 @@ export default function BargainTask(props) {
     }]
 
     const setConditionalList = () => {
-        if (DEBUG_TEST) {
+        if (DEBUG) {
             return props.data.storesLong
         } else if (typeTask.name === EXPERIMENT_TYPE_LONG || typeTask.name === EXPERIMENT_TYPE_LONG_NT) {
             return props.data.storesLong
@@ -351,13 +351,13 @@ export default function BargainTask(props) {
     }
 
     const saveResultsBeforeLeavingStore = () => {
-        if (DEBUG_TEST) console.log("saveResultsBeforeLeavingStore")
+        if (DEBUG) console.log("saveResultsBeforeLeavingStore")
         results[results.length - 1] = {
             ...results[results.length - 1],
             leaveStoreTimestamp: Date.now()
         }
 
-        if (DEBUG_TEST) console.log(results)
+        if (DEBUG) console.log(results)
     }
 
     const saveResultsBeforeChangingBelt = () => {
@@ -368,10 +368,10 @@ export default function BargainTask(props) {
         const totalShownBargainsSoFar = productListInThisIteration.filter(product => product.isBargain === true).length //we count the bargains numbers
         const lastProductNumberDisplayed = store.products[to - 1].productNumber
 
-        if (DEBUG_TEST) console.log("From: " + from + " to: " + to)
-        if (DEBUG_TEST) console.log(productListInThisIteration)
-        if (DEBUG_TEST) console.log("totalShownBargainsSoFar: " + totalShownBargainsSoFar)
-        if (DEBUG_TEST) console.log("lastProductDisplayed: " + lastProductNumberDisplayed)
+        if (DEBUG) console.log("From: " + from + " to: " + to)
+        if (DEBUG) console.log(productListInThisIteration)
+        if (DEBUG) console.log("totalShownBargainsSoFar: " + totalShownBargainsSoFar)
+        if (DEBUG) console.log("lastProductDisplayed: " + lastProductNumberDisplayed)
 
         results[results.length - 1] = {
             ...results[results.length - 1],
@@ -518,13 +518,13 @@ export default function BargainTask(props) {
                 return <ModalAlert
                     title={modalAlertConfig.title}
                     text={modalAlertConfig.text}
-                    onOpened={() => { console.log("With STORE callback") }}
+                    onOpened={() => { if (DEBUG) console.log("With STORE callback") }}
                     onClosed={onModalStoreClosed} />
             } else {
                 return <ModalAlert
                     title={modalAlertConfig.title}
                     text={modalAlertConfig.text}
-                    onOpened={() => { console.log("Without callback") }}
+                    onOpened={() => { if (DEBUG) console.log("Without callback") }}
                     onClosed={() => { closeModal() }} />
             }
         } else return <></>

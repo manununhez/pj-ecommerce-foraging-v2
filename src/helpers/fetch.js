@@ -90,8 +90,10 @@ export function fetchUserInitialData(typeTask, callback) {
         .then((response) => {
             const indexFemale = 0
             const indexMale = 1
-            const indexScenario1 = 2
-            const indexScenario2 = 3
+            const indexScenario1F = 2
+            const indexScenario2F = 3
+            const indexScenario1M = 4
+            const indexScenario2M = 5
 
             let screens = [];
             for (let value of Object.values(response.screens)) {
@@ -101,21 +103,31 @@ export function fetchUserInitialData(typeTask, callback) {
                 });
             }
 
-            let participants = Array(4);
+            let participants = Array(6);
             //TODO MEJORAR ESTO. SE DEBE BUSCAR EL VALOR EN EL ARRAY EN LUGAR DE TENER UN INDEX FIJO
             for (let value of Object.values(response.experimentCount)) {
                 if (value.category === 'female') {
                     participants[indexFemale] = [value.group_1, value.group_2, value.group_3]
                 } else if (value.category === 'male') {
                     participants[indexMale] = [value.group_1, value.group_2, value.group_3]
-                } else if (value.category === 'scenario_1') {
-                    participants[indexScenario1] = [value.group_1, value.group_2, value.group_3]
-                } else if (value.category === 'scenario_2') {
-                    participants[indexScenario2] = [value.group_1, value.group_2, value.group_3]
+                } else if (value.category === 'scenario_1_f') {
+                    participants[indexScenario1F] = [value.group_1, value.group_2, value.group_3]
+                } else if (value.category === 'scenario_2_f') {
+                    participants[indexScenario2F] = [value.group_1, value.group_2, value.group_3]
+                } else if (value.category === 'scenario_1_m') {
+                    participants[indexScenario1M] = [value.group_1, value.group_2, value.group_3]
+                } else if (value.category === 'scenario_2_m') {
+                    participants[indexScenario2M] = [value.group_1, value.group_2, value.group_3]
                 }
             }
 
-            callback({ screens, participants });
+            let totalParticipants = 0
+            for (let value of Object.values(response.participantsTotal)) {
+                totalParticipants = value.total_participants
+                break
+            }
+
+            callback({ screens, participants, totalParticipants });
         }, (response) => {
             callback(false, response);
         });

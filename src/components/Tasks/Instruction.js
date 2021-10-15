@@ -52,7 +52,7 @@ class Instruction extends React.Component {
         return (
             <Container fluid="md">
                 <Row className="justify-content-md-center">
-                    <HtmlFormattedText text={this.props.text} screen={this.props.name} />
+                    <HtmlFormattedText text={this.props.text} screen={this.props.name} typeTask={this.props.typeTask} />
                 </Row>
                 <br />
                 <br />
@@ -64,9 +64,10 @@ class Instruction extends React.Component {
     };
 }
 
-const HtmlFormattedText = ({ text, screen }) => {
+const HtmlFormattedText = ({ text, screen, typeTask }) => {
+    let screenName = demoInstructionForTask(screen, typeTask)
     let children = text
-        .filter((instruction) => instruction.screen === screen)//Map the current screen with the correspondent text instruction to display
+        .filter((instruction) => instruction.screen === screenName)//Map the current screen with the correspondent text instruction to display
         .map((instruction, index) => {
             let txtFormatted = instruction.text.split('<br>')
                 .filter(item => item !== constant.TEXT_EMPTY)
@@ -83,6 +84,13 @@ const HtmlFormattedText = ({ text, screen }) => {
 
     return children;
 };
+
+const demoInstructionForTask = (screen, typeTask) => {
+    if (screen.includes(constant.BARGAIN_DEMO_INSTRUCTION_COND)) {
+        if (typeTask === constant.EXPERIMENT_TYPE_LONG) return constant.BARGAIN_DEMO_INSTRUCTION_COND1
+        else if (typeTask === constant.EXPERIMENT_TYPE_SHORT) return constant.BARGAIN_DEMO_INSTRUCTION_COND2
+    } else return screen
+}
 
 /**
  * Map the correspondent font size for the text instruction
