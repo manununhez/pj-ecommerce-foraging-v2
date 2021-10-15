@@ -90,6 +90,8 @@ export default class BargainResult extends React.Component {
           <h5>Partial sessions</h5>
           {getTable(this.state.usersPartial, PARTIAL_COMPLETED_SESSION)}
           <br /><br />
+          <h5>Participants count <h6><NavLink href={"https://api.swps-pjatk-experiment.pl/v3/participants-count-result"}>Download</NavLink></h6></h5>
+          <br /><br />
         </div>
       </>
     );
