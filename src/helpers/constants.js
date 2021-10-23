@@ -14,8 +14,6 @@ export const TEXT_EMPTY = "";
 //App versions
 export const EXPERIMENT_TYPE_LONG = "LONG-SHORT"
 export const EXPERIMENT_TYPE_SHORT = "SHORT-LONG"
-export const EXPERIMENT_TYPE_LONG_NT = "LONG-SHORT-NT"
-export const EXPERIMENT_TYPE_SHORT_NT = "SHORT-LONG-NT"
 export const EXPERIMENT_TYPE_BASIC = "BASIC"
 export const EXPERIMENT_TYPE_TASK_PATHNAME = "/task"
 //General config parameters

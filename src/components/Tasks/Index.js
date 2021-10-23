@@ -838,8 +838,6 @@ class Index extends Component {
         let totalLength = inputNavigation.length;
 
         if (currentScreenNumber < totalLength) { //To prevent keep transition between pages
-            if (DEBUG) console.log("Current Screen:")
-            if (DEBUG) console.log(screen)
             if (type === constant.INSTRUCTION_SCREEN) {
                 this._goToNextTaskInInputNavigation();
             } else if (screen === constant.PSFORM_SCREEN) {
@@ -950,8 +948,6 @@ class Index extends Component {
      * We move to next page, according to inputNavigation input data
      */
     _goToNextTaskInInputNavigation() {
-        if (DEBUG) console.log("_goToNextTaskInInputNavigation")
-
         const { currentScreenNumber, inputNavigation, logTimestamp, showAlertWindowsClosing } = this.state;
         const { screen, timestamp } = logTimestamp
 
@@ -1053,7 +1049,6 @@ class Index extends Component {
     render() {
         const { loading, loadingSyncData } = this.state;
         const timeout = 1000 * 60 * (60 * 3); //3horas
-        if (DEBUG) console.log(USER_INFO.screen)
         return (
             <>
                 <section style={{ paddingBottom: "2rem" }}>
