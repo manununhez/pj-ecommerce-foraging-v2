@@ -57,16 +57,16 @@ export default function BargainTask(props) {
         }
     }
 
-    const [storeLists, setStoreLists] = useState(setConditionalList())
+    const [storeLists] = useState({ value: setConditionalList() })
     const [round, setRound] = useState(1)
     const [currentBeltIteration] = useState({ value: 1 })
     const [currentStoreIndex] = useState({ value: 0 })
-    const [currentProducts, setCurrentProducts] = useState(initializeProducts(storeLists[currentStoreIndex.value]))
+    const [currentProducts, setCurrentProducts] = useState(initializeProducts(storeLists.value[currentStoreIndex.value]))
     const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState([])
     const [delay, setDelay] = useState(ONE_SECOND_MS)
     const [modalAlertConfig, setModalAlertConfig] = useState({ isVisible: false, text: "", type: "", title: "" })
-    const [results] = useState([initNewStoreResult(storeLists[currentStoreIndex.value].storeNumber, typeTask.name, round)])
-    const [showFeedback, setShowFeedback] = useState(storeLists[currentStoreIndex.value].showFeedback)
+    const [results] = useState([initNewStoreResult(storeLists.value[currentStoreIndex.value].storeNumber, typeTask.name, round)])
+    const [showFeedback, setShowFeedback] = useState(storeLists.value[currentStoreIndex.value].showFeedback)
     const [showInstruction, setShowInstruction] = useState(false)
     const [showProducts, setShowProducts] = useState(true)
     const [selectedProducts, setSelectedProducts] = useState([])
@@ -121,7 +121,7 @@ export default function BargainTask(props) {
         const productIndex = parseInt(key)
 
         if (!selectedProducts.includes(productIndex)) {
-            const productSelected = storeLists[currentStoreIndex.value].products[productIndex]
+            const productSelected = storeLists.value[currentStoreIndex.value].products[productIndex]
             let selected = [...selectedProducts]
 
             selected.push(productIndex)
@@ -151,7 +151,7 @@ export default function BargainTask(props) {
      */
     const displayNewStore = () => {
         //check is there are stores available
-        if (results.length >= storeLists.length) {
+        if (results.length >= storeLists.value.length) {
             modalAlert(MODAL_TITLE, STORES_NOT_AVAILABLE)
             return
         }
@@ -159,7 +159,7 @@ export default function BargainTask(props) {
         currentStoreIndex.value += 1
         currentBeltIteration.value = 1
 
-        const newStore = storeLists[currentStoreIndex.value]
+        const newStore = storeLists.value[currentStoreIndex.value]
 
         //update results
         results.push(initNewStoreResult(newStore.storeNumber, typeTask.name, round))
@@ -216,19 +216,19 @@ export default function BargainTask(props) {
         if (DEBUG) console.log("generateNewProductListToDisplay")
         const from = currentBeltIteration.value * PRODUCTS_PER_ROW
         const to = from + (PRODUCTS_PER_ROW * 2)
-        const isNeededGenerateNewProducts = currentProducts.length === storeLists[currentStoreIndex.value].products.length
+        const isNeededGenerateNewProducts = currentProducts.length === storeLists.value[currentStoreIndex.value].products.length
 
         if (DEBUG) console.log('isNeededGenerateNewProducts: ' + isNeededGenerateNewProducts)
         let tmp = []
 
         if (!isNeededGenerateNewProducts) {
-            tmp = storeLists[currentStoreIndex.value].products.slice(from, to)
+            tmp = storeLists.value[currentStoreIndex.value].products.slice(from, to)
         } else {
             // Update menu belt products with new random generated products when we reached the end of the product list
             let filteredNotBargainList = currentProductListWithoutBargains
 
             if (currentProductListWithoutBargains.length === 0) {
-                filteredNotBargainList = storeLists[currentStoreIndex.value].products.filter(item => item.isBargain === false)
+                filteredNotBargainList = storeLists.value[currentStoreIndex.value].products.filter(item => item.isBargain === false)
 
                 setCurrentProductListWithoutBargains(filteredNotBargainList)
             }
@@ -236,8 +236,7 @@ export default function BargainTask(props) {
             tmp = generateRandomProductList(filteredNotBargainList)
 
             //we update the original list with the new generated products
-            storeLists[currentStoreIndex.value].products = currentProducts.concat(tmp)
-            setStoreLists(storeLists)
+            storeLists.value[currentStoreIndex.value].products = currentProducts.concat(tmp)
         }
 
         //update current product list
@@ -276,14 +275,14 @@ export default function BargainTask(props) {
     const countMissedBargains = () => {
         const from = (currentBeltIteration.value - 1) * PRODUCTS_PER_ROW
         const to = from + PRODUCTS_PER_ROW
-        const productListInThisIteration = storeLists[currentStoreIndex.value].products.slice(from, to)
+        const productListInThisIteration = storeLists.value[currentStoreIndex.value].products.slice(from, to)
         const bargainNumberInThisIteration = productListInThisIteration.filter(product => product.isBargain === true).length
 
         let selectedBargainsCounter = 0
 
         for (let i = from; i <= to; i++) {
             if (selectedProducts.includes(i)) {
-                const product = storeLists[currentStoreIndex.value].products[i]
+                const product = storeLists.value[currentStoreIndex.value].products[i]
 
                 if (product.isBargain) {
                     selectedBargainsCounter += 1
@@ -346,12 +345,12 @@ export default function BargainTask(props) {
      */
     const updateBargainAndProductsResults = () => {
         if (DEBUG) console.log("====Current storeLists =====")
-        if (DEBUG) console.log(storeLists)
+        if (DEBUG) console.log(storeLists.value)
         const from = (currentBeltIteration.value - 1) * PRODUCTS_PER_ROW
         const to = from + PRODUCTS_PER_ROW
-        const productListInThisIteration = storeLists[currentStoreIndex.value].products.slice(0, to) //every iteration, we took al the products from start to the current iteration. IMPROVE THIS!
+        const productListInThisIteration = storeLists.value[currentStoreIndex.value].products.slice(0, to) //every iteration, we took al the products from start to the current iteration. IMPROVE THIS!
         const totalShownBargainsSoFar = productListInThisIteration.filter(product => product.isBargain === true).length //we count the bargains numbers
-        const lastProductNumberDisplayed = storeLists[currentStoreIndex.value].products[to - 1].productNumber
+        const lastProductNumberDisplayed = storeLists.value[currentStoreIndex.value].products[to - 1].productNumber
 
         if (DEBUG) console.log("currentBeltIteration: " + currentBeltIteration.value)
         if (DEBUG) console.log("From: " + 0 + " to: " + to)
@@ -427,11 +426,10 @@ export default function BargainTask(props) {
 
         currentStoreIndex.value = 0
         currentBeltIteration.value = 1
-
+        storeLists.value = newListToDisplay//we change the stores lists by Conditions (Long/short)
         setRound(newRound)
         setSelectedProducts([])
         setCurrentProductListWithoutBargains([])
-        setStoreLists(newListToDisplay)//we change the stores lists by Conditions (Long/short)
         setCurrentProducts(initializeProducts(newStoresVisited))
         setShowFeedback(newStoresVisited.showFeedback)
     }
@@ -524,7 +522,7 @@ export default function BargainTask(props) {
         } else {
             return (<div className="centered">
                 <StickmanLoading
-                    currentStore={storeLists[currentStoreIndex.value]}
+                    currentStore={storeLists.value[currentStoreIndex.value]}
                     onLoadingFinished={onLoadingFinished} /></div>)
         }
     }
@@ -579,7 +577,7 @@ export default function BargainTask(props) {
 
 
     return (<>
-        {DEBUG ? `Store#:${storeLists[currentStoreIndex.value].storeNumber} CurrentBelt:${currentBeltIteration.value}` : ""}
+        {DEBUG ? `Store#:${storeLists.value[currentStoreIndex.value].storeNumber} CurrentBelt:${currentBeltIteration.value}` : ""}
 
         {showModal()}
 
