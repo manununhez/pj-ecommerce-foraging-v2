@@ -12,8 +12,8 @@ export const PRODUCT_MENU_BG_COLORS = [LIGHT_GRAY, "lightsteelblue", "antiquewhi
 export const TEXT_EMPTY = "";
 
 //App versions
-export const EXPERIMENT_TYPE_LONG = "LONG-SHORT"
-export const EXPERIMENT_TYPE_SHORT = "SHORT-LONG"
+export const EXPERIMENT_TYPE_LONG = "LONG"
+export const EXPERIMENT_TYPE_SHORT = "SHORT"
 export const EXPERIMENT_TYPE_BASIC = "BASIC"
 export const EXPERIMENT_TYPE_TASK_PATHNAME = "/task"
 //General config parameters

@@ -328,7 +328,8 @@ const userbargain = (data) => {
             item.bargainTakenNumber,
             item.bargainWronglyTakenNumber,
             item.bargainShownNumber,
-            item.round
+            item.round,
+            item.totalBargainsInStore
         ]
     })
 
@@ -422,7 +423,7 @@ const usergeneraldata = (data, studyParams) => {
                     item.bargainShownNumber,
                     item.round,
                     item.bargainWronglyTakenNumber,
-                    constant.TEXT_EMPTY
+                    item.totalBargainsInStore
                 ]
             });
 

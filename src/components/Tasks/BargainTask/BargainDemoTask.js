@@ -30,7 +30,7 @@ export default function BargainDemoTask(props) {
     const currentStoreIndex = 0
 
     const storeLists = [{
-        storeNumber: 1, bargainsNumber: 4, delay: 15, showFeedback: false, products: [
+        storeNumber: 1, bargainsNumber: 4, delay: 10, showFeedback: false, products: [
             { productNumber: 1, isBargain: false, oldPrice: 227, newPrice: 140.74, discount: 0.38, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/12picture.jpg" },
             { productNumber: 2, isBargain: true, oldPrice: 113, newPrice: 36.16, discount: 0.68, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/71jewelry_picture.jpg" },
             { productNumber: 3, isBargain: false, oldPrice: 125, newPrice: 63.75, discount: 0.49, numOfStars: 5, img: "https://api.swps-pjatk-experiment.pl/v3/img/31jewelry_picture.jpg" },

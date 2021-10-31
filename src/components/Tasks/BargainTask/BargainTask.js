@@ -42,7 +42,7 @@ export default function BargainTask(props) {
 
     const initializeProducts = (_store) => _store.products.slice(0, PRODUCTS_PER_ROW * 2)
 
-    const initNewStoreResult = (_storeNumber, _typeTask, _round) => {
+    const initNewStoreResult = (_storeNumber, _typeTask, _round, _totalBargains) => {
         return {
             typeTask: _typeTask,
             storeNumber: _storeNumber,
@@ -53,7 +53,8 @@ export default function BargainTask(props) {
             bargainTakenNumber: 0,
             bargainWronglyTakenNumber: 0,
             bargainShownNumber: 0,
-            round: _round
+            round: _round,
+            totalBargainsInStore: _totalBargains
         }
     }
 
@@ -65,7 +66,7 @@ export default function BargainTask(props) {
     const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState([])
     const [delay, setDelay] = useState(ONE_SECOND_MS)
     const [modalAlertConfig, setModalAlertConfig] = useState({ isVisible: false, text: "", type: "", title: "" })
-    const [results] = useState([initNewStoreResult(storeLists.value[currentStoreIndex.value].storeNumber, typeTask.name, round)])
+    const [results] = useState([initNewStoreResult(storeLists.value[currentStoreIndex.value].storeNumber, typeTask.name, round, storeLists.value[currentStoreIndex.value].bargainsNumber)])
     const [showFeedback, setShowFeedback] = useState(storeLists.value[currentStoreIndex.value].showFeedback)
     const [showInstruction, setShowInstruction] = useState(false)
     const [showProducts, setShowProducts] = useState(true)
@@ -162,7 +163,7 @@ export default function BargainTask(props) {
         const newStore = storeLists.value[currentStoreIndex.value]
 
         //update results
-        results.push(initNewStoreResult(newStore.storeNumber, typeTask.name, round))
+        results.push(initNewStoreResult(newStore.storeNumber, typeTask.name, round, newStore.bargainsNumber))
 
         setCurrentProducts(initializeProducts(newStore))
         setShowFeedback(newStore.showFeedback)
@@ -419,7 +420,7 @@ export default function BargainTask(props) {
         const newStoresVisited = newListToDisplay[0]
         const newRound = round + 1
 
-        results.push(initNewStoreResult(newStoresVisited.storeNumber, newTypeTask, newRound))
+        results.push(initNewStoreResult(newStoresVisited.storeNumber, newTypeTask, newRound, newStoresVisited.bargainsNumber))
         typeTask.name = newTypeTask
         if (DEBUG) console.log(results)
         if (DEBUG) console.log(typeTask.name)
