@@ -743,7 +743,7 @@ class Index extends Component {
         const secondGroupAgeLimit = groups[1]
         const thirdGroupAgeLimit = groups[2]
 
-        const participantsLimitPerSex = inputParticipants.total / 2
+        const participantsLimitPerSexPerGroup = inputParticipants.total / 2
         const yearsEducLimit = constant.YEARS_EDUCATION_LIMIT
 
         const femaleParticipants = inputParticipants.participants[0];
@@ -778,7 +778,7 @@ class Index extends Component {
         }
 
 
-        if (ageIncorrectIntervalFlag || parseInt(amountParticipant) >= participantsLimitPerSex ||
+        if (ageIncorrectIntervalFlag || parseInt(amountParticipant) >= participantsLimitPerSexPerGroup ||
             levelEduc === constant.FORM_LEVEL_EDUC_INITIAL || yearsEduc < yearsEducLimit) {
             data.redirect = true;
         }
@@ -883,7 +883,7 @@ class Index extends Component {
         const secondGroupAgeLimit = groups[1]
         const thirdGroupAgeLimit = groups[2]
         const scenarios = constant.SCENARIOS
-        const scenariosLimitPerSexPerGroup = inputParticipants.total / 4
+        const participantsLimitPerScenarioPerSexPerGroup = inputParticipants.total / 4
         const scenariosSex = (sex === constant.FEMALE_VALUE) ? 0 : 2
 
         let randomNumberGenerated = []
@@ -928,12 +928,12 @@ class Index extends Component {
 
                 if (DEBUG) console.log("scenarioNumber: " + scenarioNumber)
                 if (DEBUG) console.log("indexScenarioSex: " + indexScenarioSex)
-                if (DEBUG) console.log("scenariosLimitPerSexPerGroup: " + scenariosLimitPerSexPerGroup)
+                if (DEBUG) console.log("participantsLimitPerScenarioPerSexPerGroup: " + participantsLimitPerScenarioPerSexPerGroup)
                 if (DEBUG) console.log("groupAge: " + groupAge)
                 if (DEBUG) console.log("scenarios: " + scenarios)
                 if (DEBUG) console.log(inputParticipants.participants[indexScenarioSex][groupAge])
 
-                if (inputParticipants.participants[indexScenarioSex][groupAge] < parseInt(scenariosLimitPerSexPerGroup)) {
+                if (inputParticipants.participants[indexScenarioSex][groupAge] < parseInt(participantsLimitPerScenarioPerSexPerGroup)) {
                     break;
                 }
             }
