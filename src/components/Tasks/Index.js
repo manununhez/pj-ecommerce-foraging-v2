@@ -856,21 +856,24 @@ class Index extends Component {
                 let data = this.validateBargainTask();
                 if (data.isValid) this._goToNextTaskInInputNavigation();
             } else if (screen === constant.USER_FORM_SCREEN) {
-                let data = this.validateForm();
+                // let data = this.validateForm();
 
-                if (data.isValid) {
-                    this._randomUserScenarioAssignment()
+                // if (data.isValid) {
+                //     this._randomUserScenarioAssignment()
 
+                //     this._goToNextTaskInInputNavigation();
+                // } else {
+                //     if (data.redirect) {
+                //         //we redirect to Ariadna
+                //         alert(constant.PARTICIPANTS_QUOTA_FULL_ALERT_ERROR);
+                //         this.setState({ showAlertWindowsClosing: false }, () => {
+                //             window.location.replace(PROLIFIC_REDIRECT_REJECT);
+                //         })
+                //     }
+                // }
+                this.setState({ typeTask: constant.EXPERIMENT_TYPE_SHORT }, () => {
                     this._goToNextTaskInInputNavigation();
-                } else {
-                    if (data.redirect) {
-                        //we redirect to Ariadna
-                        alert(constant.PARTICIPANTS_QUOTA_FULL_ALERT_ERROR);
-                        this.setState({ showAlertWindowsClosing: false }, () => {
-                            window.location.replace(PROLIFIC_REDIRECT_REJECT);
-                        })
-                    }
-                }
+                })
             }
         }
     }
