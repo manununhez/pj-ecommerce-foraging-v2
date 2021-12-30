@@ -12,12 +12,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import {
     FIRST_TASK_PROPERTIES_TOTAL, FIRST_RADIO_VALUE, SECOND_RADIO_VALUE, WHITE, BLACK,
-    THIRD_RADIO_VALUE, TEXT_FOOTER, SHOW_FEEDBACK_TRUE
+    THIRD_RADIO_VALUE, TEXT_FOOTER, SHOW_FEEDBACK_TRUE, SPACE_KEY_CODE,
+    EVENT_KEY_DOWN
 } from '../../helpers/constants';
 
 
 const attributeLists = [{
-    id: 32, showFeedback: "YES", correctAnswer: 3, attributes: [
+    id: 31, showFeedback: "YES", showVisualStack: "YES", correctAnswer: 3, attributes: [
         { id: "A3", p1: 1, p2: 0, p3: 0, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+", valueP3: "A++" },
         { id: "A5", p1: 1, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "40", valueP2: "50", valueP3: "50" },
         { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "45", valueP3: "45" },
@@ -25,7 +26,18 @@ const attributeLists = [{
         { id: "A2", p1: 1, p2: 1, p3: 1, name: "Pojemność bębna", valueP1: "10", valueP2: "10", valueP3: "10" },
         { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1200", valueP3: "1400" },
     ]
-}];
+},
+{
+    id: 32, showFeedback: "NO", showVisualStack: "NO", correctAnswer: 3, attributes: [
+        { id: "A3", p1: 0, p2: 1, p3: 0, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+", valueP3: "A++" },
+        { id: "A5", p1: 0, p2: 1, p3: 0, name: "Zużycie wody", valueP1: "40", valueP2: "50", valueP3: "50" },
+        { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "45", valueP3: "45" },
+        { id: "A6", p1: 1, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
+        { id: "A2", p1: 1, p2: 1, p3: 1, name: "Pojemność bębna", valueP1: "10", valueP2: "10", valueP3: "10" },
+        { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1200", valueP3: "1400" },
+    ]
+}
+];
 
 class MultiAttribute extends React.Component {
     constructor(props) {
@@ -34,24 +46,60 @@ class MultiAttribute extends React.Component {
             selectedOption: [],
             counter: 0
         }
-        this.toggle = this._toggle.bind(this);
+        this.toogle = this._toggle.bind(this)
+    }
+
+    componentDidMount() {
+        //for keyboard detection
+        document.addEventListener(EVENT_KEY_DOWN, this.handleKeyDownEvent, false);
+
+        // HTML prevent space bar from scrolling page
+        window.addEventListener(EVENT_KEY_DOWN, function (e) {
+            if (e.keyCode === SPACE_KEY_CODE && e.target === document.body) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener(EVENT_KEY_DOWN, this.handleKeyDownEvent, false);
+    }
+
+    handleKeyDownEvent = (event) => {
+        if (event.keyCode === SPACE_KEY_CODE) {
+            console.log(SPACE_KEY_CODE)
+            const { selectedOption, counter } = this.state
+
+            if (selectedOption.length === (counter + 1)) {
+                this.setState({ counter: (counter + 1) })
+            }
+        }
     }
 
     _toggle(evt) {
-        const { selectedOption } = this.state
+        const { selectedOption, counter } = this.state
 
         let selectedValue = evt.target.value
 
-        selectedOption.push(selectedValue)
+        console.log(evt)
+
+        if (selectedOption.length === 0 || selectedOption.length < (counter + 1)) {
+            selectedOption.push(selectedValue)
+        } else if (selectedOption.length === (counter + 1)) {
+            selectedOption[counter] = selectedValue
+        }
 
         // this.props.action(selectedValue);
 
-        this.setState({ selectedOption: selectedOption })
+        this.setState({ selectedOption: selectedOption },
+            () => {
+                console.log(this.state)
+            })
     }
 
     _stackDisplay() {
-        document.getElementById("test_card").style.display = "";
-        document.getElementById("btnTest").style.display = "none";
+        document.getElementById("cardStackVisual").style.display = "";
+        document.getElementById("btnShowStack").style.display = "none";
     }
 
 
@@ -59,13 +107,11 @@ class MultiAttribute extends React.Component {
         const { counter, selectedOption } = this.state
         const data = attributeLists[counter]
         const showFeedback = data.showFeedback
-        const text = "TEXT"
         const modalOpen = false
         const showError = false
         const textError = "TEXT ERROR"
         return (
             <Container key={"KEY_" + counter}>
-                {text}
                 <Alert style={{ fontSize: "1.0rem" }} color="warning" isOpen={showError}>
                     <span className="alert-inner--text ml-1">
                         {textError}
@@ -84,22 +130,17 @@ class MultiAttribute extends React.Component {
                     </ModalHeader>
                 </Modal>
                 <Row className="justify-content-center">
-                    {/* <Col xs="auto"> */}
                     <Card body style={{ marginTop: "20px" }}>
-                        {/* <Col lg="auto"> */}
                         <div>{getRatingStarBarTable(data)}</div>
-                        {/* </Col> */}
                     </Card>
-                    {/* </Col> */}
-                    {/* <Col xs="auto"> */}
                     <Card body style={{ marginTop: "20px" }}>
-                        {/* <Col lg="auto"> */}
                         <div>{getTable(selectedOption[counter - 1], data, this.toggle)}</div>
-                        {/* </Col> */}
-                        <Button id="btnTest" onClick={() => this._stackDisplay()}> Test</Button>
+                        {(data.showVisualStack === "YES") ?
+                            <Button id="btnShowStack" onClick={() => this._stackDisplay()}> Show me the levels</Button>
+                            : <></>
+                        }
                     </Card>
-                    {/* </Col> */}
-                    <Card id="test_card" body style={{ marginTop: "20px", display: 'none' }}>
+                    <Card id="cardStackVisual" body style={{ marginTop: "20px", display: 'none' }}>
                         <div>{getTableVisualization(data)}</div>
                     </Card>
                 </Row>
