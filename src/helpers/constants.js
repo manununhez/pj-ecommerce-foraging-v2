@@ -5,6 +5,7 @@ export const WHITE = "white";
 export const BLUE = "#123abc";
 export const GREEN = "green";
 export const RED = "red";
+export const BLACK = "black";
 export const ALLEGRO_ORANGE = "#ff5a00";
 export const accentColor = "#5cb7b7";
 export const PRODUCT_MENU_BG_COLORS = [LIGHT_GRAY, "lightsteelblue", "antiquewhite", "beige", "lightblue", "cornsilk", "aliceblue", "thistle"]
@@ -16,6 +17,7 @@ export const EXPERIMENT_TYPE_LONG = "LONG"
 export const EXPERIMENT_TYPE_SHORT = "SHORT"
 export const EXPERIMENT_TYPE_BASIC = "BASIC"
 export const EXPERIMENT_TYPE_TASK_PATHNAME = "/task"
+
 //General config parameters
 export const SCENARIOS = [EXPERIMENT_TYPE_LONG, EXPERIMENT_TYPE_SHORT]
 export const YEARS_EDUCATION_LIMIT = 11;
@@ -24,6 +26,14 @@ export const PARTICIPANTS_GROUPS = [
     { minAge: 42, maxAge: 53 },
     { minAge: 65, maxAge: 76 }
 ]
+
+//MultiAttribute
+export const FIRST_TASK_PROPERTIES_TOTAL = 6;
+export const FIRST_RADIO_VALUE = "1";
+export const SECOND_RADIO_VALUE = "2";
+export const THIRD_RADIO_VALUE = "3";
+export const SHOW_FEEDBACK_TRUE = "YES";
+export const SHOW_FEEDBACK_NO = "NO";
 
 //Visual Pattern
 export const VISUAL_PATTERN = "VisualPattern"
