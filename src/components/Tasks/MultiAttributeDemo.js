@@ -15,60 +15,38 @@ import {
     THIRD_RADIO_VALUE, TEXT_FOOTER, SHOW_FEEDBACK_TRUE, SPACE_KEY_CODE,
     EVENT_KEY_DOWN
 } from '../../helpers/constants';
-import Footer from "../Footers/Footer";
 
 
-const attributeLists = [
-    {
-        id: 31, showFeedback: "YES", showVisualStack: "YES", correctAnswer: "3", attributes: [
-            { id: "A3", p1: 1, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+", valueP3: "A++" },
-            { id: "A5", p1: 1, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "40", valueP2: "50", valueP3: "50" },
-            { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "45", valueP3: "45" },
-            { id: "A6", p1: 0, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
-            { id: "A2", p1: 0, p2: 1, p3: 1, name: "Pojemność bębna", valueP1: "4", valueP2: "10", valueP3: "10" },
-            { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1200", valueP3: "1400" },
-        ]
-    },
-    {
-        id: 32, showFeedback: "YES", showVisualStack: "YES", correctAnswer: "1", attributes: [
-            { id: "A3", p1: 0, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A", valueP2: "A", valueP3: "A++" },
-            { id: "A5", p1: 1, p2: 1, p3: 0, name: "Zużycie wody", valueP1: "45", valueP2: "45", valueP3: "65" },
-            { id: "A4", p1: 1, p2: 0, p3: 1, name: "Poziom hałasu", valueP1: "60", valueP2: "70", valueP3: "60" },
-            { id: "A6", p1: 1, p2: 0, p3: 0, name: "Program szybki", valueP1: "jest", valueP2: "brak", valueP3: "brak" },
-            { id: "A2", p1: 0, p2: 0, p3: 0, name: "Pojemność bębna", valueP1: "4", valueP2: "4", valueP3: "4" },
-            { id: "A1", p1: 0, p2: 1, p3: 0, name: "Maksymalne obroty", valueP1: "1000", valueP2: "1400", valueP3: "1000" },
-        ]
-    },
-    {
-        id: 33, showFeedback: "YES", showVisualStack: "NO", correctAnswer: "3", attributes: [
-            { id: "A3", p1: 0, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A", valueP2: "A", valueP3: "A++" },
-            { id: "A5", p1: 1, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "45", valueP2: "65", valueP3: "65" },
-            { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "70", valueP2: "60", valueP3: "60" },
-            { id: "A6", p1: 0, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
-            { id: "A2", p1: 1, p2: 1, p3: 0, name: "Pojemność bębna", valueP1: "8", valueP2: "8", valueP3: "4" },
-            { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1000", valueP3: "1400" },
-        ]
-    },
-    {
-        id: 34, showFeedback: "YES", showVisualStack: "YES", correctAnswer: "3", attributes: [
-            { id: "A3", p1: 0, p2: 1, p3: 1, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+++", valueP3: "A+++" },
-            { id: "A5", p1: 0, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "50", valueP2: "50", valueP3: "50" },
-            { id: "A4", p1: 0, p2: 0, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "50", valueP3: "40" },
-            { id: "A6", p1: 0, p2: 0, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "brak", valueP3: "brak" },
-            { id: "A2", p1: 0, p2: 0, p3: 0, name: "Pojemność bębna", valueP1: "8", valueP2: "8", valueP3: "8" },
-            { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1600", valueP2: "1200", valueP3: "1600" },
-        ]
-    },
+const attributeLists = [{
+    id: 31, showFeedback: "YES", showVisualStack: "YES", correctAnswer: 3, attributes: [
+        { id: "A3", p1: 1, p2: 0, p3: 0, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+", valueP3: "A++" },
+        { id: "A5", p1: 1, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "40", valueP2: "50", valueP3: "50" },
+        { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "45", valueP3: "45" },
+        { id: "A6", p1: 1, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
+        { id: "A2", p1: 1, p2: 1, p3: 1, name: "Pojemność bębna", valueP1: "10", valueP2: "10", valueP3: "10" },
+        { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1200", valueP3: "1400" },
+    ]
+},
+{
+    id: 32, showFeedback: "NO", showVisualStack: "NO", correctAnswer: 3, attributes: [
+        { id: "A3", p1: 0, p2: 1, p3: 0, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+", valueP3: "A++" },
+        { id: "A5", p1: 0, p2: 1, p3: 0, name: "Zużycie wody", valueP1: "40", valueP2: "50", valueP3: "50" },
+        { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "45", valueP3: "45" },
+        { id: "A6", p1: 1, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
+        { id: "A2", p1: 1, p2: 1, p3: 1, name: "Pojemność bębna", valueP1: "10", valueP2: "10", valueP3: "10" },
+        { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1200", valueP3: "1400" },
+    ]
+}
 ];
 
-class MultiAttribute extends React.Component {
+class MultiAttributeDemo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             selectedOption: [],
-            counter: 0,
-            modalOpen: false
+            counter: 0
         }
+        this.toogle = this._toggle.bind(this)
     }
 
     componentDidMount() {
@@ -93,24 +71,13 @@ class MultiAttribute extends React.Component {
             console.log(this.state)
             const { selectedOption, counter } = this.state
 
-            if (attributeLists.length === selectedOption.length) {
-                console.log('this.props.action')
-                this.props.action(selectedOption);
-            } else if (selectedOption.length === (counter + 1)) {
-                this.setState({ counter: (counter + 1), modalOpen: false })
+            if (selectedOption.length === (counter + 1)) {
+                this.setState({ counter: (counter + 1) })
             }
         }
     }
 
-    toggle = () => {
-        console.log(this.state)
-        this.setState({
-            modalOpen: !this.state.modalOpen
-        });
-    }
-
-    optionClicked = (evt) => {
-        console.log(evt)
+    _toggle(evt) {
         const { selectedOption, counter } = this.state
 
         let selectedValue = evt.target.value
@@ -123,7 +90,9 @@ class MultiAttribute extends React.Component {
             selectedOption[counter] = selectedValue
         }
 
-        this.setState({ selectedOption: selectedOption, modalOpen: true },
+        // this.props.action(selectedValue);
+
+        this.setState({ selectedOption: selectedOption },
             () => {
                 console.log(this.state)
             })
@@ -136,13 +105,12 @@ class MultiAttribute extends React.Component {
 
 
     render() {
-        const { counter, selectedOption, modalOpen } = this.state
+        const { counter, selectedOption } = this.state
         const data = attributeLists[counter]
         const showFeedback = data.showFeedback
+        const modalOpen = false
         const showError = false
         const textError = "TEXT ERROR"
-        const isOptionWasSelected = selectedOption.length === (counter + 1)
-        const showFeedbackCorrectAnswer = selectedOption[counter] === data.correctAnswer
         return (
             <Container key={"KEY_" + counter}>
                 <Alert style={{ fontSize: "1.0rem" }} color="warning" isOpen={showError}>
@@ -150,14 +118,12 @@ class MultiAttribute extends React.Component {
                         {textError}
                     </span>
                 </Alert>
-                <Modal isOpen={modalOpen} toggle={this.toggle} style={{ position: "fixed", top: "40%", left: "45%", transform: "translate(-40%, -40%)" }}>
+                <Modal returnFocusAfterClose={modalOpen} isOpen={modalOpen} style={{ position: "fixed", top: "40%", left: "45%", transform: "translate(-40%, -40%)" }}>
                     <ModalHeader style={{ padding: "4em" }}>
                         {/* if showsFeedback -- we take the first element of the showFeedback column attribute*/}
                         {(showFeedback === SHOW_FEEDBACK_TRUE)
                             ? <div style={{ textAlign: "center" }}>
-                                {/* if correct Answer */}
-                                {showFeedbackCorrectAnswer ? <FontAwesomeIcon color="green" icon={faSmile} size="4x" />
-                                    : <FontAwesomeIcon color="red" icon={faFrown} size="4x" />}
+                                <FontAwesomeIcon color="green" icon={faSmile} size="4x" />
                             </div>
                             : <></>
                         }
@@ -169,10 +135,9 @@ class MultiAttribute extends React.Component {
                         <div>{getRatingStarBarTable(data)}</div>
                     </Card>
                     <Card body style={{ marginTop: "20px" }}>
-                        <div>{getTable(selectedOption[counter], data, this.optionClicked)}</div>
+                        <div>{getTable(selectedOption[counter - 1], data, this.toggle)}</div>
                         {(data.showVisualStack === "YES") ?
-                            <Button color="info" id="btnShowStack" style={{ width: "fit-content", alignSelf: "center" }}
-                                onClick={() => this._stackDisplay()}> Show me the levels</Button>
+                            <Button id="btnShowStack" onClick={() => this._stackDisplay()}> Show me the levels</Button>
                             : <></>
                         }
                     </Card>
@@ -180,7 +145,6 @@ class MultiAttribute extends React.Component {
                         <div>{getTableVisualization(data)}</div>
                     </Card>
                 </Row>
-                {isOptionWasSelected ? <div><Footer text={TEXT_FOOTER} /></div> : <></>}
             </Container>
         );
     }
@@ -206,9 +170,9 @@ function getTableVisualization(data) {
  * @param {*} data 
  * @param {*} counter 
  * @param {*} selectedValue 
- * @param {*} onClick 
+ * @param {*} toggle 
  */
-function getTable(selectedValue, data, onClick) {
+function getTable(selectedValue, data, toggle) {
     return (
         <Table responsive style={{ textAlign: 'center' }}>
             <thead>
@@ -217,21 +181,21 @@ function getTable(selectedValue, data, onClick) {
                         <button color="primary" id={"btn_" + FIRST_RADIO_VALUE}
                             className={selectedValue === FIRST_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length
                             style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
-                            onClick={onClick} value={FIRST_RADIO_VALUE}>
+                            onClick={toggle} value={FIRST_RADIO_VALUE}>
                             Product 1
                         </button>
                     </th>
                     <th>
                         <button color="primary" id={"btn_" + SECOND_RADIO_VALUE}
                             className={selectedValue === SECOND_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
-                            onClick={onClick} value={SECOND_RADIO_VALUE}>
+                            onClick={toggle} value={SECOND_RADIO_VALUE}>
                             Product 2
                         </button>
                     </th>
                     <th>
                         <button color="primary" id={"btn_" + THIRD_RADIO_VALUE}
                             className={selectedValue === THIRD_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
-                            onClick={onClick} value={THIRD_RADIO_VALUE}>
+                            onClick={toggle} value={THIRD_RADIO_VALUE}>
                             Product 3
                         </button>
                     </th>
@@ -431,4 +395,4 @@ function getRatingStarBarTable(data) {
     );
 }
 
-export default MultiAttribute;
+export default MultiAttributeDemo;

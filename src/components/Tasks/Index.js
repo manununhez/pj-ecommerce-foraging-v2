@@ -29,7 +29,8 @@ import VisualPatternDemoTask from "./VisualPatternDemoTask";
 import PSForm from "./PSForm";
 import BargainTask from "./BargainTask/BargainTask";
 import BargainDemoTask from "./BargainTask/BargainDemoTask";
-
+import MultiAttribute from "./MultiAttribute";
+import MultiAttributeDemo from "./MultiAttributeDemo";
 
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 const PROLIFIC_REDIRECT_REJECT = process.env.REACT_APP_PROLIFIC_REDIRECT_REJECT;
@@ -699,6 +700,15 @@ class Index extends Component {
     }
 
     /**
+ * 
+ * @param {*} bargainResults 
+ */
+    multiAttributeHandler = (selectedOptionsResult) => {
+        //we simulate a space btn pressed because multiAttribute already finishes with a space btn pressed
+        this._validateToNextPage()
+    }
+
+    /**
      * 
      * @param {*} isValidToAdvance 
      */
@@ -855,6 +865,8 @@ class Index extends Component {
             } else if (screen === constant.BARGAIN_SCREEN) {
                 let data = this.validateBargainTask();
                 if (data.isValid) this._goToNextTaskInInputNavigation();
+            } else if (screen === constant.MULTRIATTRIBUTE_SCREEN) {
+                this._goToNextTaskInInputNavigation();
             } else if (screen === constant.USER_FORM_SCREEN) {
                 // let data = this.validateForm();
 
@@ -1103,7 +1115,7 @@ function isFooterShownInCurrentScreen(state) {
     let footerText = constant.TEXT_FOOTER
 
     if (type === constant.INSTRUCTION_SCREEN) {
-        if (screen.includes(constant.VISUAL_PATTERN)) {
+        if (screen.includes(constant.VISUAL_PATTERN) || screen.includes(constant.MULTRIATTRIBUTE_SCREEN)) {
             isFooterShown = true;
         } else if (screen.includes("Bargain")) {
             if (!screen.includes("BeforeFinish")) {
@@ -1157,6 +1169,10 @@ function changePages(state, context) {
         return <BargainDemoTask action={context.bargainTaskDemoTaskHandler} typeTask={typeTask} />;
     } else if (screen === constant.BARGAIN_SCREEN) {
         return <BargainTask action={context.bargainTaskHandler} data={inputStores} typeTask={typeTask} />;
+    } else if (screen === constant.MULTRIATTRIBUTE_DEMO_SCREEN) {
+        return <MultiAttributeDemo action={context.multiAttributeHandler} />;
+    } else if (screen === constant.MULTRIATTRIBUTE_SCREEN) {
+        return <MultiAttribute action={context.multiAttributeHandler} />;
     }
 }
 
