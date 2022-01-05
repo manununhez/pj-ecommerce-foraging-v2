@@ -41,7 +41,7 @@ class NavbarCustom extends React.Component {
               <NavLink href="/bargain-results">Results</NavLink>
             </NavItem>
           </Nav>
-          <NavbarText>v1.8.4</NavbarText>
+          <NavbarText>v2.0</NavbarText>
         </Collapse>
       </Navbar>
     </div>
