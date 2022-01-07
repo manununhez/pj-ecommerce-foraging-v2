@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 //UUID
 import { v4 as uuidv4 } from 'uuid'; // For version 4
 
@@ -30,7 +31,7 @@ import PSForm from "./PSForm";
 import BargainTask from "./BargainTask/BargainTask";
 import BargainDemoTask from "./BargainTask/BargainDemoTask";
 import MultiAttribute from "./MultiAttribute";
-import MultiAttributeDemo from "./MultiAttributeDemo";
+import MultiAttributeDemo from "./MultiAttributeDemo/MultiAttributeDemo";
 
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 const PROLIFIC_REDIRECT_REJECT = process.env.REACT_APP_PROLIFIC_REDIRECT_REJECT;
@@ -1065,7 +1066,7 @@ class Index extends Component {
         const { loading, loadingSyncData } = this.state;
         const timeout = 1000 * 60 * (60 * 3); //3horas
         return (
-            <>
+            <DndProvider backend={HTML5Backend}>
                 <section style={{ paddingBottom: "2rem" }}>
                     <div id="content" style={{ marginTop: "20px", marginBottom: "20px" }}>
                         {changePages(this.state, this)}
@@ -1099,8 +1100,7 @@ class Index extends Component {
                         loading={loadingSyncData}
                     />
                 </div>
-
-            </>
+            </DndProvider>
         )
     }
 }

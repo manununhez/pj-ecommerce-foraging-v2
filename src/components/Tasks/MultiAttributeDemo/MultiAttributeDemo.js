@@ -10,11 +10,13 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faSmile, faFrown } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import DemoContainer from './DemoContainer'
+
 import {
     FIRST_TASK_PROPERTIES_TOTAL, FIRST_RADIO_VALUE, SECOND_RADIO_VALUE, WHITE, BLACK,
     THIRD_RADIO_VALUE, TEXT_FOOTER, SHOW_FEEDBACK_TRUE, SPACE_KEY_CODE,
     EVENT_KEY_DOWN
-} from '../../helpers/constants';
+} from '../../../helpers/constants';
 
 
 const attributeLists = [{
@@ -144,6 +146,7 @@ class MultiAttributeDemo extends React.Component {
                     <Card id="cardStackVisual" body style={{ marginTop: "20px", display: 'none' }}>
                         <div>{getTableVisualization(data)}</div>
                     </Card>
+                    <DemoContainer />
                 </Row>
             </Container>
         );
@@ -347,7 +350,7 @@ function getPropertiesTableBody(data) {
         children.push(
             <tr key={i}>
                 <td style={{ textAlign: 'left', fontSize: '1.0em', padding: '1.0em', verticalAlign: 'middle' }}>{data.attributes[i].name}</td>
-                <td style={{ border: '1px solid black', padding: '0' }} className="align-middle">{RatingBar(rating)}</td>
+                <td style={{ display: 'inline-block', border: '1px solid black', padding: '0' }} className="align-middle">{RatingBar(rating)}</td>
             </tr>
         );
         rating--;
@@ -364,7 +367,7 @@ function RatingBar(value) {
     return (<ReactStars
         edit={false}
         size={20}
-        count={6}
+        count={value}
         value={value}
         color={WHITE}
         activeColor={BLACK}
