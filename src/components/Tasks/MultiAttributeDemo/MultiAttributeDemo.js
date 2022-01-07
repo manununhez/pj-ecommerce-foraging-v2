@@ -350,7 +350,7 @@ function getPropertiesTableBody(data) {
         children.push(
             <tr key={i}>
                 <td style={{ textAlign: 'left', fontSize: '1.0em', padding: '1.0em', verticalAlign: 'middle' }}>{data.attributes[i].name}</td>
-                <td style={{ display: 'inline-block', border: '1px solid black', padding: '0' }} className="align-middle">{RatingBar(rating)}</td>
+                <td style={{ border: '1px solid black', padding: '0' }} className="align-middle">{RatingBar(rating)}</td>
             </tr>
         );
         rating--;
