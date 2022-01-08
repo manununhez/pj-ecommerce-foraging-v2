@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { useDrag } from "react-dnd";
+import { DragPreviewImage, useDrag } from "react-dnd";
+import { verticalRate4Image } from './verticalRate4Image';
 
 const style = {
     border: "1px dashed gray",
@@ -13,19 +14,23 @@ const style = {
 };
 
 export function Box({ name, type, isDropped }) {
-    const [{ opacity }, drag] = useDrag(
+    const [{ opacity, isDragging }, drag, preview] = useDrag(
         () => ({
             type,
             item: { name },
             collect: (monitor) => ({
-                opacity: monitor.isDragging() ? 0.4 : 1
+                isDragging: monitor.isDragging(),
+                opacity: isDragging ? 0.4 : 1
             })
         }),
         [name, type]
     );
     return (
-        <div ref={drag} role="Box" style={{ ...style, opacity }}>
-            {isDropped ? <s>{name}</s> : name}
-        </div>
+        <>
+            <DragPreviewImage connect={preview} src={verticalRate4Image} />
+            <div ref={drag} role="Box" style={{ ...style, opacity, cursor: isDragging ? "none" : "default" }}>
+                {isDropped ? <s>{name}</s> : name}
+            </div>
+        </>
     );
 }
