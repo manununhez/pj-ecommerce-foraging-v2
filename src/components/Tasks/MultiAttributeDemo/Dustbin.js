@@ -2,16 +2,14 @@ import React from 'react';
 import { useDrop } from "react-dnd";
 
 const style = {
-    height: "12rem",
-    width: "12rem",
-    marginRight: "1.5rem",
-    marginBottom: "1.5rem",
-    color: "white",
-    padding: "1rem",
-    textAlign: "center",
-    fontSize: "1rem",
-    lineHeight: "normal",
-    float: "left"
+    color: 'white',
+    padding: '1rem',
+    textAlign: 'center',
+    fontSize: '1rem',
+    backgroundColor: 'rgb(34, 34, 34)',
+    height: '50vh',
+    display: 'flex',
+    flexDirection: 'column'
 };
 export function Dustbin({ accept, lastDroppedItem, onDrop }) {
     const [{ isOver, canDrop }, drop] = useDrop({
@@ -31,9 +29,9 @@ export function Dustbin({ accept, lastDroppedItem, onDrop }) {
     }
     return (
         <div ref={drop} role="Dustbin" style={{ ...style, backgroundColor }}>
-            {isActive
+            {/* {isActive
                 ? "Release to drop"
-                : `This dustbin accepts: ${accept.join(", ")}`}
+                : `This dustbin accepts: ${accept.join(", ")}`} */}
 
             {<p>Last dropped: {JSON.stringify([...lastDroppedItem].reverse())}</p>}
         </div>

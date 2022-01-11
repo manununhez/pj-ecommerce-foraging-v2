@@ -1,19 +1,13 @@
 import React from 'react';
 
 import { DragPreviewImage, useDrag } from "react-dnd";
-import { verticalRate4Image } from './verticalRate4Image';
+import {
+    verticalRate1Image, verticalRate2Image, verticalRate3Image,
+    verticalRate4Image, verticalRate5Image, verticalRate6Image
+} from './verticalRateImage';
 
-const style = {
-    border: "1px dashed gray",
-    backgroundColor: "white",
-    padding: "0.5rem 1rem",
-    marginRight: "1.5rem",
-    marginBottom: "1.5rem",
-    cursor: "move",
-    float: "left"
-};
 
-export function Box({ name, type, isDropped }) {
+export function Box({ name, type, isDropped, isBold, index }) {
     const [{ opacity, isDragging }, drag, preview] = useDrag(
         () => ({
             type,
@@ -27,10 +21,21 @@ export function Box({ name, type, isDropped }) {
     );
     return (
         <>
-            <DragPreviewImage connect={preview} src={verticalRate4Image} />
-            <div ref={drag} role="Box" style={{ ...style, opacity, cursor: isDragging ? "none" : "default" }}>
-                {isDropped ? <s>{name}</s> : name}
+            <DragPreviewImage connect={preview} src={ImageMapper(index)} />
+            <div ref={drag} role="Box" style={{ opacity, cursor: isDragging ? "none" : "default" }}>
+                {isDropped ? (isBold ? <strong><s>{name}</s></strong> : <s>{name}</s>) : (isBold ? <strong>{name}</strong> : name)}
             </div>
         </>
     );
+}
+
+function ImageMapper(index) {
+    switch (index) {
+        case 0: return verticalRate1Image;
+        case 1: return verticalRate2Image;
+        case 2: return verticalRate3Image;
+        case 3: return verticalRate4Image;
+        case 4: return verticalRate5Image;
+        case 5: return verticalRate6Image;
+    }
 }

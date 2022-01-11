@@ -9,6 +9,8 @@ import ReactStars from "react-rating-stars-component";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faSmile, faFrown } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Box } from "./Box";
+import { ItemTypes } from "./ItemTypes";
 
 import DemoContainer from './DemoContainer'
 
@@ -144,9 +146,10 @@ class MultiAttributeDemo extends React.Component {
                         }
                     </Card>
                     <Card id="cardStackVisual" body style={{ marginTop: "20px", display: 'none' }}>
-                        <div>{getTableVisualization(data)}</div>
+                        {/* <div>{getTableVisualization(data)}</div> */}
+                        <DemoContainer />
                     </Card>
-                    <DemoContainer />
+
                 </Row>
             </Container>
         );
@@ -317,9 +320,9 @@ function getTableBody(data) {
     for (let i = 0; i < attributes; i++) {
         children.push(
             <tr key={i}>
-                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p1, data.attributes[i].valueP1)}</td>
-                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p2, data.attributes[i].valueP2)}</td>
-                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p3, data.attributes[i].valueP3)}</td>
+                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p1, data.attributes[i].valueP1, ItemTypes.PRODUCT_1, i)}</td>
+                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p2, data.attributes[i].valueP2, ItemTypes.PRODUCT_2, i)}</td>
+                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p3, data.attributes[i].valueP3, ItemTypes.PRODUCT_3, i)}</td>
             </tr>
         );
     }
@@ -332,10 +335,10 @@ function getTableBody(data) {
  * @param {*} isBold 
  * @param {*} data 
  */
-function boldStyle(isBold, data) {
+function boldStyle(isBold, data, type, index) {
     if (isBold === 1) //true, bold
-        return (<strong>{data}</strong>);
-    else return (<>{data}</>);
+        return (<Box name={data} type={type} key={index} isBold={true} index={index} />);
+    else return (<Box name={data} type={type} key={index} isBold={false} index={index} />);
 }
 
 /**
