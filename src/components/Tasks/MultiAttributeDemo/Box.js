@@ -13,7 +13,7 @@ export function Box({ name, type, isDropped, isBold, index }) {
     const [{ opacity, isDragging }, drag, preview] = useDrag(
         () => ({
             type,
-            item: { rating },
+            item: { rating, name },
             collect: (monitor) => ({
                 isDragging: monitor.isDragging(),
                 opacity: isDragging ? 0.4 : 1

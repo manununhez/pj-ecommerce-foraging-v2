@@ -337,8 +337,8 @@ function getTableBody(data) {
  */
 function boldStyle(isBold, data, type, index) {
     if (isBold === 1) //true, bold
-        return (<Box name={data} type={type} key={index} isBold={true} index={index} />);
-    else return (<Box name={data} type={type} key={index} isBold={false} index={index} />);
+        return (<Box name={data} type={type} key={index} isBold={true} index={index} />)
+    else return data
 }
 
 /**

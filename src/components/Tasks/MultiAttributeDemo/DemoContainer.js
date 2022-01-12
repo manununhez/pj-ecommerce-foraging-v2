@@ -8,32 +8,38 @@ import update from "immutability-helper";
 
 export default function Container() {
     const [dustbins, setDustbins] = useState([
-        { accepts: [ItemTypes.PRODUCT_1], lastDroppedItem: [] },
-        { accepts: [ItemTypes.PRODUCT_2], lastDroppedItem: [] },
-        { accepts: [ItemTypes.PRODUCT_3], lastDroppedItem: [] }
+        { accepts: [ItemTypes.PRODUCT_1], lastDroppedItem: [], droppedBoxNames: [] },
+        { accepts: [ItemTypes.PRODUCT_2], lastDroppedItem: [], droppedBoxNames: [] },
+        { accepts: [ItemTypes.PRODUCT_3], lastDroppedItem: [], droppedBoxNames: [] }
     ]);
 
-    const [droppedBoxNames, setDroppedBoxNames] = useState([]);
-    function isDropped(boxName) {
-        return droppedBoxNames.indexOf(boxName) > -1;
+    function isNotDroppedYet(droppedBoxName, boxName) {
+        return droppedBoxName.indexOf(boxName) === -1;
     }
     const handleDrop = useCallback(
         (index, item) => {
+            const droppedBoxName = dustbins[index].droppedBoxNames
             const { name } = item;
-            setDroppedBoxNames(
-                update(droppedBoxNames, name ? { $push: [name] } : { $push: [] })
-            );
-            setDustbins(
-                update(dustbins, {
-                    [index]: {
-                        lastDroppedItem: {
-                            $push: [item]
+            // console.log(item)
+            // console.log(droppedBoxName)
+
+            if (isNotDroppedYet(droppedBoxName, name)) {
+                setDustbins(
+                    update(dustbins, {
+                        [index]: {
+                            lastDroppedItem: {
+                                $push: [item]
+                            },
+                            droppedBoxNames: {
+                                $push: [name]
+                            }
                         }
-                    }
-                })
-            );
+                    })
+                );
+            }
+
         },
-        [droppedBoxNames, dustbins]
+        [dustbins]
     );
     return (
         <Table borderless responsive style={{ textAlign: 'center' }}>
@@ -48,7 +54,7 @@ export default function Container() {
             <tbody>
                 <tr>
                     {dustbins.map(({ accepts, lastDroppedItem }, index) => (
-                        <td style={{ verticalAlign: 'bottom', height: '100%' }}>
+                        <td style={{ verticalAlign: 'bottom' }}>
                             <Dustbin
                                 accept={accepts}
                                 lastDroppedItem={lastDroppedItem}
