@@ -320,9 +320,9 @@ function getTableBody(data) {
     for (let i = 0; i < attributes; i++) {
         children.push(
             <tr key={i}>
-                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p1, data.attributes[i].valueP1, ItemTypes.PRODUCT_1, i)}</td>
-                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p2, data.attributes[i].valueP2, ItemTypes.PRODUCT_2, i)}</td>
-                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p3, data.attributes[i].valueP3, ItemTypes.PRODUCT_3, i)}</td>
+                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p1, data.attributes[i].valueP1, ItemTypes.PRODUCT_1, 6 - i)}</td>
+                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p2, data.attributes[i].valueP2, ItemTypes.PRODUCT_2, 6 - i)}</td>
+                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p3, data.attributes[i].valueP3, ItemTypes.PRODUCT_3, 6 - i)}</td>
             </tr>
         );
     }

@@ -1,5 +1,9 @@
 import React from 'react';
 import { useDrop } from "react-dnd";
+import {
+    verticalRate1Image, verticalRate2Image, verticalRate3Image,
+    verticalRate4Image, verticalRate5Image, verticalRate6Image
+} from './verticalRateImage';
 
 const style = {
     color: 'white',
@@ -32,8 +36,22 @@ export function Dustbin({ accept, lastDroppedItem, onDrop }) {
             {/* {isActive
                 ? "Release to drop"
                 : `This dustbin accepts: ${accept.join(", ")}`} */}
-
-            {<p>Last dropped: {JSON.stringify([...lastDroppedItem].reverse())}</p>}
+            {lastDroppedItem.map(({rating}) => {
+                return (<p><img src={ImageMapperRating(rating - 1)}></img></p>)
+            })}
+            {/* {<p>Last dropped: {JSON.stringify([...lastDroppedItem].reverse())}</p>} */}
         </div>
     );
+}
+
+
+function ImageMapperRating(rating) {
+    switch (rating) {
+        case 1: return verticalRate1Image;
+        case 2: return verticalRate2Image;
+        case 3: return verticalRate3Image;
+        case 4: return verticalRate4Image;
+        case 5: return verticalRate5Image;
+        case 6: return verticalRate6Image;
+    }
 }
