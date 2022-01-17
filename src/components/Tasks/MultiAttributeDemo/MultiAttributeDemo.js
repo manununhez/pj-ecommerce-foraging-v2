@@ -197,7 +197,6 @@ class MultiAttributeDemo extends React.Component {
         const showFeedback = data.showFeedback
         const showError = false
         const textError = "TEXT ERROR"
-        const isOptionWasSelectedInThisRound = selectedOption.length === (counter + 1)
         const showFeedbackCorrectAnswer = selectedOption[counter] === data.correctAnswer
         return (
             <Container key={"KEY_" + counter}>
@@ -236,7 +235,6 @@ class MultiAttributeDemo extends React.Component {
                     </Card>
 
                 </Row>
-                {isOptionWasSelectedInThisRound ? <div><Footer text={TEXT_FOOTER} /></div> : <></>}
             </Container>
         );
     }
