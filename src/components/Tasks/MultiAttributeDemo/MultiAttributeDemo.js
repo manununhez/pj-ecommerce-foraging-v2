@@ -13,6 +13,7 @@ import { Box } from "./Box";
 import { ItemTypes } from "./ItemTypes";
 
 import DemoContainer from './DemoContainer'
+import Footer from "../../Footers/Footer";
 
 import {
     FIRST_TASK_PROPERTIES_TOTAL, FIRST_RADIO_VALUE, SECOND_RADIO_VALUE, WHITE, BLACK,
@@ -21,36 +22,60 @@ import {
 } from '../../../helpers/constants';
 
 
-const attributeLists = [{
-    id: 31, showFeedback: "YES", showVisualStack: "YES", correctAnswer: 3, attributes: [
-        { id: "A3", p1: 1, p2: 0, p3: 0, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+", valueP3: "A++" },
-        { id: "A5", p1: 1, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "40", valueP2: "50", valueP3: "50" },
-        { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "45", valueP3: "45" },
-        { id: "A6", p1: 1, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
-        { id: "A2", p1: 1, p2: 1, p3: 1, name: "Pojemność bębna", valueP1: "10", valueP2: "10", valueP3: "10" },
-        { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1200", valueP3: "1400" },
-    ]
-},
-{
-    id: 32, showFeedback: "NO", showVisualStack: "NO", correctAnswer: 3, attributes: [
-        { id: "A3", p1: 0, p2: 1, p3: 0, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+", valueP3: "A++" },
-        { id: "A5", p1: 0, p2: 1, p3: 0, name: "Zużycie wody", valueP1: "40", valueP2: "50", valueP3: "50" },
-        { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "45", valueP3: "45" },
-        { id: "A6", p1: 1, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
-        { id: "A2", p1: 1, p2: 1, p3: 1, name: "Pojemność bębna", valueP1: "10", valueP2: "10", valueP3: "10" },
-        { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1200", valueP3: "1400" },
-    ]
-}
+const attributeLists = [
+    {
+        id: 31, showFeedback: "YES", showVisualStack: "YES", correctAnswer: "3", attributes: [
+            { id: "A3", p1: 1, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+", valueP3: "A++" },
+            { id: "A5", p1: 1, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "40", valueP2: "50", valueP3: "50" },
+            { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "45", valueP3: "45" },
+            { id: "A6", p1: 0, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
+            { id: "A2", p1: 0, p2: 1, p3: 1, name: "Pojemność bębna", valueP1: "4", valueP2: "10", valueP3: "10" },
+            { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1200", valueP3: "1400" },
+        ]
+    },
+    {
+        id: 32, showFeedback: "NO", showVisualStack: "YES", correctAnswer: "1", attributes: [
+            { id: "A3", p1: 0, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A", valueP2: "A", valueP3: "A++" },
+            { id: "A5", p1: 1, p2: 1, p3: 0, name: "Zużycie wody", valueP1: "45", valueP2: "45", valueP3: "65" },
+            { id: "A4", p1: 1, p2: 0, p3: 1, name: "Poziom hałasu", valueP1: "60", valueP2: "70", valueP3: "60" },
+            { id: "A6", p1: 1, p2: 0, p3: 0, name: "Program szybki", valueP1: "jest", valueP2: "brak", valueP3: "brak" },
+            { id: "A2", p1: 0, p2: 0, p3: 0, name: "Pojemność bębna", valueP1: "4", valueP2: "4", valueP3: "4" },
+            { id: "A1", p1: 0, p2: 1, p3: 0, name: "Maksymalne obroty", valueP1: "1000", valueP2: "1400", valueP3: "1000" },
+        ]
+    },
+    {
+        id: 33, showFeedback: "YES", showVisualStack: "NO", correctAnswer: "3", attributes: [
+            { id: "A3", p1: 0, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A", valueP2: "A", valueP3: "A++" },
+            { id: "A5", p1: 1, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "45", valueP2: "65", valueP3: "65" },
+            { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "70", valueP2: "60", valueP3: "60" },
+            { id: "A6", p1: 0, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
+            { id: "A2", p1: 1, p2: 1, p3: 0, name: "Pojemność bębna", valueP1: "8", valueP2: "8", valueP3: "4" },
+            { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1000", valueP3: "1400" },
+        ]
+    },
+    {
+        id: 34, showFeedback: "NO", showVisualStack: "YES", correctAnswer: "3", attributes: [
+            { id: "A3", p1: 0, p2: 1, p3: 1, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+++", valueP3: "A+++" },
+            { id: "A5", p1: 0, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "50", valueP2: "50", valueP3: "50" },
+            { id: "A4", p1: 0, p2: 0, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "50", valueP3: "40" },
+            { id: "A6", p1: 0, p2: 0, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "brak", valueP3: "brak" },
+            { id: "A2", p1: 0, p2: 0, p3: 0, name: "Pojemność bębna", valueP1: "8", valueP2: "8", valueP3: "8" },
+            { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1600", valueP2: "1200", valueP3: "1600" },
+        ]
+    },
 ];
+
 
 class MultiAttributeDemo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             selectedOption: [],
-            counter: 0
+            counter: 0,
+            multiAttributeResults: [],
+            showMissingResultsIndicator: false,
+            modalOpen: false
         }
-        this.toogle = this._toggle.bind(this)
     }
 
     componentDidMount() {
@@ -74,15 +99,57 @@ class MultiAttributeDemo extends React.Component {
             console.log("SPACE_KEY_CODE")
             console.log(this.state)
             const { selectedOption, counter } = this.state
+            const isOptionWasSelectedInThisRound = selectedOption.length === (counter + 1)
 
-            if (selectedOption.length === (counter + 1)) {
-                this.setState({ counter: (counter + 1) })
+            if (isOptionWasSelectedInThisRound) {
+                if (this.allOptionsWereSelected()) {
+                    if (attributeLists.length === selectedOption.length) {
+                        console.log('this.props.action')
+                        this.props.action(selectedOption);
+                    } else {
+                        this.setState({ counter: (counter + 1), modalOpen: false }, () => {
+                            console.log("NEXT ROUND")
+                        })
+                    }
+                } else {
+                    this.setState({ showMissingResultsIndicator: true, modalOpen: false }, () => {
+                        console.log("SHOW MISSING RESULTS")
+                        console.log(this.state)
+                    })
+                }
             }
         }
     }
 
-    _toggle(evt) {
+    allOptionsWereSelected() {
+        const { multiAttributeResults, counter } = this.state
+
+        if (multiAttributeResults.length === 0) return false
+
+        const data = attributeLists[counter]
+        console.log(data)
+        for (let i = 0; i < FIRST_TASK_PROPERTIES_TOTAL; i++) {
+            console.log(data.attributes[i])
+            let isAttributeP1Bold = data.attributes[i].p1 === 1
+            let isAttributeP2Bold = data.attributes[i].p2 === 1
+            let isAttributeP3Bold = data.attributes[i].p3 === 1
+
+            let isCurrentValueP1NotDroppedYet = !multiAttributeResults[0].droppedBoxNames.includes(data.attributes[i].valueP1)
+            let isCurrentValueP2NotDroppedYet = !multiAttributeResults[1].droppedBoxNames.includes(data.attributes[i].valueP2)
+            let isCurrentValueP3NotDroppedYet = !multiAttributeResults[2].droppedBoxNames.includes(data.attributes[i].valueP3)
+
+            if ((isAttributeP1Bold && isCurrentValueP1NotDroppedYet) || (isAttributeP2Bold && isCurrentValueP2NotDroppedYet)
+                || (isAttributeP3Bold && isCurrentValueP3NotDroppedYet)) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    optionClicked = (evt) => {
         const { selectedOption, counter } = this.state
+        const isOptionWasSelectedInThisRound = selectedOption.length === (counter + 1)
 
         let selectedValue = evt.target.value
 
@@ -90,16 +157,25 @@ class MultiAttributeDemo extends React.Component {
 
         if (selectedOption.length === 0 || selectedOption.length < (counter + 1)) {
             selectedOption.push(selectedValue)
-        } else if (selectedOption.length === (counter + 1)) {
+        } else if (isOptionWasSelectedInThisRound) {
             selectedOption[counter] = selectedValue
         }
 
         // this.props.action(selectedValue);
 
-        this.setState({ selectedOption: selectedOption },
+        console.log('option clicked')
+
+        this.setState({ selectedOption: selectedOption, modalOpen: true },
             () => {
                 console.log(this.state)
             })
+    }
+
+    toggle = () => {
+        console.log(this.state)
+        this.setState({
+            modalOpen: !this.state.modalOpen
+        });
     }
 
     _stackDisplay() {
@@ -107,14 +183,22 @@ class MultiAttributeDemo extends React.Component {
         document.getElementById("btnShowStack").style.display = "none";
     }
 
+    multiAttributeResultsHandler = (attributeResults) => {
+        console.log("RESULTS")
+        console.log(attributeResults)
+
+        this.setState({ multiAttributeResults: attributeResults.results, showMissingResultsIndicator: false })
+    }
+
 
     render() {
-        const { counter, selectedOption } = this.state
+        const { counter, selectedOption, showMissingResultsIndicator, multiAttributeResults, modalOpen } = this.state
         const data = attributeLists[counter]
         const showFeedback = data.showFeedback
-        const modalOpen = false
         const showError = false
         const textError = "TEXT ERROR"
+        const isOptionWasSelectedInThisRound = selectedOption.length === (counter + 1)
+        const showFeedbackCorrectAnswer = selectedOption[counter] === data.correctAnswer
         return (
             <Container key={"KEY_" + counter}>
                 <Alert style={{ fontSize: "1.0rem" }} color="warning" isOpen={showError}>
@@ -122,12 +206,14 @@ class MultiAttributeDemo extends React.Component {
                         {textError}
                     </span>
                 </Alert>
-                <Modal returnFocusAfterClose={modalOpen} isOpen={modalOpen} style={{ position: "fixed", top: "40%", left: "45%", transform: "translate(-40%, -40%)" }}>
+                <Modal isOpen={modalOpen} toggle={this.toggle} style={{ position: "fixed", top: "40%", left: "45%", transform: "translate(-40%, -40%)" }}>
                     <ModalHeader style={{ padding: "4em" }}>
                         {/* if showsFeedback -- we take the first element of the showFeedback column attribute*/}
                         {(showFeedback === SHOW_FEEDBACK_TRUE)
                             ? <div style={{ textAlign: "center" }}>
-                                <FontAwesomeIcon color="green" icon={faSmile} size="4x" />
+                                {/* if correct Answer */}
+                                {showFeedbackCorrectAnswer ? <FontAwesomeIcon color="green" icon={faSmile} size="4x" />
+                                    : <FontAwesomeIcon color="red" icon={faFrown} size="4x" />}
                             </div>
                             : <></>
                         }
@@ -139,46 +225,32 @@ class MultiAttributeDemo extends React.Component {
                         <div>{getRatingStarBarTable(data)}</div>
                     </Card>
                     <Card body style={{ marginTop: "20px" }}>
-                        <div>{getTable(selectedOption[counter - 1], data, this.toggle)}</div>
+                        <div>{getTable(selectedOption[counter], data, this.optionClicked, showMissingResultsIndicator, multiAttributeResults)}</div>
                         {(data.showVisualStack === "YES") ?
                             <Button id="btnShowStack" onClick={() => this._stackDisplay()}> Show me the levels</Button>
                             : <></>
                         }
                     </Card>
                     <Card id="cardStackVisual" body style={{ marginTop: "20px", display: 'none' }}>
-                        {/* <div>{getTableVisualization(data)}</div> */}
-                        <DemoContainer />
+                        <DemoContainer action={this.multiAttributeResultsHandler} />
                     </Card>
 
                 </Row>
+                {isOptionWasSelectedInThisRound ? <div><Footer text={TEXT_FOOTER} /></div> : <></>}
             </Container>
         );
     }
 }
 
-function getTableVisualization(data) {
-    return (<Table borderless responsive style={{ textAlign: 'center' }}>
-        <thead>
-            <tr>
-                <th><h5>Product 1</h5></th>
-                <th><h5>Product 2</h5></th>
-                <th><h5>Product 3</h5></th>
-            </tr>
 
-        </thead>
-        <tbody>
-            {getTableVisualizationBody(data)}
-        </tbody>
-    </Table>)
-}
 /**
  * 
  * @param {*} data 
  * @param {*} counter 
  * @param {*} selectedValue 
- * @param {*} toggle 
+ * @param {*} onClick 
  */
-function getTable(selectedValue, data, toggle) {
+function getTable(selectedValue, data, onClick, showMissingResultsIndicator, multiAttributeResults) {
     return (
         <Table responsive style={{ textAlign: 'center' }}>
             <thead>
@@ -187,28 +259,28 @@ function getTable(selectedValue, data, toggle) {
                         <button color="primary" id={"btn_" + FIRST_RADIO_VALUE}
                             className={selectedValue === FIRST_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length
                             style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
-                            onClick={toggle} value={FIRST_RADIO_VALUE}>
+                            onClick={onClick} value={FIRST_RADIO_VALUE}>
                             Product 1
                         </button>
                     </th>
                     <th>
                         <button color="primary" id={"btn_" + SECOND_RADIO_VALUE}
                             className={selectedValue === SECOND_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
-                            onClick={toggle} value={SECOND_RADIO_VALUE}>
+                            onClick={onClick} value={SECOND_RADIO_VALUE}>
                             Product 2
                         </button>
                     </th>
                     <th>
                         <button color="primary" id={"btn_" + THIRD_RADIO_VALUE}
                             className={selectedValue === THIRD_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
-                            onClick={toggle} value={THIRD_RADIO_VALUE}>
+                            onClick={onClick} value={THIRD_RADIO_VALUE}>
                             Product 3
                         </button>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                {getTableBody(data)}
+                {getTableBody(data, showMissingResultsIndicator, multiAttributeResults)}
             </tbody>
         </Table>
     );
@@ -219,110 +291,38 @@ function getTable(selectedValue, data, toggle) {
  * @param {*} data 
  * @param {*} counter 
  */
-function getTableVisualizationBody(data) {
-    return (<tr>
-        <td style={{ verticalAlign: 'bottom' }}>
-            <Table responsive borderless>
-                <thead></thead>
-                <tbody>
-                    {getPropertiesTableVizualizationBodyProduct1(data)}
-                </tbody>
-            </Table>
-        </td>
-        <td style={{ verticalAlign: 'bottom' }}>
-            <Table responsive borderless>
-                <thead></thead>
-                <tbody>
-                    {getPropertiesTableVizualizationBodyProduct2(data)}
-                </tbody>
-            </Table>
-        </td>
-        <td style={{ verticalAlign: 'bottom' }}>
-            <Table responsive borderless>
-                <thead></thead>
-                <tbody>
-                    {getPropertiesTableVizualizationBodyProduct3(data)}
-                </tbody>
-            </Table>
-        </td>
-    </tr>
-    );
-}
-
-function getPropertiesTableVizualizationBodyProduct1(data) {
+function getTableBody(data, showMissingResultsIndicator, multiAttributeResults) {
     let children = []
     let attributes = FIRST_TASK_PROPERTIES_TOTAL
-    for (let i = attributes - 1; i >= 0; i--) {
-        if (data.attributes[i].p1 === 1) {
-            children.push(
-                <tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em' }}>
-                    {getPropertiesVerticalRating(FIRST_TASK_PROPERTIES_TOTAL - i)}
-                </tr>);
-        }
-    }
-
-    return children
-}
-
-function getPropertiesTableVizualizationBodyProduct2(data) {
-    let children = []
-    let attributes = FIRST_TASK_PROPERTIES_TOTAL
-    for (let i = attributes - 1; i >= 0; i--) {
-        if (data.attributes[i].p2 === 1) {
-            children.push(
-                <tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em' }}>
-                    {getPropertiesVerticalRating(FIRST_TASK_PROPERTIES_TOTAL - i)}
-                </tr>);
-        }
-    }
-    return children
-
-}
-
-function getPropertiesTableVizualizationBodyProduct3(data) {
-    let children = []
-    let attributes = FIRST_TASK_PROPERTIES_TOTAL
-    for (let i = attributes - 1; i >= 0; i--) {
-        if (data.attributes[i].p3 === 1) {
-            children.push(
-                <tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em' }}>
-                    {getPropertiesVerticalRating(FIRST_TASK_PROPERTIES_TOTAL - i)}
-                </tr>
-            );
-        }
-    }
-    return children
-
-}
-
-function getPropertiesVerticalRating(value) {
-    let children = []
-    for (let i = 0; i < value; i++) {
-        children.push(
-            <tr>
-                <td style={{ padding: '0' }}>
-                    <FontAwesomeIcon icon={faPlus} />
-                </td>
-            </tr>
-        )
-    }
-    return children
-}
-
-/**
- * 
- * @param {*} data 
- * @param {*} counter 
- */
-function getTableBody(data) {
-    let children = []
-    let attributes = FIRST_TASK_PROPERTIES_TOTAL
+    console.log(multiAttributeResults)
     for (let i = 0; i < attributes; i++) {
+        let index = 6 - i
+        let showIndicatorP1 = false
+        let showIndicatorP2 = false
+        let showIndicatorP3 = false
+        let isAttributeP1Bold = data.attributes[i].p1 === 1
+        let isAttributeP2Bold = data.attributes[i].p2 === 1
+        let isAttributeP3Bold = data.attributes[i].p3 === 1
+        let isCurrentValueP1NotDroppedYet = true
+        let isCurrentValueP2NotDroppedYet = true
+        let isCurrentValueP3NotDroppedYet = true
+
+
+        if (multiAttributeResults.length > 0) {
+            isCurrentValueP1NotDroppedYet = !multiAttributeResults[0].droppedBoxNames.includes(data.attributes[i].valueP1)
+            isCurrentValueP2NotDroppedYet = !multiAttributeResults[1].droppedBoxNames.includes(data.attributes[i].valueP2)
+            isCurrentValueP3NotDroppedYet = !multiAttributeResults[2].droppedBoxNames.includes(data.attributes[i].valueP3)
+
+            showIndicatorP1 = showMissingResultsIndicator && isAttributeP1Bold && isCurrentValueP1NotDroppedYet
+            showIndicatorP2 = showMissingResultsIndicator && isAttributeP2Bold && isCurrentValueP2NotDroppedYet
+            showIndicatorP3 = showMissingResultsIndicator && isAttributeP3Bold && isCurrentValueP3NotDroppedYet
+        }
+
         children.push(
             <tr key={i}>
-                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p1, data.attributes[i].valueP1, ItemTypes.PRODUCT_1, 6 - i)}</td>
-                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p2, data.attributes[i].valueP2, ItemTypes.PRODUCT_2, 6 - i)}</td>
-                <td style={{ fontSize: '1.3em' }}>{boldStyle(data.attributes[i].p3, data.attributes[i].valueP3, ItemTypes.PRODUCT_3, 6 - i)}</td>
+                <td style={{ fontSize: '1.3em' }}>{boldStyle(isAttributeP1Bold, data.attributes[i].valueP1, ItemTypes.PRODUCT_1, index, showIndicatorP1, isCurrentValueP1NotDroppedYet)}</td>
+                <td style={{ fontSize: '1.3em' }}>{boldStyle(isAttributeP2Bold, data.attributes[i].valueP2, ItemTypes.PRODUCT_2, index, showIndicatorP2, isCurrentValueP2NotDroppedYet)}</td>
+                <td style={{ fontSize: '1.3em' }}>{boldStyle(isAttributeP3Bold, data.attributes[i].valueP3, ItemTypes.PRODUCT_3, index, showIndicatorP3, isCurrentValueP3NotDroppedYet)}</td>
             </tr>
         );
     }
@@ -335,9 +335,11 @@ function getTableBody(data) {
  * @param {*} isBold 
  * @param {*} data 
  */
-function boldStyle(isBold, data, type, index) {
-    if (isBold === 1) //true, bold
-        return (<Box name={data} type={type} key={index} isBold={true} index={index} />)
+function boldStyle(isBold, data, type, index, showIndicator, isDragActive) {
+    if (isBold && isDragActive)
+        return (<Box name={data} type={type} key={index} index={index} showIndicator={showIndicator} />)
+    else if (!isDragActive)
+        return <strong>{data}</strong>
     else return data
 }
 

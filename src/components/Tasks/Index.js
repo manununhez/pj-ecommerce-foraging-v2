@@ -868,6 +868,8 @@ class Index extends Component {
                 if (data.isValid) this._goToNextTaskInInputNavigation();
             } else if (screen === constant.MULTRIATTRIBUTE_SCREEN) {
                 this._goToNextTaskInInputNavigation();
+            } else if (screen === constant.MULTRIATTRIBUTE_DEMO_SCREEN) {
+                this._goToNextTaskInInputNavigation();
             } else if (screen === constant.USER_FORM_SCREEN) {
                 // let data = this.validateForm();
 
@@ -1067,7 +1069,7 @@ class Index extends Component {
         const timeout = 1000 * 60 * (60 * 3); //3horas
         return (
             <DndProvider backend={HTML5Backend}>
-                <section style={{ paddingBottom: "2rem" }}>
+                <section className="section-sm">
                     <div id="content" style={{ marginTop: "20px", marginBottom: "20px" }}>
                         {changePages(this.state, this)}
                     </div>

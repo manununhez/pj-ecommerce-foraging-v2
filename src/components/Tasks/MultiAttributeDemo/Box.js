@@ -7,7 +7,7 @@ import {
 } from './verticalRateImage';
 
 
-export function Box({ name, type, isDropped, isBold, index }) {
+export function Box({ name, type, index, showIndicator }) {
     const rating = index + 1
 
     const [{ opacity, isDragging }, drag, preview] = useDrag(
@@ -24,8 +24,8 @@ export function Box({ name, type, isDropped, isBold, index }) {
     return (
         <>
             <DragPreviewImage connect={preview} src={ImageMapperRating(index)} />
-            <div ref={drag} role="Box" style={{ opacity, cursor: isDragging ? "none" : "default" }}>
-                {isDropped ? (isBold ? <strong><s>{name}</s></strong> : <s>{name}</s>) : (isBold ? <strong>{name}</strong> : name)}
+            <div ref={drag} role="Box" style={{ opacity, cursor: isDragging ? "none" : "default", border: showIndicator ? '1px solid green' : '' }}>
+                {<strong>{name}</strong>}
             </div>
         </>
     );

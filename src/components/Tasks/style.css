@@ -14,15 +14,12 @@
 }
 
 /* INdex */
-/* .section-sm {
+ .section-sm {
     margin-top: 20px;
     margin-bottom: 20px;
-    /* min-height: 500px; */
-    /* max-height: 500px; */
-    /* overflow: hidden; */
-    /* padding-top: 1rem; */
-    /* padding-bottom: 2rem; */
-/* }  */
+    min-height: 500px;
+    padding-bottom: 2rem;
+ } 
 
 /* .section-sm-content {
   max-height: 500px;

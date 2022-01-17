@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import { Table } from "reactstrap";
 
@@ -6,7 +6,7 @@ import { Dustbin } from "./Dustbin";
 import { ItemTypes } from "./ItemTypes";
 import update from "immutability-helper";
 
-export default function Container() {
+export default function Container(props) {
     const [dustbins, setDustbins] = useState([
         { accepts: [ItemTypes.PRODUCT_1], lastDroppedItem: [], droppedBoxNames: [] },
         { accepts: [ItemTypes.PRODUCT_2], lastDroppedItem: [], droppedBoxNames: [] },
@@ -41,6 +41,14 @@ export default function Container() {
         },
         [dustbins]
     );
+
+    useEffect(() => {
+        props.action({
+            isTaskCompleted: false,
+            results: dustbins
+        })
+    }, [dustbins]);
+
     return (
         <Table borderless responsive style={{ textAlign: 'center' }}>
             <thead>
