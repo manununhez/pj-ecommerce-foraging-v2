@@ -8,10 +8,12 @@ const style = {
     color: 'white',
     textAlign: 'center',
     fontSize: '1rem',
-    height: '50vh',
+    height: '100%',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    position: 'relative'
 };
+
 export function Dustbin({ accept, lastDroppedItem, onDrop }) {
     const [{ isOver, canDrop }, drop] = useDrop({
         accept,
@@ -30,7 +32,7 @@ export function Dustbin({ accept, lastDroppedItem, onDrop }) {
     }
     return (
         <div ref={drop} role="Dustbin" style={{ ...style, backgroundColor, verticalAlign: 'bottom' }}>
-            <Table borderless responsive style={{ textAlign: 'center' }}>
+            <Table borderless responsive style={{ position: 'absolute', bottom: 0 }}>
                 <thead></thead>
                 <tbody>
                     {[...lastDroppedItem].reverse().map(({ rating }) => {

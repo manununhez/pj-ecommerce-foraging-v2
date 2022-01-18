@@ -50,7 +50,7 @@ export default function Container(props) {
     }, [dustbins]);
 
     return (
-        <Table borderless responsive style={{ textAlign: 'center' }}>
+        <Table borderless responsive style={{ textAlign: 'center', height: '600px' }}>
             <thead>
                 <tr>
                     <th><h5>Product 1</h5></th>
@@ -62,7 +62,7 @@ export default function Container(props) {
             <tbody>
                 <tr>
                     {dustbins.map(({ accepts, lastDroppedItem }, index) => (
-                        <td style={{ verticalAlign: 'bottom' }}>
+                        <td style={{ height: '100%' }}>
                             <Dustbin
                                 accept={accepts}
                                 lastDroppedItem={lastDroppedItem}

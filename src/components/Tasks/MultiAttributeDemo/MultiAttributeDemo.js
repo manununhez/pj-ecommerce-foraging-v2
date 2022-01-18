@@ -34,7 +34,7 @@ const attributeLists = [
         ]
     },
     {
-        id: 32, showFeedback: "NO", showVisualStack: "YES", correctAnswer: "1", attributes: [
+        id: 32, showFeedback: "YES", showVisualStack: "YES", correctAnswer: "1", attributes: [
             { id: "A3", p1: 0, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A", valueP2: "A", valueP3: "A++" },
             { id: "A5", p1: 1, p2: 1, p3: 0, name: "Zużycie wody", valueP1: "45", valueP2: "45", valueP3: "65" },
             { id: "A4", p1: 1, p2: 0, p3: 1, name: "Poziom hałasu", valueP1: "60", valueP2: "70", valueP3: "60" },
@@ -54,7 +54,7 @@ const attributeLists = [
         ]
     },
     {
-        id: 34, showFeedback: "NO", showVisualStack: "YES", correctAnswer: "3", attributes: [
+        id: 34, showFeedback: "YES", showVisualStack: "YES", correctAnswer: "3", attributes: [
             { id: "A3", p1: 0, p2: 1, p3: 1, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+++", valueP3: "A+++" },
             { id: "A5", p1: 0, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "50", valueP2: "50", valueP3: "50" },
             { id: "A4", p1: 0, p2: 0, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "50", valueP3: "40" },
@@ -178,11 +178,6 @@ class MultiAttributeDemo extends React.Component {
         });
     }
 
-    _stackDisplay() {
-        document.getElementById("cardStackVisual").style.display = "";
-        document.getElementById("btnShowStack").style.display = "none";
-    }
-
     multiAttributeResultsHandler = (attributeResults) => {
         console.log("RESULTS")
         console.log(attributeResults)
@@ -225,12 +220,8 @@ class MultiAttributeDemo extends React.Component {
                     </Card>
                     <Card body style={{ marginTop: "20px" }}>
                         <div>{getTable(selectedOption[counter], data, this.optionClicked, showMissingResultsIndicator, multiAttributeResults)}</div>
-                        {(data.showVisualStack === "YES") ?
-                            <Button id="btnShowStack" onClick={() => this._stackDisplay()}> Show me the levels</Button>
-                            : <></>
-                        }
                     </Card>
-                    <Card id="cardStackVisual" body style={{ marginTop: "20px", display: 'none' }}>
+                    <Card id="cardStackVisual" body style={{ marginTop: "20px" }}>
                         <DemoContainer action={this.multiAttributeResultsHandler} />
                     </Card>
 
