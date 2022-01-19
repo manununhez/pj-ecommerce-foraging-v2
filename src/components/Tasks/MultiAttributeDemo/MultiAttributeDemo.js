@@ -1,7 +1,7 @@
 import React from 'react';
 
 // reactstrap components
-import { Card, Button, Container, Row, Table, Alert, Modal, ModalHeader } from "reactstrap";
+import { Card, Container, Row, Button, Table, Modal, ModalHeader } from "reactstrap";
 
 import ReactStars from "react-rating-stars-component";
 
@@ -11,9 +11,7 @@ import { faSmile, faFrown } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box } from "./Box";
 import { ItemTypes } from "./ItemTypes";
-
 import DemoContainer from './DemoContainer'
-import Footer from "../../Footers/Footer";
 
 import {
     FIRST_TASK_PROPERTIES_TOTAL, FIRST_RADIO_VALUE, SECOND_RADIO_VALUE, WHITE, BLACK,
@@ -21,7 +19,12 @@ import {
     EVENT_KEY_DOWN
 } from '../../../helpers/constants';
 
-
+const modaltStyle = {
+    position: "fixed",
+    top: "35%",
+    left: "35%",
+    ransform: "translate(-40%, -40%)"
+}
 const attributeLists = [
     {
         id: 31, showFeedback: "YES", showVisualStack: "YES", correctAnswer: "3", attributes: [
@@ -52,17 +55,7 @@ const attributeLists = [
             { id: "A2", p1: 1, p2: 1, p3: 0, name: "Pojemność bębna", valueP1: "8", valueP2: "8", valueP3: "4" },
             { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1000", valueP3: "1400" },
         ]
-    },
-    {
-        id: 34, showFeedback: "YES", showVisualStack: "YES", correctAnswer: "3", attributes: [
-            { id: "A3", p1: 0, p2: 1, p3: 1, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+++", valueP3: "A+++" },
-            { id: "A5", p1: 0, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "50", valueP2: "50", valueP3: "50" },
-            { id: "A4", p1: 0, p2: 0, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "50", valueP3: "40" },
-            { id: "A6", p1: 0, p2: 0, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "brak", valueP3: "brak" },
-            { id: "A2", p1: 0, p2: 0, p3: 0, name: "Pojemność bębna", valueP1: "8", valueP2: "8", valueP3: "8" },
-            { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1600", valueP2: "1200", valueP3: "1600" },
-        ]
-    },
+    }
 ];
 
 
@@ -96,26 +89,22 @@ class MultiAttributeDemo extends React.Component {
 
     handleKeyDownEvent = (event) => {
         if (event.keyCode === SPACE_KEY_CODE) {
-            console.log("SPACE_KEY_CODE")
-            console.log(this.state)
             const { selectedOption, counter } = this.state
             const isOptionWasSelectedInThisRound = selectedOption.length === (counter + 1)
+            const completedTask = this.allOptionsWereSelected()
 
             if (isOptionWasSelectedInThisRound) {
-                if (this.allOptionsWereSelected()) {
+                if (completedTask) {
                     if (attributeLists.length === selectedOption.length) {
-                        console.log('this.props.action')
                         this.props.action(selectedOption);
                     } else {
-                        this.setState({ counter: (counter + 1), modalOpen: false }, () => {
+                        this.setState({
+                            counter: (counter + 1),
+                            modalOpen: false
+                        }, () => {
                             console.log("NEXT ROUND")
                         })
                     }
-                } else {
-                    this.setState({ showMissingResultsIndicator: true, modalOpen: false }, () => {
-                        console.log("SHOW MISSING RESULTS")
-                        console.log(this.state)
-                    })
                 }
             }
         }
@@ -123,13 +112,11 @@ class MultiAttributeDemo extends React.Component {
 
     allOptionsWereSelected() {
         const { multiAttributeResults, counter } = this.state
+        const data = attributeLists[counter]
 
         if (multiAttributeResults.length === 0) return false
 
-        const data = attributeLists[counter]
-        console.log(data)
         for (let i = 0; i < FIRST_TASK_PROPERTIES_TOTAL; i++) {
-            console.log(data.attributes[i])
             let isAttributeP1Bold = data.attributes[i].p1 === 1
             let isAttributeP2Bold = data.attributes[i].p2 === 1
             let isAttributeP3Bold = data.attributes[i].p3 === 1
@@ -153,7 +140,7 @@ class MultiAttributeDemo extends React.Component {
 
         let selectedValue = evt.target.value
 
-        console.log(evt)
+        evt.target.blur() //remove focus of selected button
 
         if (selectedOption.length === 0 || selectedOption.length < (counter + 1)) {
             selectedOption.push(selectedValue)
@@ -163,8 +150,6 @@ class MultiAttributeDemo extends React.Component {
 
         // this.props.action(selectedValue);
 
-        console.log('option clicked')
-
         this.setState({ selectedOption: selectedOption, modalOpen: true },
             () => {
                 console.log(this.state)
@@ -172,54 +157,50 @@ class MultiAttributeDemo extends React.Component {
     }
 
     toggle = () => {
-        console.log(this.state)
-        this.setState({
-            modalOpen: !this.state.modalOpen
-        });
+        const { selectedOption } = this.state
+        const completedTask = this.allOptionsWereSelected()
+
+        if (completedTask) {
+            this.setState({
+                modalOpen: !this.state.modalOpen
+            });
+        } else {
+            selectedOption.pop() //removed button selection
+            this.setState({
+                modalOpen: !this.state.modalOpen,
+                selectedOption: selectedOption,
+                showMissingResultsIndicator: true
+            });
+        }
     }
 
     multiAttributeResultsHandler = (attributeResults) => {
-        console.log("RESULTS")
-        console.log(attributeResults)
-
-        this.setState({ multiAttributeResults: attributeResults.results, showMissingResultsIndicator: false })
+        this.setState({
+            multiAttributeResults: attributeResults.results,
+            showMissingResultsIndicator: false
+        })
     }
 
 
     render() {
-        const { counter, selectedOption, showMissingResultsIndicator, multiAttributeResults, modalOpen } = this.state
+        const { counter, selectedOption, showMissingResultsIndicator,
+            multiAttributeResults, modalOpen } = this.state
         const data = attributeLists[counter]
         const showFeedback = data.showFeedback
-        const showError = false
-        const textError = "TEXT ERROR"
         const showFeedbackCorrectAnswer = selectedOption[counter] === data.correctAnswer
+        const completedTask = this.allOptionsWereSelected()
         return (
             <Container key={"KEY_" + counter}>
-                <Alert style={{ fontSize: "1.0rem" }} color="warning" isOpen={showError}>
-                    <span className="alert-inner--text ml-1">
-                        {textError}
-                    </span>
-                </Alert>
-                <Modal isOpen={modalOpen} toggle={this.toggle} style={{ position: "fixed", top: "40%", left: "45%", transform: "translate(-40%, -40%)" }}>
-                    <ModalHeader style={{ padding: "4em" }}>
-                        {/* if showsFeedback -- we take the first element of the showFeedback column attribute*/}
-                        {(showFeedback === SHOW_FEEDBACK_TRUE)
-                            ? <div style={{ textAlign: "center" }}>
-                                {/* if correct Answer */}
-                                {showFeedbackCorrectAnswer ? <FontAwesomeIcon color="green" icon={faSmile} size="4x" />
-                                    : <FontAwesomeIcon color="red" icon={faFrown} size="4x" />}
-                            </div>
-                            : <></>
-                        }
-                        <br /><div><h4>{TEXT_FOOTER}</h4></div>
-                    </ModalHeader>
+                <Modal isOpen={modalOpen} toggle={this.toggle} style={modaltStyle}>
+                    {getModalText(showFeedback, showFeedbackCorrectAnswer, completedTask)}
                 </Modal>
                 <Row className="justify-content-center">
                     <Card body style={{ marginTop: "20px" }}>
                         <div>{getRatingStarBarTable(data)}</div>
                     </Card>
                     <Card body style={{ marginTop: "20px" }}>
-                        <div>{getTable(selectedOption[counter], data, this.optionClicked, showMissingResultsIndicator, multiAttributeResults)}</div>
+                        <div>{getTable(selectedOption[counter], data, this.optionClicked,
+                            showMissingResultsIndicator, multiAttributeResults)}</div>
                     </Card>
                     <Card id="cardStackVisual" body style={{ marginTop: "20px" }}>
                         <DemoContainer action={this.multiAttributeResultsHandler} />
@@ -231,7 +212,26 @@ class MultiAttributeDemo extends React.Component {
     }
 }
 
+function getModalText(showFeedback, showFeedbackCorrectAnswer, completedTask) {
+    return (<ModalHeader style={{ padding: "4em" }}>
+        {completedTask ? getModalFeedback(showFeedback, showFeedbackCorrectAnswer) :
+            <div><h4>You did not finished yet. Please complete the stacks.</h4></div>}
+    </ModalHeader>)
+}
 
+function getModalFeedback(showFeedback, showFeedbackCorrectAnswer) {
+    return (
+        <>
+            {(showFeedback === SHOW_FEEDBACK_TRUE) ?
+                <div style={{ textAlign: "center" }}>
+                    {showFeedbackCorrectAnswer ? <FontAwesomeIcon color="green" icon={faSmile} size="4x" />
+                        : <FontAwesomeIcon color="red" icon={faFrown} size="4x" />}
+                </div>
+                : <></>}
+            <br /><div><h4>{TEXT_FOOTER}</h4></div>
+        </>
+    )
+}
 /**
  * 
  * @param {*} data 
@@ -245,26 +245,26 @@ function getTable(selectedValue, data, onClick, showMissingResultsIndicator, mul
             <thead>
                 <tr>
                     <th>
-                        <button color="primary" id={"btn_" + FIRST_RADIO_VALUE}
-                            className={selectedValue === FIRST_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length
+                        <Button color="primary" id={"btn_" + FIRST_RADIO_VALUE}
+                            className={selectedValue === FIRST_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"}
                             style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
                             onClick={onClick} value={FIRST_RADIO_VALUE}>
                             Product 1
-                        </button>
+                        </Button>
                     </th>
                     <th>
-                        <button color="primary" id={"btn_" + SECOND_RADIO_VALUE}
-                            className={selectedValue === SECOND_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
+                        <Button color="primary" id={"btn_" + SECOND_RADIO_VALUE}
+                            className={selectedValue === SECOND_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"}
                             onClick={onClick} value={SECOND_RADIO_VALUE}>
                             Product 2
-                        </button>
+                        </Button>
                     </th>
                     <th>
-                        <button color="primary" id={"btn_" + THIRD_RADIO_VALUE}
-                            className={selectedValue === THIRD_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
+                        <Button color="primary" id={"btn_" + THIRD_RADIO_VALUE}
+                            className={selectedValue === THIRD_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"}
                             onClick={onClick} value={THIRD_RADIO_VALUE}>
                             Product 3
-                        </button>
+                        </Button>
                     </th>
                 </tr>
             </thead>
