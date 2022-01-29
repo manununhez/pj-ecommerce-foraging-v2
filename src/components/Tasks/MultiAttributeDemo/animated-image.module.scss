@@ -1,0 +1,26 @@
+.image {
+    display: none;
+    margin: 0 auto;
+  }
+
+  .image[visibility='1'] {
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .image[translate='1'] {
+    -webkit-animation: translate 0.7s linear forwards;
+    animation: translate 0.7s linear forwards;
+  }
+
+  @keyframes translate {
+    0%{
+      -webkit-transform:translateX(0);
+      transform:translateX(0);
+  }
+    100%{
+        -webkit-transform:translateX(350px);
+        transform:translateX(350px);
+        opacity: 0.6;
+    }
+  }
