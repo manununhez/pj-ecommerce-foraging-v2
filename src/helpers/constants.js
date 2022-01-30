@@ -12,6 +12,58 @@ export const PRODUCT_MENU_BG_COLORS = [LIGHT_GRAY, "lightsteelblue", "antiquewhi
 
 export const TEXT_EMPTY = "";
 
+//MultiAttribute
+export const modaltStyle = {
+    position: "fixed",
+    top: "35%",
+    left: "35%",
+    ransform: "translate(-40%, -40%)"
+}
+export const ItemTypes = {
+    PRODUCT_1: "product1",
+    PRODUCT_2: "product2",
+    PRODUCT_3: "product3"
+};
+
+export const ItemTypesID = {
+    PRODUCT_ID_1: "columnProduct1",
+    PRODUCT_ID_2: "columnProduct2",
+    PRODUCT_ID_3: "columnProduct3"
+};
+
+export const attributeListsForDemo = [
+    {
+        id: 31, showFeedback: "YES", showVisualStack: "YES", correctAnswer: "3", attributes: [
+            { id: "A3", p1: 1, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+", valueP3: "A++" },
+            { id: "A5", p1: 1, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "40", valueP2: "50", valueP3: "50" },
+            { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "45", valueP3: "45" },
+            { id: "A6", p1: 0, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
+            { id: "A2", p1: 0, p2: 1, p3: 1, name: "Pojemność bębna", valueP1: "4", valueP2: "10", valueP3: "10" },
+            { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1200", valueP3: "1400" },
+        ]
+    },
+    {
+        id: 32, showFeedback: "YES", showVisualStack: "YES", correctAnswer: "1", attributes: [
+            { id: "A3", p1: 0, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A", valueP2: "A", valueP3: "A++" },
+            { id: "A5", p1: 1, p2: 1, p3: 0, name: "Zużycie wody", valueP1: "45", valueP2: "45", valueP3: "65" },
+            { id: "A4", p1: 1, p2: 0, p3: 1, name: "Poziom hałasu", valueP1: "60", valueP2: "70", valueP3: "60" },
+            { id: "A6", p1: 1, p2: 0, p3: 0, name: "Program szybki", valueP1: "jest", valueP2: "brak", valueP3: "brak" },
+            { id: "A2", p1: 0, p2: 0, p3: 0, name: "Pojemność bębna", valueP1: "4", valueP2: "4", valueP3: "4" },
+            { id: "A1", p1: 0, p2: 1, p3: 0, name: "Maksymalne obroty", valueP1: "1000", valueP2: "1400", valueP3: "1000" },
+        ]
+    },
+    {
+        id: 33, showFeedback: "YES", showVisualStack: "NO", correctAnswer: "3", attributes: [
+            { id: "A3", p1: 0, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A", valueP2: "A", valueP3: "A++" },
+            { id: "A5", p1: 1, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "45", valueP2: "65", valueP3: "65" },
+            { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "70", valueP2: "60", valueP3: "60" },
+            { id: "A6", p1: 0, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
+            { id: "A2", p1: 1, p2: 1, p3: 0, name: "Pojemność bębna", valueP1: "8", valueP2: "8", valueP3: "4" },
+            { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1000", valueP3: "1400" },
+        ]
+    }
+];
+
 //App versions
 export const EXPERIMENT_TYPE_LONG = "LONG"
 export const EXPERIMENT_TYPE_SHORT = "SHORT"

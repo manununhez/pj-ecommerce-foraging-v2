@@ -400,7 +400,7 @@ function RatingBar(value) {
     return (<ReactStars
         edit={false}
         size={20}
-        count={6}
+        count={value}
         value={value}
         color={WHITE}
         activeColor={BLACK}

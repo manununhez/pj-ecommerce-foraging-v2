@@ -31,7 +31,7 @@ import PSForm from "./PSForm";
 import BargainTask from "./BargainTask/BargainTask";
 import BargainDemoTask from "./BargainTask/BargainDemoTask";
 import MultiAttribute from "./MultiAttribute";
-import MultiAttributeDemo from "./MultiAttributeDemo/MultiAttributeDemo";
+import MultiAttributeDemo from "./MultiAttributeDemo/MultiAttributeDemoV2";
 
 const DEBUG = (process.env.REACT_APP_DEBUG_LOG === "true") ? true : false;
 const PROLIFIC_REDIRECT_REJECT = process.env.REACT_APP_PROLIFIC_REDIRECT_REJECT;

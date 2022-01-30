@@ -10,53 +10,13 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faSmile, faFrown } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box } from "./Box";
-import { ItemTypes } from "./ItemTypes";
 import DemoContainer from './DemoContainer'
 
 import {
     FIRST_TASK_PROPERTIES_TOTAL, FIRST_RADIO_VALUE, SECOND_RADIO_VALUE, WHITE, BLACK,
     THIRD_RADIO_VALUE, TEXT_FOOTER, SHOW_FEEDBACK_TRUE, SPACE_KEY_CODE,
-    EVENT_KEY_DOWN
+    EVENT_KEY_DOWN, modaltStyle, ItemTypes, attributeListsForDemo
 } from '../../../helpers/constants';
-
-const modaltStyle = {
-    position: "fixed",
-    top: "35%",
-    left: "35%",
-    ransform: "translate(-40%, -40%)"
-}
-const attributeLists = [
-    {
-        id: 31, showFeedback: "YES", showVisualStack: "YES", correctAnswer: "3", attributes: [
-            { id: "A3", p1: 1, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A+", valueP2: "A+", valueP3: "A++" },
-            { id: "A5", p1: 1, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "40", valueP2: "50", valueP3: "50" },
-            { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "50", valueP2: "45", valueP3: "45" },
-            { id: "A6", p1: 0, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
-            { id: "A2", p1: 0, p2: 1, p3: 1, name: "Pojemność bębna", valueP1: "4", valueP2: "10", valueP3: "10" },
-            { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1200", valueP3: "1400" },
-        ]
-    },
-    {
-        id: 32, showFeedback: "YES", showVisualStack: "YES", correctAnswer: "1", attributes: [
-            { id: "A3", p1: 0, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A", valueP2: "A", valueP3: "A++" },
-            { id: "A5", p1: 1, p2: 1, p3: 0, name: "Zużycie wody", valueP1: "45", valueP2: "45", valueP3: "65" },
-            { id: "A4", p1: 1, p2: 0, p3: 1, name: "Poziom hałasu", valueP1: "60", valueP2: "70", valueP3: "60" },
-            { id: "A6", p1: 1, p2: 0, p3: 0, name: "Program szybki", valueP1: "jest", valueP2: "brak", valueP3: "brak" },
-            { id: "A2", p1: 0, p2: 0, p3: 0, name: "Pojemność bębna", valueP1: "4", valueP2: "4", valueP3: "4" },
-            { id: "A1", p1: 0, p2: 1, p3: 0, name: "Maksymalne obroty", valueP1: "1000", valueP2: "1400", valueP3: "1000" },
-        ]
-    },
-    {
-        id: 33, showFeedback: "YES", showVisualStack: "NO", correctAnswer: "3", attributes: [
-            { id: "A3", p1: 0, p2: 0, p3: 1, name: "Klasa energetyczna", valueP1: "A", valueP2: "A", valueP3: "A++" },
-            { id: "A5", p1: 1, p2: 0, p3: 0, name: "Zużycie wody", valueP1: "45", valueP2: "65", valueP3: "65" },
-            { id: "A4", p1: 0, p2: 1, p3: 1, name: "Poziom hałasu", valueP1: "70", valueP2: "60", valueP3: "60" },
-            { id: "A6", p1: 0, p2: 1, p3: 0, name: "Program szybki", valueP1: "brak", valueP2: "jest", valueP3: "brak" },
-            { id: "A2", p1: 1, p2: 1, p3: 0, name: "Pojemność bębna", valueP1: "8", valueP2: "8", valueP3: "4" },
-            { id: "A1", p1: 1, p2: 0, p3: 1, name: "Maksymalne obroty", valueP1: "1400", valueP2: "1000", valueP3: "1400" },
-        ]
-    }
-];
 
 
 class MultiAttributeDemo extends React.Component {
@@ -91,11 +51,11 @@ class MultiAttributeDemo extends React.Component {
         if (event.keyCode === SPACE_KEY_CODE) {
             const { selectedOption, counter } = this.state
             const isOptionWasSelectedInThisRound = selectedOption.length === (counter + 1)
-            const completedTask = this.allOptionsWereSelected()
+            const completedTask = this.controlIfAllOptionsAreSelected()
 
             if (isOptionWasSelectedInThisRound) {
                 if (completedTask) {
-                    if (attributeLists.length === selectedOption.length) {
+                    if (attributeListsForDemo.length === selectedOption.length) {
                         this.props.action(selectedOption);
                     } else {
                         this.setState({
@@ -110,9 +70,9 @@ class MultiAttributeDemo extends React.Component {
         }
     }
 
-    allOptionsWereSelected() {
+    controlIfAllOptionsAreSelected() {
         const { multiAttributeResults, counter } = this.state
-        const data = attributeLists[counter]
+        const data = attributeListsForDemo[counter]
 
         if (multiAttributeResults.length === 0) return false
 
@@ -158,17 +118,16 @@ class MultiAttributeDemo extends React.Component {
 
     toggle = () => {
         const { selectedOption } = this.state
-        const completedTask = this.allOptionsWereSelected()
+        const completedTask = this.controlIfAllOptionsAreSelected()
 
         if (completedTask) {
             this.setState({
-                modalOpen: !this.state.modalOpen
+                modalOpen: false
             });
         } else {
             selectedOption.pop() //removed button selection
             this.setState({
-                modalOpen: !this.state.modalOpen,
-                selectedOption: selectedOption,
+                modalOpen: false,
                 showMissingResultsIndicator: true
             });
         }
@@ -185,10 +144,10 @@ class MultiAttributeDemo extends React.Component {
     render() {
         const { counter, selectedOption, showMissingResultsIndicator,
             multiAttributeResults, modalOpen } = this.state
-        const data = attributeLists[counter]
+        const data = attributeListsForDemo[counter]
         const showFeedback = data.showFeedback
         const showFeedbackCorrectAnswer = selectedOption[counter] === data.correctAnswer
-        const completedTask = this.allOptionsWereSelected()
+        const completedTask = this.controlIfAllOptionsAreSelected()
         return (
             <Container key={"KEY_" + counter}>
                 <Modal isOpen={modalOpen} toggle={this.toggle} style={modaltStyle}>
@@ -212,6 +171,13 @@ class MultiAttributeDemo extends React.Component {
     }
 }
 
+/**
+ * 
+ * @param {*} showFeedback 
+ * @param {*} showFeedbackCorrectAnswer 
+ * @param {*} completedTask 
+ * @returns 
+ */
 function getModalText(showFeedback, showFeedbackCorrectAnswer, completedTask) {
     return (<ModalHeader style={{ padding: "4em" }}>
         {completedTask ? getModalFeedback(showFeedback, showFeedbackCorrectAnswer) :
@@ -219,6 +185,12 @@ function getModalText(showFeedback, showFeedbackCorrectAnswer, completedTask) {
     </ModalHeader>)
 }
 
+/**
+ * 
+ * @param {*} showFeedback 
+ * @param {*} showFeedbackCorrectAnswer 
+ * @returns 
+ */
 function getModalFeedback(showFeedback, showFeedbackCorrectAnswer) {
     return (
         <>
@@ -232,12 +204,15 @@ function getModalFeedback(showFeedback, showFeedbackCorrectAnswer) {
         </>
     )
 }
+
 /**
  * 
- * @param {*} data 
- * @param {*} counter 
  * @param {*} selectedValue 
+ * @param {*} data 
  * @param {*} onClick 
+ * @param {*} showMissingResultsIndicator 
+ * @param {*} multiAttributeResults 
+ * @returns 
  */
 function getTable(selectedValue, data, onClick, showMissingResultsIndicator, multiAttributeResults) {
     return (
@@ -278,7 +253,9 @@ function getTable(selectedValue, data, onClick, showMissingResultsIndicator, mul
 /**
  * 
  * @param {*} data 
- * @param {*} counter 
+ * @param {*} showMissingResultsIndicator 
+ * @param {*} multiAttributeResults 
+ * @returns 
  */
 function getTableBody(data, showMissingResultsIndicator, multiAttributeResults) {
     let children = []
@@ -323,6 +300,11 @@ function getTableBody(data, showMissingResultsIndicator, multiAttributeResults) 
  * 
  * @param {*} isBold 
  * @param {*} data 
+ * @param {*} type 
+ * @param {*} index 
+ * @param {*} showIndicator 
+ * @param {*} isDragActive 
+ * @returns 
  */
 function boldStyle(isBold, data, type, index, showIndicator, isDragActive) {
     if (isBold && isDragActive)
@@ -335,7 +317,7 @@ function boldStyle(isBold, data, type, index, showIndicator, isDragActive) {
 /**
  * 
  * @param {*} data 
- * @param {*} counter 
+ * @returns 
  */
 function getPropertiesTableBody(data) {
     let children = []
@@ -374,7 +356,7 @@ function RatingBar(value) {
 /**
  * 
  * @param {*} data 
- * @param {*} counter 
+ * @returns 
  */
 function getRatingStarBarTable(data) {
     return (

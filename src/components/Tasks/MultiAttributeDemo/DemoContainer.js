@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Table } from "reactstrap";
 
 import { Dustbin } from "./Dustbin";
-import { ItemTypes } from "./ItemTypes";
+import { ItemTypes } from "../../../helpers/constants";
 import update from "immutability-helper";
 
 export default function Container(props) {
@@ -20,8 +20,6 @@ export default function Container(props) {
         (index, item) => {
             const droppedBoxName = dustbins[index].droppedBoxNames
             const { name } = item;
-            // console.log(item)
-            // console.log(droppedBoxName)
 
             if (isNotDroppedYet(droppedBoxName, name)) {
                 setDustbins(
