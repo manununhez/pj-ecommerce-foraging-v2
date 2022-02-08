@@ -5,9 +5,8 @@ const RateImage = (props) => {
     // const [translation, setTranslation] = React.useState(1)
 
     const onAnimationEnd = () => {
-        console.log("onAnimationEnd")
         // setTranslation(0)
-        props.action({ isAnimationEnd: true })
+        props.action()
     }
     return (
         <img

@@ -32,7 +32,8 @@ class MultiAttributeDemoV3 extends React.Component {
             visibility: 0,
             coordinatesImage: { x: 0, y: 0 },
             imageRating: 0,
-            multiAttributeResults: { p1: [], p2: [], p3: [] }
+            multiAttributeResults: { p1: [], p2: [], p3: [] },
+            multiAttributeResultsTmp: { p1: [], p2: [], p3: [] }
         }
     }
 
@@ -149,17 +150,18 @@ class MultiAttributeDemoV3 extends React.Component {
 
     onDoubleClickImage = (rating, productType, evt) => {
         const { multiAttributeResults } = this.state
-        // console.log("Results double click:")
-        // console.log(multiAttributeResults)
+        let multiAttributeResultsLocal = {  //local results in order to wait until rate image animation ends to update the cointainer
+            p1: [...multiAttributeResults.p1],
+            p2: [...multiAttributeResults.p2],
+            p3: [...multiAttributeResults.p3]
+        }
 
-        console.log(rating)
-        console.log(productType)
         if (productType === ItemTypesID.PRODUCT_ID_1) {
-            multiAttributeResults.p1.push(rating)
+            multiAttributeResultsLocal.p1.push(rating)
         } else if (productType === ItemTypesID.PRODUCT_ID_2) {
-            multiAttributeResults.p2.push(rating)
+            multiAttributeResultsLocal.p2.push(rating)
         } else if (productType === ItemTypesID.PRODUCT_ID_3) {
-            multiAttributeResults.p3.push(rating)
+            multiAttributeResultsLocal.p3.push(rating)
         }
 
         document.getElementById(productType).style.backgroundColor = GREEN
@@ -167,22 +169,25 @@ class MultiAttributeDemoV3 extends React.Component {
         this.setState({
             showMissingResultsIndicator: false, visibility: 1,
             imageRating: rating, coordinatesImage: { x: evt.clientX, y: evt.clientY },
-            multiAttributeResults: multiAttributeResults
+            multiAttributeResultsTmp: multiAttributeResultsLocal
         })
     }
 
-    onAnimationRateImageEnd = (isAnimationEnd) => {
-        if (isAnimationEnd) {
-            document.getElementById(ItemTypesID.PRODUCT_ID_1).style.backgroundColor = WHITE
-            document.getElementById(ItemTypesID.PRODUCT_ID_2).style.backgroundColor = WHITE
-            document.getElementById(ItemTypesID.PRODUCT_ID_3).style.backgroundColor = WHITE
-            this.setState({ visibility: 0 })
-        }
+    onAnimationRateImageEnd = () => {
+        const { multiAttributeResultsTmp } = this.state
+
+        // if (isAnimationEnd) {
+        document.getElementById(ItemTypesID.PRODUCT_ID_1).style.backgroundColor = WHITE
+        document.getElementById(ItemTypesID.PRODUCT_ID_2).style.backgroundColor = WHITE
+        document.getElementById(ItemTypesID.PRODUCT_ID_3).style.backgroundColor = WHITE
+        this.setState({
+            visibility: 0,
+            multiAttributeResults: multiAttributeResultsTmp //now we update the table after the animation ends
+        })
+        // }
     }
 
     multiAttributeResultsHandler = (attributeResults) => {
-        // console.log("Results drag:")
-        // console.log(attributeResults.results)
         this.setState({
             multiAttributeResults: attributeResults.results,
             showMissingResultsIndicator: false
@@ -211,7 +216,6 @@ class MultiAttributeDemoV3 extends React.Component {
                     </Card>
                     <Card id="cardStackVisual" body style={{ marginTop: "20px" }}>
                         <DemoContainer action={this.multiAttributeResultsHandler} currentResult={multiAttributeResults} />
-                        {/* <div>{getTableVisualization(multiAttributeResults)}</div> */}
                     </Card>
                 </Row>
                 <RateImage image={ImageMapperRating(imageRating)} visibility={visibility}
