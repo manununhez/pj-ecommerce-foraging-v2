@@ -150,13 +150,13 @@ class MultiAttributeDemoV2 extends React.Component {
         let productId = ""
 
         if (productType === ItemTypes.PRODUCT_1) {
-            productId = ItemTypesID.PRODUCT_ID_1
+            productId = ItemTypesID.PRODUCT_1
             multiAttributeResults.p1.push(rating)
         } else if (productType === ItemTypes.PRODUCT_2) {
-            productId = ItemTypesID.PRODUCT_ID_2
+            productId = ItemTypesID.PRODUCT_2
             multiAttributeResults.p2.push(rating)
         } else if (productType === ItemTypes.PRODUCT_3) {
-            productId = ItemTypesID.PRODUCT_ID_3
+            productId = ItemTypesID.PRODUCT_3
             multiAttributeResults.p3.push(rating)
         }
 
@@ -167,9 +167,9 @@ class MultiAttributeDemoV2 extends React.Component {
 
     onAnimationRateImageEnd = (isAnimationEnd) => {
         if (isAnimationEnd) {
-            document.getElementById(ItemTypesID.PRODUCT_ID_1).style.backgroundColor = WHITE
-            document.getElementById(ItemTypesID.PRODUCT_ID_2).style.backgroundColor = WHITE
-            document.getElementById(ItemTypesID.PRODUCT_ID_3).style.backgroundColor = WHITE
+            document.getElementById(ItemTypesID.PRODUCT_1).style.backgroundColor = WHITE
+            document.getElementById(ItemTypesID.PRODUCT_2).style.backgroundColor = WHITE
+            document.getElementById(ItemTypesID.PRODUCT_3).style.backgroundColor = WHITE
             this.setState({ visibility: 0 })
         }
     }
@@ -311,7 +311,7 @@ function getTable(selectedValue, data, onClick, onDoubleClick, showMissingResult
  */
 function getTableVisualizationBody(data) {
     return (<tr>
-        <td id={ItemTypesID.PRODUCT_ID_1} style={{ verticalAlign: 'bottom' }}>
+        <td id={ItemTypesID.PRODUCT_1} style={{ verticalAlign: 'bottom' }}>
             <Table responsive borderless>
                 <thead></thead>
                 <tbody>
@@ -319,7 +319,7 @@ function getTableVisualizationBody(data) {
                 </tbody>
             </Table>
         </td>
-        <td id={ItemTypesID.PRODUCT_ID_2} style={{ verticalAlign: 'bottom' }}>
+        <td id={ItemTypesID.PRODUCT_2} style={{ verticalAlign: 'bottom' }}>
             <Table responsive borderless>
                 <thead></thead>
                 <tbody>
@@ -327,7 +327,7 @@ function getTableVisualizationBody(data) {
                 </tbody>
             </Table>
         </td>
-        <td id={ItemTypesID.PRODUCT_ID_3} style={{ verticalAlign: 'bottom' }}>
+        <td id={ItemTypesID.PRODUCT_3} style={{ verticalAlign: 'bottom' }}>
             <Table responsive borderless>
                 <thead></thead>
                 <tbody>

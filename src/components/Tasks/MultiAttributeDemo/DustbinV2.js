@@ -3,6 +3,7 @@ import { Table } from 'reactstrap'
 import { useDrop } from "react-dnd";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { INDEX_HEADER_TEXT, INDEX_HEADER_TOP } from "../../../helpers/constants";
 
 const style = {
     color: 'white',
@@ -14,7 +15,7 @@ const style = {
     position: 'relative'
 };
 
-export function Dustbin({ accept, lastDroppedItem, onDrop }) {
+export function Dustbin({ accept, lastDroppedItem, onDrop, productIndex }) {
     const [{ isOver, canDrop }, drop] = useDrop({
         accept,
         drop: onDrop,
@@ -36,9 +37,11 @@ export function Dustbin({ accept, lastDroppedItem, onDrop }) {
                 <thead></thead>
                 <tbody>
                     {[...lastDroppedItem].reverse().map((rating) => {
-                        return (<tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em' }}>
-                            {getPropertiesVerticalRating(rating)}
-                        </tr>)
+                        if (rating === INDEX_HEADER_TOP) {
+                            return <tr id={INDEX_HEADER_TEXT + productIndex} />
+                        } else {
+                            return (getPropertiesVerticalRating(rating))
+                        }
                     })}
                 </tbody>
             </Table>
@@ -57,5 +60,5 @@ function getPropertiesVerticalRating(value) {
             </tr>
         )
     }
-    return children
+    return <tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em' }}>{children}</tr>
 }

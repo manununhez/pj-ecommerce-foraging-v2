@@ -3,13 +3,13 @@ import React, { useCallback } from "react";
 import { Table } from "reactstrap";
 
 import { Dustbin } from "./DustbinV2";
-import { ItemTypes, ItemTypesID } from "../../../helpers/constants";
+import { ItemTypes, ItemTypesID, INDEX_HEADER_TOP } from "../../../helpers/constants";
 
 export default function Container(props) {
     const dustbins = [
-        { accepts: ItemTypes.PRODUCT_1, id: ItemTypesID.PRODUCT_ID_1, droppedBoxNames: props.currentResult.p1 },
-        { accepts: ItemTypes.PRODUCT_2, id: ItemTypesID.PRODUCT_ID_2, droppedBoxNames: props.currentResult.p2 },
-        { accepts: ItemTypes.PRODUCT_3, id: ItemTypesID.PRODUCT_ID_3, droppedBoxNames: props.currentResult.p3 }
+        { accepts: ItemTypes.PRODUCT_1, id: ItemTypesID.PRODUCT_1, droppedBoxNames: props.currentResult.p1 },
+        { accepts: ItemTypes.PRODUCT_2, id: ItemTypesID.PRODUCT_2, droppedBoxNames: props.currentResult.p2 },
+        { accepts: ItemTypes.PRODUCT_3, id: ItemTypesID.PRODUCT_3, droppedBoxNames: props.currentResult.p3 }
     ];
 
     function isNotDroppedYet(droppedBoxName, rating) {
@@ -21,7 +21,9 @@ export default function Container(props) {
             const rating = item.rating - 1;
 
             if (isNotDroppedYet(droppedBoxName, rating)) {
-                dustbins[index].droppedBoxNames.push(rating)
+                dustbins[index].droppedBoxNames.pop() //remove index header value
+                dustbins[index].droppedBoxNames.push(rating) //add latest value
+                dustbins[index].droppedBoxNames.push(INDEX_HEADER_TOP)//add index header value
 
                 props.action({
                     results: { p1: dustbins[0].droppedBoxNames, p2: dustbins[1].droppedBoxNames, p3: dustbins[2].droppedBoxNames }
@@ -51,6 +53,7 @@ export default function Container(props) {
                                 lastDroppedItem={droppedBoxNames}
                                 onDrop={(item) => handleDrop(index, item)}
                                 key={index}
+                                productIndex={index}
                             />
                         </td>
                     ))}

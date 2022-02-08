@@ -13,6 +13,13 @@ export const PRODUCT_MENU_BG_COLORS = [LIGHT_GRAY, "lightsteelblue", "antiquewhi
 export const TEXT_EMPTY = "";
 
 //MultiAttribute
+export const INDEX_HEADER_TEXT = "index_header_"
+export const INDEX_HEADER = {
+    PRODUCT_1: INDEX_HEADER_TEXT + "0",
+    PRODUCT_2: INDEX_HEADER_TEXT + "1",
+    PRODUCT_3: INDEX_HEADER_TEXT + "2"
+}
+export const INDEX_HEADER_TOP = -198
 export const modaltStyle = {
     position: "fixed",
     top: "35%",
@@ -26,9 +33,9 @@ export const ItemTypes = {
 };
 
 export const ItemTypesID = {
-    PRODUCT_ID_1: "columnProduct1",
-    PRODUCT_ID_2: "columnProduct2",
-    PRODUCT_ID_3: "columnProduct3"
+    PRODUCT_1: "columnProduct1",
+    PRODUCT_2: "columnProduct2",
+    PRODUCT_3: "columnProduct3"
 };
 
 export const attributeListsForDemo = [

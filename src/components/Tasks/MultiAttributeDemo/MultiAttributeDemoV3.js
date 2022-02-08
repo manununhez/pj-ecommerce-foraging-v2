@@ -16,7 +16,7 @@ import DemoContainer from './DemoContainerV2'
 import {
     FIRST_TASK_PROPERTIES_TOTAL, FIRST_RADIO_VALUE, SECOND_RADIO_VALUE, WHITE, BLACK,
     THIRD_RADIO_VALUE, TEXT_FOOTER, SHOW_FEEDBACK_TRUE, SPACE_KEY_CODE, EVENT_KEY_DOWN,
-    GREEN, modaltStyle, ItemTypes, attributeListsForDemo, ItemTypesID
+    GREEN, modaltStyle, ItemTypes, attributeListsForDemo, ItemTypesID, INDEX_HEADER_TOP, INDEX_HEADER
 } from '../../../helpers/constants';
 import RateImage from './RateImage';
 
@@ -32,8 +32,8 @@ class MultiAttributeDemoV3 extends React.Component {
             visibility: 0,
             coordinatesImage: { x: 0, y: 0 },
             imageRating: 0,
-            multiAttributeResults: { p1: [], p2: [], p3: [] },
-            multiAttributeResultsTmp: { p1: [], p2: [], p3: [] }
+            multiAttributeResults: { p1: [INDEX_HEADER_TOP], p2: [INDEX_HEADER_TOP], p3: [INDEX_HEADER_TOP] },
+            multiAttributeResultsTmp: { p1: [INDEX_HEADER_TOP], p2: [INDEX_HEADER_TOP], p3: [INDEX_HEADER_TOP] }
         }
     }
 
@@ -71,7 +71,7 @@ class MultiAttributeDemoV3 extends React.Component {
                             visibility: 0,
                             coordinatesImage: { x: 0, y: 0 },
                             imageRating: 0,
-                            multiAttributeResults: { p1: [], p2: [], p3: [] }
+                            multiAttributeResults: { p1: [INDEX_HEADER_TOP], p2: [INDEX_HEADER_TOP], p3: [INDEX_HEADER_TOP] }
                         }, () => {
                             console.log("NEXT ROUND")
                         })
@@ -155,20 +155,34 @@ class MultiAttributeDemoV3 extends React.Component {
             p2: [...multiAttributeResults.p2],
             p3: [...multiAttributeResults.p3]
         }
-
-        if (productType === ItemTypesID.PRODUCT_ID_1) {
+        let coordsY = 0
+        if (productType === ItemTypesID.PRODUCT_1) {
+            multiAttributeResultsLocal.p1.pop()
             multiAttributeResultsLocal.p1.push(rating)
-        } else if (productType === ItemTypesID.PRODUCT_ID_2) {
+            multiAttributeResultsLocal.p1.push(INDEX_HEADER_TOP)
+
+            coordsY = document.getElementById(INDEX_HEADER.PRODUCT_1).getBoundingClientRect().top - (rating * 25)
+        } else if (productType === ItemTypesID.PRODUCT_2) {
+            multiAttributeResultsLocal.p2.pop()
             multiAttributeResultsLocal.p2.push(rating)
-        } else if (productType === ItemTypesID.PRODUCT_ID_3) {
+            multiAttributeResultsLocal.p2.push(INDEX_HEADER_TOP)
+
+            coordsY = document.getElementById(INDEX_HEADER.PRODUCT_2).getBoundingClientRect().top - (rating * 25)
+        } else if (productType === ItemTypesID.PRODUCT_3) {
+            multiAttributeResultsLocal.p3.pop()
             multiAttributeResultsLocal.p3.push(rating)
+            multiAttributeResultsLocal.p3.push(INDEX_HEADER_TOP)
+
+            coordsY = document.getElementById(INDEX_HEADER.PRODUCT_3).getBoundingClientRect().top - (rating * 25)
         }
 
         document.getElementById(productType).style.backgroundColor = GREEN
 
         this.setState({
-            showMissingResultsIndicator: false, visibility: 1,
-            imageRating: rating, coordinatesImage: { x: evt.clientX, y: evt.clientY },
+            showMissingResultsIndicator: false,
+            visibility: 1,
+            imageRating: rating,
+            coordinatesImage: { x: evt.clientX, y: coordsY },
             multiAttributeResultsTmp: multiAttributeResultsLocal
         })
     }
@@ -176,15 +190,13 @@ class MultiAttributeDemoV3 extends React.Component {
     onAnimationRateImageEnd = () => {
         const { multiAttributeResultsTmp } = this.state
 
-        // if (isAnimationEnd) {
-        document.getElementById(ItemTypesID.PRODUCT_ID_1).style.backgroundColor = WHITE
-        document.getElementById(ItemTypesID.PRODUCT_ID_2).style.backgroundColor = WHITE
-        document.getElementById(ItemTypesID.PRODUCT_ID_3).style.backgroundColor = WHITE
+        document.getElementById(ItemTypesID.PRODUCT_1).style.backgroundColor = WHITE
+        document.getElementById(ItemTypesID.PRODUCT_2).style.backgroundColor = WHITE
+        document.getElementById(ItemTypesID.PRODUCT_3).style.backgroundColor = WHITE
         this.setState({
             visibility: 0,
             multiAttributeResults: multiAttributeResultsTmp //now we update the table after the animation ends
         })
-        // }
     }
 
     multiAttributeResultsHandler = (attributeResults) => {
@@ -262,27 +274,6 @@ function getModalFeedback(showFeedback, showFeedbackCorrectAnswer) {
 
 /**
  * 
- * @param {*} data 
- * @returns 
- */
-function getTableVisualization(data) {
-    return (<Table borderless responsive style={{ textAlign: 'center', height: '600px' }}>
-        <thead>
-            <tr>
-                <th><h5>Product 1</h5></th>
-                <th><h5>Product 2</h5></th>
-                <th><h5>Product 3</h5></th>
-            </tr>
-
-        </thead>
-        <tbody>
-            {getTableVisualizationBody(data)}
-        </tbody>
-    </Table>)
-}
-
-/**
- * 
  * @param {*} selectedValue 
  * @param {*} data 
  * @param {*} onClick 
@@ -327,72 +318,6 @@ function getTable(selectedValue, data, onClick, onDoubleClick, showMissingResult
     );
 }
 
-/**
- * 
- * @param {*} data 
- * @returns 
- */
-function getTableVisualizationBody(data) {
-    return (<tr>
-        <td id={ItemTypesID.PRODUCT_ID_1} style={{ verticalAlign: 'bottom' }}>
-            <Table responsive borderless>
-                <thead></thead>
-                <tbody>
-                    {getPropertiesTableVizualizationBodyProduct(data.p1)}
-                </tbody>
-            </Table>
-        </td>
-        <td id={ItemTypesID.PRODUCT_ID_2} style={{ verticalAlign: 'bottom' }}>
-            <Table responsive borderless>
-                <thead></thead>
-                <tbody>
-                    {getPropertiesTableVizualizationBodyProduct(data.p2)}
-                </tbody>
-            </Table>
-        </td>
-        <td id={ItemTypesID.PRODUCT_ID_3} style={{ verticalAlign: 'bottom' }}>
-            <Table responsive borderless>
-                <thead></thead>
-                <tbody>
-                    {getPropertiesTableVizualizationBodyProduct(data.p3)}
-                </tbody>
-            </Table>
-        </td>
-    </tr>
-    );
-}
-
-/**
- * 
- * @param {*} listSelectedRating 
- * @returns 
- */
-function getPropertiesTableVizualizationBodyProduct(listSelectedRating) {
-    return [...listSelectedRating].reverse().map(rating => {
-        return (<tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em' }}>
-            {getPropertiesVerticalRating(rating)}
-        </tr>)
-    })
-}
-
-/**
- * 
- * @param {*} value 
- * @returns 
- */
-function getPropertiesVerticalRating(value) {
-    let children = []
-    for (let i = 0; i < value; i++) {
-        children.push(
-            <tr>
-                <td style={{ padding: '0' }}>
-                    <FontAwesomeIcon icon={faPlus} />
-                </td>
-            </tr>
-        )
-    }
-    return children
-}
 
 /**
  * 
@@ -432,11 +357,11 @@ function getTableBody(data, onDoubleClick, showMissingResultsIndicator, multiAtt
         children.push(
             <tr key={i}>
                 <td style={{ fontSize: '1.3em' }}>{boldStyle(isAttributeP1Bold, data.attributes[i].valueP1,
-                    ItemTypes.PRODUCT_1, rating, showIndicatorP1, isCurrentValueP1NotDroppedYet, onDoubleClick, ItemTypesID.PRODUCT_ID_1)}</td>
+                    ItemTypes.PRODUCT_1, rating, showIndicatorP1, isCurrentValueP1NotDroppedYet, onDoubleClick, ItemTypesID.PRODUCT_1)}</td>
                 <td style={{ fontSize: '1.3em' }}>{boldStyle(isAttributeP2Bold, data.attributes[i].valueP2,
-                    ItemTypes.PRODUCT_2, rating, showIndicatorP2, isCurrentValueP2NotDroppedYet, onDoubleClick, ItemTypesID.PRODUCT_ID_2)}</td>
+                    ItemTypes.PRODUCT_2, rating, showIndicatorP2, isCurrentValueP2NotDroppedYet, onDoubleClick, ItemTypesID.PRODUCT_2)}</td>
                 <td style={{ fontSize: '1.3em' }}>{boldStyle(isAttributeP3Bold, data.attributes[i].valueP3,
-                    ItemTypes.PRODUCT_3, rating, showIndicatorP3, isCurrentValueP3NotDroppedYet, onDoubleClick, ItemTypesID.PRODUCT_ID_3)}</td>
+                    ItemTypes.PRODUCT_3, rating, showIndicatorP3, isCurrentValueP3NotDroppedYet, onDoubleClick, ItemTypesID.PRODUCT_3)}</td>
             </tr>
         );
     }
