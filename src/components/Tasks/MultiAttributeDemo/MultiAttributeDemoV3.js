@@ -219,7 +219,8 @@ class MultiAttributeDemoV3 extends React.Component {
                 <Modal isOpen={modalOpen} toggle={this.modalToggle} style={modaltStyle}>
                     {getModalText(showFeedback, showFeedbackCorrectAnswer, completedTask)}
                 </Modal>
-                <Row className="justify-content-center">
+                {/* Row style to avoid 'layout of all three panes should be fixed, not floating (when window is resized, panes change their layout)' */}
+                <Row className="justify-content-center" style={{ display: 'inline-flex', position: 'fixed', flexWrap: 'nowrap' }}>
                     <Card body style={{ marginTop: "20px" }}>
                         <div>{getRatingStarBarTable(data)}</div>
                     </Card>
