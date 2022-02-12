@@ -22,7 +22,7 @@ export function Box({ name, type, columnType, index, showIndicator, onDoubleClic
         <>
             <DragPreviewImage connect={preview} src={ImageMapperRating(index)} />
             <div ref={drag} onDoubleClick={onDoubleClick.bind(this, index, columnType)}
-                role="Box" style={{ opacity, cursor: isDragging ? "none" : "default", border: showIndicator ? '1px solid green' : '' }}>
+                role="Box" style={{ opacity, cursor: isDragging ? "none" : "grab", border: showIndicator ? '1px solid green' : '' }}>
                 {<strong>{name}</strong>}
             </div>
         </>

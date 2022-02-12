@@ -292,3 +292,7 @@ form {
 .menu-item-wrapper.active {
   border: 0px blue solid;
 }
+
+.cursor-normal-text:hover{
+  cursor: default;
+}

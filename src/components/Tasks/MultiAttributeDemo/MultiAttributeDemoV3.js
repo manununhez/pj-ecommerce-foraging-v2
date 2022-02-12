@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ImageMapperRating } from './verticalRateImage';
 import { Box } from "./BoxV2";
 import DemoContainer from './DemoContainerV2'
+import "../style.css"
 
 import {
     FIRST_TASK_PROPERTIES_TOTAL, FIRST_RADIO_VALUE, SECOND_RADIO_VALUE, WHITE, BLACK,
@@ -385,8 +386,8 @@ function boldStyle(isBold, data, productType, rating, showIndicator, isDragActiv
         return (<Box name={data} type={productType} key={rating} index={rating} showIndicator={showIndicator}
             onDoubleClick={onDoubleClick} columnType={columnType} />)
     else if (!isDragActive)
-        return <strong>{data}</strong>
-    else return data
+        return <strong className='cursor-normal-text'>{data}</strong>
+    else return <div className='cursor-normal-text'>{data}</div>
 }
 
 /**
