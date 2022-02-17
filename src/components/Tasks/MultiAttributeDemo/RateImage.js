@@ -1,23 +1,39 @@
 import React from 'react'
-import styles from './animated-image.module.scss'
+import styled, { keyframes } from "styled-components";
 
 const RateImage = (props) => {
-    // const [translation, setTranslation] = React.useState(1)
+    const visbility = props.visibility ? "block" : "none"
+
+    const slideToRightAnimation = keyframes`
+        0%{
+            -webkit-transform:translate(${props.x1}px, ${props.y1}px);
+            transform:translate(${props.x1}px, ${props.y1}px);
+        }
+        100%{
+            -webkit-transform:translate(${props.x2}px, ${props.y2}px);
+            transform:translate(${props.x2}px, ${props.y2}px);
+            opacity: 0.6;
+        }
+    `;
+
+    // Here we create a component that will rotate everything we pass in over two seconds
+    const SlideRightFadeOutImg = styled.img`
+        display: ${visbility};
+        margin: 0 auto;
+        -webkit-animation: ${slideToRightAnimation} 0.6s linear forwards;
+    animation: ${slideToRightAnimation} 0.6s linear forwards;
+    `;
 
     const onAnimationEnd = () => {
-        // setTranslation(0)
         props.action()
     }
+
     return (
-        <img
-            className={styles.image}
+        <SlideRightFadeOutImg
             style={props.style}
-            src={props.image}
-            alt="randomised!"
-            // onDoubleClick={() => setTranslation(1)}
             onAnimationEnd={onAnimationEnd}
-            translate={props.visibility}
-            visibility={props.visibility}
+            src={props.image}
+            alt="loading..."
         />
     )
 }

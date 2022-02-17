@@ -31,7 +31,7 @@ class MultiAttributeDemoV3 extends React.Component {
             showMissingResultsIndicator: false,
             modalOpen: false,
             visibility: 0,
-            coordinatesImage: { x: 0, y: 0 },
+            coordinatesImage: { leftX: 0, leftY: 0, y: 0 },
             imageRating: 0,
             multiAttributeResults: { p1: [INDEX_HEADER_TOP], p2: [INDEX_HEADER_TOP], p3: [INDEX_HEADER_TOP] },
             multiAttributeResultsTmp: { p1: [INDEX_HEADER_TOP], p2: [INDEX_HEADER_TOP], p3: [INDEX_HEADER_TOP] }
@@ -70,7 +70,7 @@ class MultiAttributeDemoV3 extends React.Component {
                             showMissingResultsIndicator: false,
                             modalOpen: false,
                             visibility: 0,
-                            coordinatesImage: { x: 0, y: 0 },
+                            coordinatesImage: { leftX: 0, leftY: 0, y: 0 },
                             imageRating: 0,
                             multiAttributeResults: { p1: [INDEX_HEADER_TOP], p2: [INDEX_HEADER_TOP], p3: [INDEX_HEADER_TOP] }
                         }, () => {
@@ -85,8 +85,6 @@ class MultiAttributeDemoV3 extends React.Component {
     controlIfAllOptionsAreSelected() {
         const { multiAttributeResults, counter } = this.state
         const data = attributeListsForDemo[counter]
-
-        console.log(multiAttributeResults)
 
         if (multiAttributeResults.length === 0) return false
 
@@ -183,7 +181,7 @@ class MultiAttributeDemoV3 extends React.Component {
             showMissingResultsIndicator: false,
             visibility: 1,
             imageRating: rating,
-            coordinatesImage: { x: evt.clientX, y: coordsY },
+            coordinatesImage: { leftX: evt.clientX, leftY: evt.clientY, y: coordsY },
             multiAttributeResultsTmp: multiAttributeResultsLocal
         })
     }
@@ -232,8 +230,14 @@ class MultiAttributeDemoV3 extends React.Component {
                         <DemoContainer action={this.multiAttributeResultsHandler} currentResult={multiAttributeResults} />
                     </Card>
                 </Row>
-                <RateImage image={ImageMapperRating(imageRating)} visibility={visibility}
-                    style={{ position: "absolute", left: coordinatesImage.x + 'px', top: coordinatesImage.y + 'px' }}
+                <RateImage
+                    image={ImageMapperRating(imageRating)}
+                    visibility={visibility}
+                    x1={coordinatesImage.leftX}
+                    x2={coordinatesImage.leftX + 350}
+                    y1={coordinatesImage.leftY}
+                    y2={coordinatesImage.y}
+                    style={{ position: "absolute", top: '0px', left: '0px' }}
                     action={this.onAnimationRateImageEnd} />
             </Container>
         );
