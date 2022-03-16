@@ -205,8 +205,8 @@ export function fetchUsers(callback) {
  * Load psychology questionaries input data from the spreadsheet
  * @param {*} callback 
  */
-export function fetchPSFormData(callback) {
-    let url = fetch_psform_url
+export function fetchPSFormData(sex, callback) {
+    let url = fetch_psform_url + '/' + sex
 
     get(url, {})
         .then((response) => {
@@ -214,6 +214,7 @@ export function fetchPSFormData(callback) {
 
             for (let value of Object.values(response)) {
                 result.push({
+                    sex: value.sex,
                     title: value.main_title,
                     titleFontSize: value.main_title_font_size,
                     questionCode: value.question_code,
@@ -234,8 +235,8 @@ export function fetchPSFormData(callback) {
  * Load all the necessary Text structure for the app from the spreadsheet
  * @param {*} callback 
  */
-export function fetchAppText(callback) {
-    let url = fetch_apptext_url
+export function fetchAppText(sex, callback) {
+    let url = fetch_apptext_url + '/' + sex
 
     get(url, {})
         .then((response) => {
@@ -243,6 +244,7 @@ export function fetchAppText(callback) {
 
             for (let value of Object.values(response)) {
                 appText.push({
+                    sex: value.sex,
                     screen: value.name,
                     size: value.font_size,
                     text: value.text,

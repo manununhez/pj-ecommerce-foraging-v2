@@ -285,18 +285,21 @@ class Index extends Component {
     _onLoadStoresShortDataCallBack(data, error) {
         if (data) {
             //Loggin the first screen of the navigation
-            const { inputStores } = this.state
+            const { inputStores, inputNavigation } = this.state
 
             inputStores.storesShort = data.response
 
             this.setState({
-                inputStores: inputStores
+                loading: false, //Hide loading
+                inputStores: inputStores,
+                logTimestamp: {
+                    screen: [inputNavigation[0].screen],//we grap the first screen
+                    timestamp: [Date.now()]//we log the first screen we are entering in
+                }
             }, () => {
                 if (DEBUG) console.log(this.state)
-            })
+            });
 
-            if (DEBUG) console.log(data)
-            request.fetchAppText(this._onLoadAppTextCallBack.bind(this));
         } else {
             this.setState({
                 loading: false,
@@ -318,7 +321,8 @@ class Index extends Component {
                 inputTextInstructions: data.appText
             })
             if (DEBUG) console.log(data)
-            request.fetchPSFormData(this._onLoadPSFormCallback.bind(this));
+
+            request.fetchPSFormData(this.state.outputFormData.sex, this._onLoadPSFormCallback.bind(this));
 
         } else {
             this.setState({
@@ -338,18 +342,16 @@ class Index extends Component {
     */
     _onLoadPSFormCallback(data, error) {
         if (data) {
-            const { inputNavigation } = this.state
 
             this.setState({
                 loading: false, //Hide loading
                 inputPSForm: data.result,
-                logTimestamp: {
-                    screen: [inputNavigation[0].screen],//we grap the first screen
-                    timestamp: [Date.now()]//we log the first screen we are entering in
-                }
+                typeTask: constant.EXPERIMENT_TYPE_SHORT
             }, () => {
                 if (DEBUG) console.log(this.state)
+                this._goToNextTaskInInputNavigation();
             });
+
         } else {
             this.setState({
                 loading: false,
@@ -843,7 +845,7 @@ class Index extends Component {
      * Validate components before navigating between pages. Space key pressed
      */
     _validateToNextPage() {
-        const { currentScreenNumber, inputNavigation } = this.state;
+        const { currentScreenNumber, inputNavigation, outputFormData } = this.state;
         const { screen, type } = inputNavigation[currentScreenNumber];
 
         let totalLength = inputNavigation.length;
@@ -886,9 +888,11 @@ class Index extends Component {
                 //         })
                 //     }
                 // }
-                this.setState({ typeTask: constant.EXPERIMENT_TYPE_SHORT }, () => {
-                    this._goToNextTaskInInputNavigation();
-                })
+
+                //Get texts per sex, and after, go to next page
+                this.setState({ loading: true }, () => {
+                    request.fetchAppText(outputFormData.sex, this._onLoadAppTextCallBack.bind(this))
+                });
             }
         }
     }
