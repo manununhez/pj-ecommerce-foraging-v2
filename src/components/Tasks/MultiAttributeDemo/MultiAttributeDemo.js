@@ -224,21 +224,21 @@ function getTable(selectedValue, data, onClick, showMissingResultsIndicator, mul
                             className={selectedValue === FIRST_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"}
                             style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
                             onClick={onClick} value={FIRST_RADIO_VALUE}>
-                            Product 1
+                            Pralka 1
                         </Button>
                     </th>
                     <th>
                         <Button color="primary" id={"btn_" + SECOND_RADIO_VALUE}
                             className={selectedValue === SECOND_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"}
                             onClick={onClick} value={SECOND_RADIO_VALUE}>
-                            Product 2
+                            Pralka 2
                         </Button>
                     </th>
                     <th>
                         <Button color="primary" id={"btn_" + THIRD_RADIO_VALUE}
                             className={selectedValue === THIRD_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"}
                             onClick={onClick} value={THIRD_RADIO_VALUE}>
-                            Product 3
+                            Pralka 3
                         </Button>
                     </th>
                 </tr>
@@ -363,8 +363,8 @@ function getRatingStarBarTable(data) {
         <Table responsive borderless style={{ borderCollapse: 'separate' }}>
             <thead>
                 <tr>
-                    <th><h5>Feature</h5></th>
-                    <th><h5>Importance</h5></th>
+                    <th><h5>Właściwość</h5></th>
+                    <th><h5>Ważność</h5></th>
                 </tr>
             </thead>
             <tbody>

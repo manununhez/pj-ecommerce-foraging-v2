@@ -190,9 +190,9 @@ function getTableVisualization(data) {
     return (<Table borderless responsive style={{ textAlign: 'center' }}>
         <thead>
             <tr>
-                <th><h5>Product 1</h5></th>
-                <th><h5>Product 2</h5></th>
-                <th><h5>Product 3</h5></th>
+                <th><h5>Pralka 1</h5></th>
+                <th><h5>Pralka 2</h5></th>
+                <th><h5>Pralka 3</h5></th>
             </tr>
 
         </thead>
@@ -218,21 +218,21 @@ function getTable(selectedValue, data, onClick) {
                             className={selectedValue === FIRST_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length
                             style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
                             onClick={onClick} value={FIRST_RADIO_VALUE}>
-                            Product 1
+                            Pralka 1
                         </button>
                     </th>
                     <th>
                         <button color="primary" id={"btn_" + SECOND_RADIO_VALUE}
                             className={selectedValue === SECOND_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
                             onClick={onClick} value={SECOND_RADIO_VALUE}>
-                            Product 2
+                            Pralka 2
                         </button>
                     </th>
                     <th>
                         <button color="primary" id={"btn_" + THIRD_RADIO_VALUE}
                             className={selectedValue === THIRD_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
                             onClick={onClick} value={THIRD_RADIO_VALUE}>
-                            Product 3
+                            Pralka 3
                         </button>
                     </th>
                 </tr>
@@ -285,7 +285,7 @@ function getPropertiesTableVizualizationBodyProduct1(data) {
     for (let i = attributes - 1; i >= 0; i--) {
         if (data.attributes[i].p1 === 1) {
             children.push(
-                <tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em' }}>
+                <tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em', display: 'block ruby' }}>
                     {getPropertiesVerticalRating(FIRST_TASK_PROPERTIES_TOTAL - i)}
                 </tr>);
         }
@@ -300,7 +300,7 @@ function getPropertiesTableVizualizationBodyProduct2(data) {
     for (let i = attributes - 1; i >= 0; i--) {
         if (data.attributes[i].p2 === 1) {
             children.push(
-                <tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em' }}>
+                <tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em', display: 'block ruby' }}>
                     {getPropertiesVerticalRating(FIRST_TASK_PROPERTIES_TOTAL - i)}
                 </tr>);
         }
@@ -315,7 +315,7 @@ function getPropertiesTableVizualizationBodyProduct3(data) {
     for (let i = attributes - 1; i >= 0; i--) {
         if (data.attributes[i].p3 === 1) {
             children.push(
-                <tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em' }}>
+                <tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em', display: 'block ruby' }}>
                     {getPropertiesVerticalRating(FIRST_TASK_PROPERTIES_TOTAL - i)}
                 </tr>
             );
@@ -420,8 +420,8 @@ function getRatingStarBarTable(data) {
         <Table responsive borderless style={{ borderCollapse: 'separate' }}>
             <thead>
                 <tr>
-                    <th><h5>Feature</h5></th>
-                    <th><h5>Importance</h5></th>
+                    <th><h5>Właściwość</h5></th>
+                    <th><h5>Ważność</h5></th>
                 </tr>
             </thead>
             <tbody>

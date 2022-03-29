@@ -36,7 +36,7 @@ export function Dustbin({ accept, lastDroppedItem, onDrop }) {
                 <thead></thead>
                 <tbody>
                     {[...lastDroppedItem].reverse().map(({ rating }) => {
-                        return (<tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em' }}>
+                        return (<tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em', display: 'block ruby' }}>
                             {getPropertiesVerticalRating(rating - 1)}
                         </tr>)
                     })}

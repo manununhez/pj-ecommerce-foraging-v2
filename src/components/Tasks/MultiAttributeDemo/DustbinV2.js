@@ -60,5 +60,5 @@ function getPropertiesVerticalRating(value) {
             </tr>
         )
     }
-    return <tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em' }}>{children}</tr>
+    return <tr style={{ border: '1px solid black', textAlign: '-webkit-center', fontSize: '1.3em', display: 'block ruby' }}>{children}</tr>
 }

@@ -234,7 +234,7 @@ class MultiAttributeDemoV3 extends React.Component {
                     image={ImageMapperRating(imageRating)}
                     visibility={visibility}
                     x1={coordinatesImage.leftX}
-                    x2={coordinatesImage.leftX + 350}
+                    x2={coordinatesImage.leftX + 300}
                     y1={coordinatesImage.leftY}
                     y2={coordinatesImage.y}
                     style={{ position: "absolute", top: '0px', left: '0px' }}
@@ -298,21 +298,21 @@ function getTable(selectedValue, data, onClick, onDoubleClick, showMissingResult
                             className={selectedValue === FIRST_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length
                             style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
                             onClick={onClick} value={FIRST_RADIO_VALUE}>
-                            Product 1
+                            Pralka 1
                         </button>
                     </th>
                     <th>
                         <button color="primary" id={"btn_" + SECOND_RADIO_VALUE}
                             className={selectedValue === SECOND_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
                             onClick={onClick} value={SECOND_RADIO_VALUE}>
-                            Product 2
+                            Pralka 2
                         </button>
                     </th>
                     <th>
                         <button color="primary" id={"btn_" + THIRD_RADIO_VALUE}
                             className={selectedValue === THIRD_RADIO_VALUE ? "btn btn-warning" : "btn btn-primary"} //Values from 1 to length style={{ marginTop: "0px", marginBottom: "0px", fontSize: "0.9em" }}
                             onClick={onClick} value={THIRD_RADIO_VALUE}>
-                            Product 3
+                            Pralka 3
                         </button>
                     </th>
                 </tr>
@@ -444,8 +444,8 @@ function getRatingStarBarTable(data) {
         <Table responsive borderless style={{ borderCollapse: 'separate' }}>
             <thead>
                 <tr>
-                    <th><h5>Feature</h5></th>
-                    <th><h5>Importance</h5></th>
+                    <th><h5>Właściwość</h5></th>
+                    <th><h5>Ważność</h5></th>
                 </tr>
             </thead>
             <tbody>

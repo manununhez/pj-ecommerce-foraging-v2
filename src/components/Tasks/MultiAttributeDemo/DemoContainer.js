@@ -51,9 +51,9 @@ export default function Container(props) {
         <Table borderless responsive style={{ textAlign: 'center', height: '600px' }}>
             <thead>
                 <tr>
-                    <th><h5>Product 1</h5></th>
-                    <th><h5>Product 2</h5></th>
-                    <th><h5>Product 3</h5></th>
+                    <th><h5>Pralka 1</h5></th>
+                    <th><h5>Pralka 2</h5></th>
+                    <th><h5>Pralka 3</h5></th>
                 </tr>
 
             </thead>
