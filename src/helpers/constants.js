@@ -183,8 +183,6 @@ export const BARGAIN_DEMO_SCREEN = "BargainDemoTask";
 export const BARGAIN_DEMO_INSTRUCTION_BEFORE_FINISH = "BargainDemoTaskInstructionBeforeFinish";
 export const BARGAIN_DEMO_FINISH_INSTRUCTION = "BargainDemoTaskInstructionFinish";
 export const BARGAIN_SCREEN = "BargainTask";
-export const MULTRIATTRIBUTE_DEMO_SCREEN = "MultiAttributeTaskDemo";
-export const MULTRIATTRIBUTE_SCREEN = "MultiAttributeTask";
 
 
 //CSV input stores
