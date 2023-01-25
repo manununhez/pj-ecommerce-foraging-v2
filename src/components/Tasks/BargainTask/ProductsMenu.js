@@ -4,6 +4,7 @@ import { Row, Col, Input, Button } from "reactstrap";
 import PropTypes from "prop-types";
 import ScrollMenu from "react-horizontal-scrolling-menu";
 import StarRatings from 'react-star-ratings';
+import styled, { keyframes } from "styled-components";
 
 import { PRODUCT_MENU_BG_COLORS, ALLEGRO_ORANGE } from "../../../helpers/constants";
 
@@ -13,6 +14,32 @@ export default function ProductsMenu(props) {
     const backgroundColorItem = PRODUCT_MENU_BG_COLORS[props.store % PRODUCT_MENU_BG_COLORS.length]
     const menu = Menu(props.products, props.selected)
     const ArrowRight = Arrow({ text: "", className: "arrow-next" });
+    const orangePulseAnim = keyframes`
+        0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(255, 121, 63, 0.7);
+        }
+
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 10px rgba(255, 121, 63, 0);
+        }
+
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(255, 121, 63, 0);
+        }
+    `;
+    const OrangePulse = styled.div`
+        border-radius: 50%;
+        margin: 10px;
+        height: 30px;
+        width: 30px;
+        transform: scale(1);
+        background: rgba(255, 192, 1, 255);
+        box-shadow: 0 0 0 0 rgba(255, 121, 63, 1);
+        animation: ${orangePulseAnim} 1s infinite;
+    `;
 
     return (<div className="scroll-menu" style={{ backgroundColor: backgroundColorItem }}>
         <Row style={{ backgroundColor: "white", height: "60px", padding: "15px", marginBottom: "20px", marginRight: "auto", marginLeft: "auto" }}>
@@ -30,7 +57,8 @@ export default function ProductsMenu(props) {
             <Col xs="2" style={{ alignSelf: "center" }}>Bargains: {props.bargainsTaken}</Col>
         </Row>
         <h4 style={{ paddingTop: "15px", paddingBottom: "5px", paddingLeft: "10px" }}>Local offers!</h4>
-        <div data-tut="reactour__product_belt" style={{ backgroundColor: "white", paddingTop: "40px", paddingBottom: "40px", paddingLeft: "5px" }}>
+        <div data-tut="reactour__product_belt" style={{ backgroundColor: "white", paddingBottom: "40px", paddingLeft: "5px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "end" }}>Screens without bargains: 5 <OrangePulse /></div>
             <ScrollMenu
                 alignCenter={false}
                 arrowRight={ArrowRight}
