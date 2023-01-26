@@ -210,6 +210,8 @@ export default function BargainTask(props) {
 
         if (missedBargains === 0) {
             setEmptyBeltCounter(counter => counter + 1)
+        } else {
+            setEmptyBeltCounter(0)
         }
         //we called saveResultsBeforeChangingBelt() even if we have shown the alert (it does not affect the animation of the belt transitioning)
         saveResultsBeforeChangingBelt()

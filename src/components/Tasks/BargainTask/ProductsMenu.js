@@ -90,8 +90,8 @@ export default function ProductsMenu(props) {
         </Row>
         <h4 style={{ paddingTop: "15px", paddingBottom: "5px", paddingLeft: "10px" }}>Local offers!</h4>
         <div data-tut="reactour__product_belt" style={{ backgroundColor: "white", paddingBottom: "40px", paddingLeft: "5px" }}>
-            {(props.emptyBeltCounter >= 0) ?
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "end" }}>Screens without bargains: {props.emptyBeltCounter} {(props.emptyBeltCounter > 0) ? <OrangePulse /> : <></>}</div>
+            {(props.emptyBeltCounter > 0) ?
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "end" }}>Screens without bargains: {props.emptyBeltCounter}  <OrangePulse /></div>
                 : <></>}
             <ScrollMenu
                 alignCenter={false}
