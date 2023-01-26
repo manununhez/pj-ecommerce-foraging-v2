@@ -273,6 +273,7 @@ export default function BargainDemoTask(props) {
                     onUpdate={onShowNextProducts}
                     onGoStoreBtnClick={onShowNextStore}
                     bargainsTaken={0}
+                    emptyBeltCounter={-1}
                 /></div> :
             <div className="centered">
                 <StickmanLoading

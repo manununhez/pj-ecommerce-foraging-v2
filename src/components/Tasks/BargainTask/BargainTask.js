@@ -62,6 +62,7 @@ export default function BargainTask(props) {
     const [round, setRound] = useState(1)
     const [currentBeltIteration] = useState({ value: 1 })
     const [currentStoreIndex] = useState({ value: 0 })
+    const [emptyBeltCounter, setEmptyBeltCounter] = useState(0)
     const [currentProducts, setCurrentProducts] = useState(initializeProducts(storeLists.value[currentStoreIndex.value]))
     const [currentProductListWithoutBargains, setCurrentProductListWithoutBargains] = useState([])
     const [delay, setDelay] = useState(ONE_SECOND_MS)
@@ -159,6 +160,7 @@ export default function BargainTask(props) {
 
         currentStoreIndex.value += 1
         currentBeltIteration.value = 1
+        setEmptyBeltCounter(0)
 
         const newStore = storeLists.value[currentStoreIndex.value]
 
@@ -200,11 +202,14 @@ export default function BargainTask(props) {
      * 
      */
     const showNextBeltIterationProducts = () => {
-        if (showFeedback) {
-            let missedBargains = countMissedBargains()
-            if (missedBargains > 0) {
-                modalAlert(MODAL_TITLE, BARGAIN_MISSED_SELECTED_ALERT_MESSAGE(missedBargains), "")
-            }
+        let missedBargains = countMissedBargains()
+
+        if (showFeedback && missedBargains > 0) {
+            modalAlert(MODAL_TITLE, BARGAIN_MISSED_SELECTED_ALERT_MESSAGE(missedBargains), "")
+        }
+
+        if (missedBargains === 0) {
+            setEmptyBeltCounter(counter => counter + 1)
         }
         //we called saveResultsBeforeChangingBelt() even if we have shown the alert (it does not affect the animation of the belt transitioning)
         saveResultsBeforeChangingBelt()
@@ -427,6 +432,7 @@ export default function BargainTask(props) {
 
         currentStoreIndex.value = 0
         currentBeltIteration.value = 1
+        setEmptyBeltCounter(0)
         storeLists.value = newListToDisplay//we change the stores lists by Conditions (Long/short)
         setRound(newRound)
         setSelectedProducts([])
@@ -513,7 +519,8 @@ export default function BargainTask(props) {
                 onSelect={onSelect}
                 onUpdate={onUpdate}
                 onGoStoreBtnClick={onShowNextStore}
-                bargainsTaken={results[results.length - 1].bargainTakenNumber} /></div>)
+                bargainsTaken={results[results.length - 1].bargainTakenNumber}
+                emptyBeltCounter={emptyBeltCounter} /></div>)
         } else if (showInstruction) {
             return (<div className="centered" style={{ textAlign: "center" }}>
                 <h3>{MIDDLE_EXPERIMENT_ALERT}</h3>
@@ -578,7 +585,7 @@ export default function BargainTask(props) {
 
 
     return (<>
-        {DEBUG ? `Store#:${storeLists.value[currentStoreIndex.value].storeNumber} CurrentBelt:${currentBeltIteration.value}` : ""}
+        {DEBUG ? `Store#:${storeLists.value[currentStoreIndex.value].storeNumber} CurrentBelt:${currentBeltIteration.value} EmptyBelt:${emptyBeltCounter}` : ""}
 
         {showModal()}
 

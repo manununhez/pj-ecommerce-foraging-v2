@@ -14,32 +14,64 @@ export default function ProductsMenu(props) {
     const backgroundColorItem = PRODUCT_MENU_BG_COLORS[props.store % PRODUCT_MENU_BG_COLORS.length]
     const menu = Menu(props.products, props.selected)
     const ArrowRight = Arrow({ text: "", className: "arrow-next" });
+
+    const animationVelocity = () => {
+        if (props.emptyBeltCounter > 0 && props.emptyBeltCounter < 3) return 2
+        else if (props.emptyBeltCounter > 2 && props.emptyBeltCounter < 5) return 1
+        else return 0.5
+    }
+
+    const animationBackgroundColor = () => {
+        if (props.emptyBeltCounter > 0 && props.emptyBeltCounter < 3) return 'rgba(255, 240, 1, 255)' //yellow
+        else if (props.emptyBeltCounter > 2 && props.emptyBeltCounter < 5) return 'rgba(255, 190, 1, 255)' //orange
+        else return 'rgba(255, 0, 1, 255)' //red
+    }
+
+    const animationBoxShadow = () => {
+        if (props.emptyBeltCounter > 0 && props.emptyBeltCounter < 3) return 'rgba(227, 212, 55, 1)'
+        else if (props.emptyBeltCounter > 2 && props.emptyBeltCounter < 5) return 'rgba(255, 121, 63, 1)'
+        else return 'rgba(255, 64, 64, 1)'
+    }
+
+    const animationBoxShadowTotalFaded = () => {
+        if (props.emptyBeltCounter > 0 && props.emptyBeltCounter < 3) return 'rgba(227, 212, 55,  0)'
+        else if (props.emptyBeltCounter > 2 && props.emptyBeltCounter < 5) return 'rgba(255, 121, 63, 0)'
+        else return 'rgba(255, 64, 64, 0)'
+    }
+
+    const animationBoxShadowAlmostFaded = () => {
+        if (props.emptyBeltCounter > 0 && props.emptyBeltCounter < 3) return 'rgba(227, 212, 55, 0.7)'
+        else if (props.emptyBeltCounter > 2 && props.emptyBeltCounter < 5) return 'rgba(255, 121, 63, 0.7)'
+        else return 'rgba(255, 64, 64, 0.7)'
+    }
+
     const orangePulseAnim = keyframes`
-        0% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(255, 121, 63, 0.7);
-        }
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 ${animationBoxShadowAlmostFaded()};
+    }
 
-        70% {
-            transform: scale(1);
-            box-shadow: 0 0 0 10px rgba(255, 121, 63, 0);
-        }
-
-        100% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(255, 121, 63, 0);
-        }
-    `;
-    const OrangePulse = styled.div`
-        border-radius: 50%;
-        margin: 10px;
-        height: 30px;
-        width: 30px;
+    70% {
         transform: scale(1);
-        background: rgba(255, 192, 1, 255);
-        box-shadow: 0 0 0 0 rgba(255, 121, 63, 1);
-        animation: ${orangePulseAnim} 1s infinite;
-    `;
+        box-shadow: 0 0 0 10px ${animationBoxShadowTotalFaded()};
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 ${animationBoxShadowTotalFaded()};
+    }
+`;
+    const OrangePulse = styled.div`
+    border-radius: 50%;
+    margin: 10px;
+    height: 30px;
+    width: 30px;
+    transform: scale(1);
+    background: ${animationBackgroundColor()};
+    box-shadow: 0 0 0 0 ${animationBoxShadow()};
+    animation: ${orangePulseAnim} ${animationVelocity()}s infinite;
+`;
+
 
     return (<div className="scroll-menu" style={{ backgroundColor: backgroundColorItem }}>
         <Row style={{ backgroundColor: "white", height: "60px", padding: "15px", marginBottom: "20px", marginRight: "auto", marginLeft: "auto" }}>
@@ -58,7 +90,9 @@ export default function ProductsMenu(props) {
         </Row>
         <h4 style={{ paddingTop: "15px", paddingBottom: "5px", paddingLeft: "10px" }}>Local offers!</h4>
         <div data-tut="reactour__product_belt" style={{ backgroundColor: "white", paddingBottom: "40px", paddingLeft: "5px" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "end" }}>Screens without bargains: 5 <OrangePulse /></div>
+            {(props.emptyBeltCounter >= 0) ?
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "end" }}>Screens without bargains: {props.emptyBeltCounter} {(props.emptyBeltCounter > 0) ? <OrangePulse /> : <></>}</div>
+                : <></>}
             <ScrollMenu
                 alignCenter={false}
                 arrowRight={ArrowRight}
