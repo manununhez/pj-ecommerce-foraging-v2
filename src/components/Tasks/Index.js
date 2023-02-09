@@ -344,7 +344,7 @@ class Index extends Component {
             this.setState({
                 loading: false, //Hide loading
                 inputPSForm: data.result,
-                typeTask: constant.EXPERIMENT_TYPE_SHORT
+                typeTask: constant.EXPERIMENT_TYPE_LONG
             }, () => {
                 if (DEBUG) console.log(this.state)
                 this._goToNextTaskInInputNavigation();
@@ -861,8 +861,6 @@ class Index extends Component {
                 // let data = this.validateForm();
 
                 // if (data.isValid) {
-                //     this._randomUserScenarioAssignment()
-
                 //     this._goToNextTaskInInputNavigation();
                 // } else {
                 //     if (data.redirect) {
@@ -880,75 +878,6 @@ class Index extends Component {
                 });
             }
         }
-    }
-
-    _randomUserScenarioAssignment() {
-        const { inputParticipants, outputFormData } = this.state;
-        const { sex, age } = outputFormData;
-        const groups = constant.PARTICIPANTS_GROUPS
-        const firstGroupAgeLimit = groups[0]
-        const secondGroupAgeLimit = groups[1]
-        const thirdGroupAgeLimit = groups[2]
-        const scenarios = constant.SCENARIOS
-        const participantsLimitPerScenarioPerSexPerGroup = inputParticipants.total / 4
-        const scenariosSex = (sex === constant.FEMALE_VALUE) ? 0 : 2
-
-        let randomNumberGenerated = []
-        let scenarioNumber = 0
-        let groupAge = 0
-
-        if (age >= parseInt(firstGroupAgeLimit.minAge) &&
-            age <= parseInt(firstGroupAgeLimit.maxAge)) { //firstGroup
-            groupAge = 0
-        } else if (age >= parseInt(secondGroupAgeLimit.minAge) &&
-            age <= parseInt(secondGroupAgeLimit.maxAge)) { //secondGroup
-            groupAge = 1
-        } else if (age >= parseInt(thirdGroupAgeLimit.minAge) &&
-            age <= parseInt(thirdGroupAgeLimit.maxAge)) { //thirdGroup
-            groupAge = 2
-        }
-
-
-        //Logic to assign and check scenarios availability
-        while (true) {
-            scenarioNumber = randomNumber(0, (scenarios.length - 1))
-
-            if (randomNumberGenerated.includes(scenarioNumber)) { //If we already have generated a certain number, we do not check again scenario availability, we only check if we have seen all number options availables
-                if (randomNumberGenerated.length === scenarios.length) {
-                    alert(constant.PARTICIPANTS_QUOTA_FULL_ALERT_ERROR);
-                    this.setState({ showAlertWindowsClosing: false }, () => {
-                        window.location.replace(PROLIFIC_REDIRECT_REJECT);
-                    })
-                    break;
-                }
-            } else { //if we generated a new number option, we add it to randomNumberGenerated and check that scenario availability 
-                randomNumberGenerated.push(scenarioNumber)
-                //Index in inputParticipant array are:
-                // indexScenario1F = 2
-                // indexScenario2F = 3
-                // indexScenario1M = 4
-                // indexScenario2M = 5
-                //ScenarioNumber should be a random number between 0 and 1 (there are two scenarios),
-                //so if we add 2, plus scenarioSex (0 if Female, 2 is Male), we have the correct table index with values for the scenario 
-
-                let indexScenarioSex = scenarioNumber + 2 + scenariosSex
-
-                if (DEBUG) console.log("scenarioNumber: " + scenarioNumber)
-                if (DEBUG) console.log("indexScenarioSex: " + indexScenarioSex)
-                if (DEBUG) console.log("participantsLimitPerScenarioPerSexPerGroup: " + participantsLimitPerScenarioPerSexPerGroup)
-                if (DEBUG) console.log("groupAge: " + groupAge)
-                if (DEBUG) console.log("scenarios: " + scenarios)
-                if (DEBUG) console.log(inputParticipants.participants[indexScenarioSex][groupAge])
-
-                if (inputParticipants.participants[indexScenarioSex][groupAge] < parseInt(participantsLimitPerScenarioPerSexPerGroup)) {
-                    break;
-                }
-            }
-        }
-
-
-        //we update select hotel value
-        this.setState({ typeTask: (scenarios[scenarioNumber] === constant.EXPERIMENT_TYPE_LONG ? constant.EXPERIMENT_TYPE_LONG : constant.EXPERIMENT_TYPE_SHORT) })
     }
 
     /**

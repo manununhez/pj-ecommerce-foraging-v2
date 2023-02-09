@@ -331,7 +331,10 @@ const userbargain = (data) => {
             item.bargainWronglyTakenNumber,
             item.bargainShownNumber,
             item.round,
-            item.totalBargainsInStore
+            item.totalBargainsInStore,
+            item.maxEmptyBelt,
+            item.lastEmptyBeltDisplayedBeforeChangeStore,
+            item.displayEmptyBeltCount
         ]
     })
 
@@ -357,6 +360,9 @@ const usergeneraldata = (data, studyParams) => {
                 studyParams.SESSION_ID,
                 constant.TEXT_EMPTY,
                 constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
                 constant.TEXT_EMPTY
             ]);
         } else if (output.task === constant.USER_INFO_SCREEN) {
@@ -373,6 +379,9 @@ const usergeneraldata = (data, studyParams) => {
                 output.data[7],
                 output.data[8],
                 output.data[9],
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
                 constant.TEXT_EMPTY
             ]);
         } else if (output.task === constant.PSFORM_SCREEN) {
@@ -381,6 +390,9 @@ const usergeneraldata = (data, studyParams) => {
                 output.task,
                 output.data.questionCode,
                 output.data.answer,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
+                constant.TEXT_EMPTY,
                 constant.TEXT_EMPTY,
                 constant.TEXT_EMPTY,
                 constant.TEXT_EMPTY,
@@ -406,6 +418,9 @@ const usergeneraldata = (data, studyParams) => {
                     item.retry,
                     item.timestamp,
                     constant.TEXT_EMPTY,
+                    constant.TEXT_EMPTY,
+                    constant.TEXT_EMPTY,
+                    constant.TEXT_EMPTY,
                     constant.TEXT_EMPTY
                 ]
             });
@@ -425,7 +440,10 @@ const usergeneraldata = (data, studyParams) => {
                     item.bargainShownNumber,
                     item.round,
                     item.bargainWronglyTakenNumber,
-                    item.totalBargainsInStore
+                    item.totalBargainsInStore,
+                    item.maxEmptyBelt,
+                    item.lastEmptyBeltDisplayedBeforeChangeStore,
+                    item.displayEmptyBeltCount
                 ]
             });
 

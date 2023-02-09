@@ -54,7 +54,10 @@ export default function BargainTask(props) {
             bargainWronglyTakenNumber: 0,
             bargainShownNumber: 0,
             round: _round,
-            totalBargainsInStore: _totalBargains
+            totalBargainsInStore: _totalBargains,
+            maxEmptyBelt: 0,
+            lastEmptyBeltDisplayedBeforeChangeStore: 0,
+            displayEmptyBeltCount: 0
         }
     }
 
@@ -160,6 +163,7 @@ export default function BargainTask(props) {
 
         currentStoreIndex.value += 1
         currentBeltIteration.value = 1
+
         setEmptyBeltCounter(0)
 
         const newStore = storeLists.value[currentStoreIndex.value]
@@ -202,15 +206,34 @@ export default function BargainTask(props) {
      * 
      */
     const showNextBeltIterationProducts = () => {
-        let missedBargains = countMissedBargains()
+        const from = (currentBeltIteration.value - 1) * PRODUCTS_PER_ROW
+        const to = from + PRODUCTS_PER_ROW
+        const productListInThisIteration = storeLists.value[currentStoreIndex.value].products.slice(from, to)
+        const bargainNumberInThisIteration = productListInThisIteration.filter(product => product.isBargain === true).length
+        const missedBargains = countMissedBargains()
 
         if (showFeedback && missedBargains > 0) {
             modalAlert(MODAL_TITLE, BARGAIN_MISSED_SELECTED_ALERT_MESSAGE(missedBargains), "")
         }
 
-        if (missedBargains === 0) {
+        if (bargainNumberInThisIteration === 0) {
+            results[results.length - 1] = {
+                ...results[results.length - 1],
+                displayEmptyBeltCount: results[results.length - 1].displayEmptyBeltCount + 1,
+                lastEmptyBeltDisplayedBeforeChangeStore: emptyBeltCounter + 1
+            }
             setEmptyBeltCounter(counter => counter + 1)
         } else {
+            if (results[results.length - 1].maxEmptyBelt < emptyBeltCounter) {
+                results[results.length - 1] = {
+                    ...results[results.length - 1],
+                    maxEmptyBelt: emptyBeltCounter,
+                }
+            }
+            results[results.length - 1] = {
+                ...results[results.length - 1],
+                lastEmptyBeltDisplayedBeforeChangeStore: emptyBeltCounter
+            }
             setEmptyBeltCounter(0)
         }
         //we called saveResultsBeforeChangingBelt() even if we have shown the alert (it does not affect the animation of the belt transitioning)
