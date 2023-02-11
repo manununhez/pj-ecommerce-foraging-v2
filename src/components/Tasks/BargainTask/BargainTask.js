@@ -216,6 +216,15 @@ export default function BargainTask(props) {
             modalAlert(MODAL_TITLE, BARGAIN_MISSED_SELECTED_ALERT_MESSAGE(missedBargains), "")
         }
 
+        if (DEBUG) console.log("Max Empty Belt: " + results[results.length - 1].maxEmptyBelt)
+        if (DEBUG) console.log("Current empty belt: " + emptyBeltCounter)
+        if (results[results.length - 1].maxEmptyBelt < emptyBeltCounter) {
+            results[results.length - 1] = {
+                ...results[results.length - 1],
+                maxEmptyBelt: emptyBeltCounter,
+            }
+        }
+
         if (bargainNumberInThisIteration === 0) {
             results[results.length - 1] = {
                 ...results[results.length - 1],
@@ -224,12 +233,6 @@ export default function BargainTask(props) {
             }
             setEmptyBeltCounter(counter => counter + 1)
         } else {
-            if (results[results.length - 1].maxEmptyBelt < emptyBeltCounter) {
-                results[results.length - 1] = {
-                    ...results[results.length - 1],
-                    maxEmptyBelt: emptyBeltCounter,
-                }
-            }
             results[results.length - 1] = {
                 ...results[results.length - 1],
                 lastEmptyBeltDisplayedBeforeChangeStore: emptyBeltCounter
